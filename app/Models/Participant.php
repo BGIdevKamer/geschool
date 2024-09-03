@@ -20,12 +20,13 @@ class Participant extends Model
         'age',
         'cni',
         'NiveauScolaire',
+        'randomUser',
     ];
     public function Formations()
     {
-        return $this->belongsToMany(Formation::class,'formation_participant')->whithPivot(['date_debut','date_fin']);
+        return $this->belongsToMany(Formation::class, 'formation_participant')->whithPivot(['anneeScolaire']);
     }
-    public function FormationParticipantPayement()
+    public function payements()
     {
         return $this->hasMany(FormationParticipantPayement::class);
     }

@@ -15,10 +15,9 @@ return new class extends Migration
     {
         Schema::create('formation_participant', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Participant::class);
-            $table->foreignIdFor(Formation::class);
-            $table->date('date_debut');
-            $table->date('date_fin');
+            $table->foreignIdFor(Formation::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Participant::class)->constrained()->onDelete('cascade');
+            $table->string('anneeScolaire');
             $table->timestamps();
         });
     }

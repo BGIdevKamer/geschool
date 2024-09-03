@@ -49,18 +49,18 @@
 									<i class="dw dw-more"></i>
 								</a>
 								<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-									<a class="dropdown-item @if($Formation->statue == 1) text-danger @endif"
+									<a class="dropdown-item @if($Formation->statue == 1) text-danger @else text-success @endif"
 										href="{{route('Delete.Formation',['id'=>$Formation->id,'statut'=>$Formation->statue])}}"><i
 											class="iicon-copy dw dw-shrink"></i>@if($Formation->statue == 1) Désactiver
 										@else Activer @endif</a>
 									<a class="dropdown-item " href="" href="#" class="btn-block" data-toggle="modal" id="ApplieUpdate"
-									data-id="{{$Formation->id}}"
-									data-nom="{{$Formation->nom}}"
-									data-duree="{{$Formation->durée}}"
-									data-note="{{$Formation->note}}"
-									data-prix="{{$Formation->prix}}"
-									data-Enligne="{{$Formation->EnLigne}}"
-									data-niveau="{{$Formation->Niveau_requie}}"
+										data-id="{{$Formation->id}}"
+										data-nom="{{$Formation->nom}}"
+										data-duree="{{$Formation->durée}}"
+										data-note="{{$Formation->note}}"
+										data-prix="{{$Formation->prix}}"
+										data-Enligne="{{$Formation->EnLigne}}"
+										data-niveau="{{$Formation->Niveau_requie}}"
 										data-target="#bd-example-modal-lg" type="button"><i
 											class="icon-copy dw dw-edit-2"></i>Modifier</a>
 								</div>
@@ -89,73 +89,72 @@
 					</button>
 				</div>
 				<div class="modal-body">
-				<div class="errors_class"></div>
-				<form action="" id="FormUpFormation">
-					<div class="row">
-						<div class="col-md-6 col-sm-12">
-							<div class="form-group">
-								<label>Nom de la formation <span class="text-danger">*</span> </label>
-								<input type="text" class="form-control" name="nom" id="nom">
-								<input type="text" class="form-control d-none" name="id" id="id">
-							</div>
-						</div>
-						<div class="col-md-6 col-sm-12">
-							<div class="form-group">
-								<label>Durée de la formation <span class="text-danger">*</span> </label>
-								<input type="text" class="form-control" name="duree" id="duree">
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6 col-sm-12">
-							<div class="form-group">
-								<label>Note</label>
-								<input type="text" class="form-control" name="note" id="note">
-							</div>
-						</div>
-						<div class="col-md-6 col-sm-12">
-							<div class="form-group">
-								<label>Prix de la formation <span class="text-danger">*</span></label>
-								<input class="prix" id="prix" type="text" value="" name="prix" />
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6 col-sm-12">
-							<div class="form-group">
-								<label>Niveau requie <span class="text-danger">*</span></label>
-								<input type="text" class="form-control" id="niveau" name="niveau">
-							</div>
-						</div>
-						<div class="col-md-6 col-sm-12">
-							<div class="form-group">
+					<div class="errors_class"></div>
+					<form action="" id="FormUpFormation">
+						<div class="row">
+							<div class="col-md-6 col-sm-12">
 								<div class="form-group">
+									<label>Nom de la formation <span class="text-danger">*</span> </label>
+									<input type="text" class="form-control" name="nom" id="nom">
+									<input type="text" class="form-control d-none" name="id" id="id">
+								</div>
+							</div>
+							<div class="col-md-6 col-sm-12">
+								<div class="form-group">
+									<label>Durée de la formation <span class="text-danger">*</span> </label>
+									<input type="text" class="form-control" name="duree" id="duree">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 col-sm-12">
+								<div class="form-group">
+									<label>Note</label>
+									<input type="text" class="form-control" name="note" id="note">
+								</div>
+							</div>
+							<div class="col-md-6 col-sm-12">
+								<div class="form-group">
+									<label>Prix de la formation <span class="text-danger">*</span></label>
+									<input class="prix" id="prix" type="text" value="" name="prix" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 col-sm-12">
+								<div class="form-group">
+									<label>Niveau requie <span class="text-danger">*</span></label>
+									<input type="text" class="form-control" id="niveau" name="niveau">
+								</div>
+							</div>
+							<div class="col-md-6 col-sm-12">
+								<div class="form-group">
+									<div class="form-group">
 										<label>En ligne ?</label>
 										<select
 											class="custom-select2 form-control"
 											name="state"
 											id="enligne"
-											style="width: 100%; height: 38px"
-										>
+											style="width: 100%; height: 38px">
 											<option value="2">Conserver valeur initial</option>
 											<option value="0">Non</option>
 											<option value="1">Oui</option>
 										</select>
 									</div>
+								</div>
 							</div>
 						</div>
-					</div>
-				</form>
+					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">
 						Fermer
 					</button>
 					<button type="button" class="btn btn-primary" id="FormationUpdate">
-					  <div class="spinner-border text-light load-btn d-none" style="width: 1rem; height: 1rem;" role="status">
-                        <span class="sr-only">Loading...</span>
-                        </div>
-                        <span class="btn-txt">Enregister</span>
+						<div class="spinner-border text-light load-btn d-none" style="width: 1rem; height: 1rem;" role="status">
+							<span class="sr-only">Loading...</span>
+						</div>
+						<span class="btn-txt">Enregister</span>
 					</button>
 				</div>
 			</div>
@@ -232,15 +231,16 @@
 <script src="{{asset('assets/src/plugins/sweetalert2/sweetalert2.all.js')}}"></script>
 <script src="{{asset('assets/src/plugins/sweetalert2/sweet-alert.init.js')}}"></script>
 
-		<!-- switchery js -->
-		<script src="{{asset('assets/src/plugins/switchery/switchery.min.js')}}"></script>
-		<!-- bootstrap-tagsinput js -->
-		<script src="{{asset('assets/src/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js')}}"></script>
-		<!-- bootstrap-stouchspin js -->
+<!-- switchery js -->
+<script src="{{asset('assets/src/plugins/switchery/switchery.min.js')}}"></script>
+<!-- bootstrap-tagsinput js -->
+<script src="{{asset('assets/src/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js')}}"></script>
+<!-- bootstrap-stouchspin js -->
 
-		<script src="{{asset('assets/src/plugins/bootstrap-touchspin/jquery.bootstrap-touchspin.js')}}"></script>
-        <script src="{{asset('assets/vendors/scripts/advanced-components.js')}}"></script>
-@include('main')
+<script src="{{asset('assets/src/plugins/bootstrap-touchspin/jquery.bootstrap-touchspin.js')}}"></script>
+<script src="{{asset('assets/vendors/scripts/advanced-components.js')}}"></script>
+
+<script src="{{asset('assets/module/main.js')}}"></script>
 
 
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NXZMQSS" height="0" width="0"

@@ -22,9 +22,10 @@ class Formation extends Model
     ];
     public function Participants()
     {
-        return $this->belongsToMany(Participant::class,'formation_participant')->whithPivot(['date_debut','date_fin']);
+        return $this->belongsToMany(Participant::class)
+            ->withPivot(['anneeScolaire']);
     }
-    public function FormationParticipantPayement()
+    public function payements()
     {
         return $this->hasMany(FormationParticipantPayement::class);
     }
