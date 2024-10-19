@@ -6,23 +6,28 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Formation;
 use App\Models\Participant;
+use App\Models\Payement;
 
-class FormationParticipantPayement extends Model
+class FormationParticipant extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'montant',
-        'pay_date',
         'participant_id',
         'formation_id',
+        'anneeScolaire',
+        'niv',
     ];
-    public function formation()
+    public function Participant()
+    {
+        return $this->belongsTo(Participant::class);
+    }
+    public function Formation()
     {
         return $this->belongsTo(Formation::class);
     }
-    public function participant()
+    public function Payements()
     {
-        return $this->belongsTo(Participant::class);
+        return $this->hasMany(Payement::class);
     }
 }

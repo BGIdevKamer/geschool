@@ -17,9 +17,10 @@ return new class extends Migration
             $table->string('durée');
             $table->string('note')->nullable();
             $table->string('prix');
-            $table->string('Niveau_requie');
+            $table->string('Niveau_requie')->nullable();
             $table->boolean('EnLigne')->default(false);
             $table->string('randomUser');
+            $table->string('img')->nullable();
             $table->string('statue');
             $table->timestamps();
         });

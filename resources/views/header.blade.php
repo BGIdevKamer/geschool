@@ -82,7 +82,7 @@
 	<div class="pre-loader">
 		<div class="pre-loader-box">
 			<div class="loader-logo">
-				<img src="{{asset('assets/vendors/images/logo.png')}}" alt="" width="200px" />
+				<img src="{{Storage::url(Auth::user()->logo)}}" alt="" width="200px" />
 			</div>
 			<div class="loader-progress" id="progress_div">
 				<div class="bar" id="bar1"></div>
@@ -353,7 +353,7 @@
 	<div class="left-side-bar">
 		<div class="brand-logo">
 			<a href="index.html">
-				<img src="{{asset('assets/vendors/images/logo.png')}}" alt="" class="dark-logo" />
+				<img src="" alt="" class="dark-logo" />
 				<img
 					src="vendors/images/deskapp-logo-white.svg"
 					alt=""
@@ -396,9 +396,34 @@
 							<li><a href="{{route('liste.Formation')}}">Listes Formations</a></li>
 						</ul>
 					</li>
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle">
+							<span class="micon bi bi-textarea-resize"></span><span class="mtext">Payement</span>
+						</a>
+						<ul class="submenu">
+							<li>
+								<a href="{{route('Payement.index')}}">Nauveau payements</a>
+							</li>
+							<li><a href="">Listes Payements</a></li>
+							<li><a href="">Tranches</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle">
+							<span class="micon bi bi-textarea-resize"></span><span class="mtext">Ressources</span>
+						</a>
+						<ul class="submenu">
+							<li>
+								<a href="{{route('cour.index')}}">Cours</a>
+							</li>
+							<li><a href="{{route('Exercice')}}">Exercices</a></li>
+							<li><a href="">Evaluation</a></li>
+							<li><a href="">Seances</a></li>
+						</ul>
+					</li>
 					<li>
-						<a href="calendar.html" class="dropdown-toggle no-arrow">
-							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Formateurs</span>
+						<a href="{{route('courriel.liste')}}" class="dropdown-toggle no-arrow">
+							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Courriels</span>
 						</a>
 					</li>
 					<li>

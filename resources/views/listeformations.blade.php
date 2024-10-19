@@ -164,7 +164,9 @@
 </div>
 
 <button type="button" class="btn mb-20 btn-primary btn-block d-none" id="sa-success">Click me</button>
-
+<script>
+	const route = "{{route('update.formation')}}";
+</script>
 <!-- welcome modal start -->
 <div class="welcome-modal">
 	<button class="welcome-modal-close">
@@ -221,13 +223,13 @@
 <script src="{{asset ('assets/src/plugins/datatables/js/responsive.bootstrap4.min.js')}}"></script>
 <script src="{{asset ('assets/src/plugins/datatables/js/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset ('assets/src/plugins/datatables/js/buttons.bootstrap4.min.js')}}"></script>
-<script src="{{asset ('assets/src/plugins/datatables/js/buttons.print.min.js')}}"></script>
-<script src="{{asset ('assets/src/plugins/datatables/js/buttons.html5.min.js')}}"></script>
-<script src="{{asset ('assets/src/plugins/datatables/js/buttons.flash.min.js')}}"></script>
-<script src="{{asset ('assets/src/plugins/datatables/js/pdfmake.min.js')}}"></script>
-<script src="{{asset ('assets/src/plugins/datatables/js/vfs_fonts.js')}}"></script>
+<!-- <script src="{{asset ('assets/src/plugins/datatables/js/buttons.print.min.js')}}"></script> -->
+<!-- <script src="{{asset ('assets/src/plugins/datatables/js/buttons.html5.min.js')}}"></script> -->
+<!-- <script src="{{asset ('assets/src/plugins/datatables/js/buttons.flash.min.js')}}"></script> -->
+<!-- <script src="{{asset ('assets/src/plugins/datatables/js/pdfmake.min.js')}}"></script> -->
+<!-- <script src="{{asset ('assets/src/plugins/datatables/js/vfs_fonts.js')}}"></script> -->
 
-<script src="{{asset ('assets/vendors/scripts/datatable-setting.js')}}"></script>
+<!-- <script src="{{asset ('assets/vendors/scripts/datatable-setting.js')}}"></script> -->
 <script src="{{asset('assets/src/plugins/sweetalert2/sweetalert2.all.js')}}"></script>
 <script src="{{asset('assets/src/plugins/sweetalert2/sweet-alert.init.js')}}"></script>
 

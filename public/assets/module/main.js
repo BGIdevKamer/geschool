@@ -6,34 +6,36 @@ $.ajaxSetup({
 });
 
 $(document).ready(function () {
+    // scrool to top function
+    function scrollTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
     // Enregistrer une  nouvelle formation
     //  validation & envoie des infortion en ajax
-    $(document).on('click', '#Envoyer', function (e) {
+    $(document).on('submit', '#FormationForm', function (e) {
         e.preventDefault();
-        let name = $('#nom').val();
-        let duree = $('#duree').val();
-        let prix = $('#prix').val();
-        let prerequit = $('#prerequit').val();
-        let note = $('#note').val();
+
+        const formData = new FormData(this);
+
         const sa = document.getElementById("sa-success");
         document.querySelector(".save-load-btn-ma").classList.remove("d-none");
         document.querySelector(".save-bu-ma").classList.add("d-none");
         $.ajax({
-            url: "/add-formation",
-            method: 'post',
-            data: {
-                name: name,
-                duree: duree,
-                prix: prix,
-                prerequit: prerequit,
-                note: note
-            },
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData, // Envoie les données du formulaire en utilisant FormData
+            processData: false,
+            contentType: false,
             success: function (res) {
                 if (res.status == "success") {
                     document.querySelector(".save-load-btn-ma").classList.add("d-none");
                     document.querySelector(".save-bu-ma").classList.remove("d-none");
                     $('#FormationForm')[0].reset();
                     sa.click();
+                    $(' .errors_calss').load(location.href + ' .errors_calss');
                 }
             },
             error: function (err) {
@@ -43,6 +45,7 @@ $(document).ready(function () {
                 });
                 document.querySelector(".save-load-btn-ma").classList.add("d-none");
                 document.querySelector(".save-bu-ma").classList.remove("d-none");
+                scrollTop();
             }
         })
 
@@ -66,7 +69,9 @@ $(document).ready(function () {
         $("#note").val(note);
         $("#prix").val(prix);
         $("#niveau").val(niveau);
-        $("#enligne").val(enligne);
+        if (enligne == undefined) {
+            enligne = 2;
+        }
         $("#id").val(id);
     })
     $(document).on('click', '#FormationUpdate', function (e) {
@@ -82,7 +87,7 @@ $(document).ready(function () {
         document.querySelector(".load-btn").classList.remove("d-none");
         document.querySelector(".btn-txt").classList.add("d-none");
         $.ajax({
-            url: "/update-formation",
+            url: route,
             method: 'post',
             data: {
                 nom: nom,
@@ -128,194 +133,55 @@ $(document).ready(function () {
         let niveau = $('#niveauEtudiant');
         let formation = $('#formation');
         let anneescolaire = $('#anneescolaire');
-        let montant = $('#montant');
+        let niv = $('#niv');
+        // let montant = $('#montant');
 
-        const sa = document.getElementById("sa-success");
+        $(' .load-select').load(location.href + ' .load-select');
 
-
-        var CptErr = 0; //compteur d'erreurs
-
-        if (nom.val().match(/[^\w\s]/) || nom.val() == "" || nom.val().length < 3) {
-            CptErr += 1;
-            nom.removeClass("form-control-success");
-            nom.addClass("form-control-warning");
-            let tagerr = document.querySelector(".errname");
-            tagerr.innerHTML = "<div class='form-control-feedback'>Renseignez correctement le nom | < 3 carracteres | pas de carracteres speciaux</div>";
-        } else {
-            nom.removeClass("form-control-warning");
-            nom.addClass('form-control-success');
-            let tagerr = document.querySelector(".errname");
-            tagerr.innerHTML = "";
-        }
-
-        if (prenom.val() == "" || prenom.val().length < 3 || prenom.val().match(/[^\w\s]/)) {
-            CptErr += 1;
-            prenom.removeClass('form-control-success');
-            prenom.addClass('form-control-warning');
-            let tagerr = document.querySelector(".errprenom");
-            tagerr.innerHTML = "<div class='form-control-feedback'>Renseignez correctement le prenom | < 3 carracteres | pas de carracteres speciaux</div>";
-        } else {
-            prenom.removeClass('form-control-warning');
-            prenom.addClass('form-control-success');
-            let tagerr = document.querySelector(".errprenom");
-            tagerr.innerHTML = "";
-        }
-
-        if (telephone.val() == "" || telephone.val().length != 9) {
-            CptErr += 1;
-            telephone.removeClass('form-control-success');
-            telephone.addClass('form-control-warning');
-            let tagerr = document.querySelector(".errtel");
-            tagerr.innerHTML = "<div class='form-control-feedback'>Renseignez correctement le telephone | 9 carracteres</div>";
-        } else {
-            telephone.removeClass('form-control-warning');
-            telephone.addClass('form-control-success');
-            let tagerr = document.querySelector(".errtel");
-            tagerr.innerHTML = "";
-        }
-
-        if (email.val() == "") {
-            CptErr += 1;
-            email.removeClass('form-control-success');
-            email.addClass('form-control-warning');
-            let tagerr = document.querySelector(".erremail");
-            tagerr.innerHTML = "<div class='form-control-feedback'>Veiller renseignez correctement le champ email</div>";
-        } else {
-            email.removeClass('form-control-warning');
-            email.addClass('form-control-success');
-            let tagerr = document.querySelector(".erremail");
-            tagerr.innerHTML = "";
-        }
-
-        if (dateN.val() == "") {
-            CptErr += 1;
-            dateN.removeClass('form-control-success');
-            dateN.addClass('form-control-warning');
-            let tagerr = document.querySelector(".errdate");
-            tagerr.innerHTML = "<div class='form-control-feedback'>Veiller renseignez le champ email</div>";
-        } else {
-            dateN.removeClass('form-control-warning');
-            dateN.addClass('form-control-success');
-            let tagerr = document.querySelector(".errdate");
-            tagerr.innerHTML = "";
-        }
-
-        if (age.val() == "") {
-            CptErr += 1;
-            age.removeClass('form-control-success');
-            age.addClass('form-control-warning');
-            let tagerr = document.querySelector(".errage");
-            tagerr.innerHTML = "<div class='form-control-feedback'>Veiller renseignez le champ</div>";
-        } else {
-            age.removeClass('form-control-warning');
-            age.addClass('form-control-success');
-            let tagerr = document.querySelector(".errage");
-            tagerr.innerHTML = "";
-        }
-
-        if (cni.val() == "") {
-            CptErr += 1;
-            cni.removeClass('form-control-success');
-            cni.addClass('form-control-warning');
-            let tagerr = document.querySelector(".errcni");
-            tagerr.innerHTML = "<div class='form-control-feedback'>Veiller renseignez le champ email</div>";
-        } else {
-            cni.removeClass('form-control-warning');
-            cni.addClass('form-control-success');
-            let tagerr = document.querySelector(".errcni");
-            tagerr.innerHTML = "";
-        }
-
-        if (niveau.val() == "") {
-            CptErr += 1;
-            let tagerr = document.querySelector(".errniveau");
-            tagerr.innerHTML = "<div class='form-control-feedback'>Veiller renseignez un niveau</div>";
-        } else {
-            let tagerr = document.querySelector(".errniveau");
-            tagerr.innerHTML = "";
-        }
-
-        if (sexe == undefined) {
-            CptErr += 1;
-            let tagerr = document.querySelector(".errsex");
-            tagerr.innerHTML = "<div class='form-control-feedback'>Choisir un sexe </div>";
-        } else {
-            let tagerr = document.querySelector(".errsex");
-            tagerr.innerHTML = "";
-        }
-
-        if (formation.val() == "") {
-            CptErr += 1;
-            let tagerr = document.querySelector(".errniformation");
-            tagerr.innerHTML = "<div class='form-control-feedback'>Veiller renseignez un niveau</div>";
-        } else {
-            let tagerr = document.querySelector(".errniformation");
-            tagerr.innerHTML = "";
-        }
-
-        if (anneescolaire.val() == "") {
-            CptErr += 1;
-            let tagerr = document.querySelector(".erranneescolaire");
-            tagerr.innerHTML = "<div class='form-control-feedback'>Veiller renseignez un niveau</div>";
-        } else {
-            let tagerr = document.querySelector(".erranneescolaire");
-            tagerr.innerHTML = "";
-        }
-
-        if (montant.val() == "") {
-            CptErr += 1;
-            montant.removeClass('form-control-success');
-            montant.addClass('form-control-warning');
-            let tagerr = document.querySelector(".errmontant");
-            tagerr.innerHTML = "<div class='form-control-feedback'>Veiller renseignez le champ</div>";
-        } else {
-            montant.removeClass('form-control-warning');
-            montant.addClass('form-control-success');
-            let tagerr = document.querySelector(".errmontant");
-            tagerr.innerHTML = "";
-        }
+        const sa = document.getElementById("modal-success");
 
 
-        if (CptErr == 0) {
-            // document.querySelector(".load-btn-addparticipant").classList.remove("d-none");
-            // document.querySelector(".load-txt-addparticipant").classList.add("d-none");
 
-            $.ajax({
-                url: "/add-participant",
-                method: "post",
-                data: {
-                    nom: nom.val(),
-                    prenom: prenom.val(),
-                    telephone: telephone.val(),
-                    email: email.val(),
-                    dateN: dateN.val(),
-                    sexe: sexe,
-                    age: age.val(),
-                    cni: cni.val(),
-                    niveau: niveau.val(),
-                    formation: formation.val(),
-                    anneescolaire: anneescolaire.val(),
-                    montant: montant.val(),
-                },
-                success: function (res) {
-                    // if (res.status == "success") {
-                    //     document.querySelector(".load-btn-addparticipant").classList.add("d-none");
-                    //     document.querySelector(".load-txt-addparticipant").classList.remove("d-none");
-                    //     $('#FormaddParticipant')[0].reset();
-                    //     $(' #FormaddParticipant').load(location.href + ' #FormaddParticipant');
-                    //     sa.click();
-                    // }
-                    console.log(res.status);
-                },
-                error: function (err) {
-                    let error = err.responseJSON;
-                    $.each(error.errors, function (index, value) {
-                        $('.errors_participant').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + value + '<button type="button" class="close" data-dismiss="alert" aria-label="Close" id="sa-err-close"><span aria-hidden="true">&times;</span></button>');
-                    });
+        document.querySelector(".load-btn-addparticipant").classList.remove("d-none");
+        document.querySelector(".load-txt-addparticipant").classList.add("d-none");
 
+        $.ajax({
+            url: route,
+            method: "post",
+            data: {
+                nom: nom.val(),
+                prenom: prenom.val(),
+                telephone: telephone.val(),
+                email: email.val(),
+                dateN: dateN.val(),
+                sexe: sexe,
+                age: age.val(),
+                cni: cni.val(),
+                niveau: niveau.val(),
+                formation: formation.val(),
+                anneescolaire: anneescolaire.val(),
+                niv: niv.val(),
+            },
+            success: function (res) {
+                if (res.status == "success") {
+                    document.querySelector(".load-btn-addparticipant").classList.add("d-none");
+                    document.querySelector(".load-txt-addparticipant").classList.remove("d-none");
+                    $('#FormaddParticipant')[0].reset();
+                    $(' .errors_participant').load(location.href + ' .errors_participant');
+                    sa.click();
                 }
-            })
-        }
+            },
+            error: function (err) {
+                let error = err.responseJSON;
+                $.each(error.errors, function (index, value) {
+                    $('.errors_participant').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + value + '<button type="button" class="close" data-dismiss="alert" aria-label="Close" id="sa-err-close"><span aria-hidden="true">&times;</span></button>');
+                });
+                document.querySelector(".load-btn-addparticipant").classList.add("d-none");
+                document.querySelector(".load-txt-addparticipant").classList.remove("d-none");
+                scrollTop();
+            }
+        })
+        // }
     })
 
     // Suppression d'un etudiant/participant
@@ -395,119 +261,69 @@ $(document).ready(function () {
         let age = $('#ageEtudiant');
         let cni = $('#cniEtudiant');
         let niveau = $('#niveauEtudiant');
+        var saClose = document.getElementById("sa-success");
+        var closeM = document.getElementById("closeModals");
         if (sexe == undefined) {
             sexe = $('#sexeId').val();
         }
-        // alert(sexe);
 
         var CptErr = 0; //compteur d'erreurs
 
         if (nom.val().match(/[^\w\s]/) || nom.val() == "" || nom.val().length < 3) {
             CptErr += 1;
-            nom.removeClass("form-control-success");
             nom.addClass("form-control-warning");
             let tagerr = document.querySelector(".errname");
             tagerr.innerHTML = "<div class='form-control-feedback'>Renseignez correctement le nom | < 3 carracteres | pas de carracteres speciaux</div>";
-        } else {
-            nom.removeClass("form-control-warning");
-            nom.addClass('form-control-success');
-            let tagerr = document.querySelector(".errname");
-            tagerr.innerHTML = "";
         }
 
         if (prenom.val() == "" || prenom.val().length < 3 || prenom.val().match(/[^\w\s]/)) {
             CptErr += 1;
-            prenom.removeClass('form-control-success');
             prenom.addClass('form-control-warning');
             let tagerr = document.querySelector(".errprenom");
             tagerr.innerHTML = "<div class='form-control-feedback'>Renseignez correctement le prenom | < 3 carracteres | pas de carracteres speciaux</div>";
-        } else {
-            prenom.removeClass('form-control-warning');
-            prenom.addClass('form-control-success');
-            let tagerr = document.querySelector(".errprenom");
-            tagerr.innerHTML = "";
         }
 
         if (telephone.val() == "" || telephone.val().length != 9) {
             CptErr += 1;
-            telephone.removeClass('form-control-success');
             telephone.addClass('form-control-warning');
             let tagerr = document.querySelector(".errtel");
             tagerr.innerHTML = "<div class='form-control-feedback'>Renseignez correctement le telephone | 9 carracteres</div>";
-        } else {
-            telephone.removeClass('form-control-warning');
-            telephone.addClass('form-control-success');
-            let tagerr = document.querySelector(".errtel");
-            tagerr.innerHTML = "";
         }
-
         if (email.val() == "") {
             CptErr += 1;
-            email.removeClass('form-control-success');
             email.addClass('form-control-warning');
             let tagerr = document.querySelector(".erremail");
             tagerr.innerHTML = "<div class='form-control-feedback'>Veiller renseignez correctement le champ email</div>";
-        } else {
-            email.removeClass('form-control-warning');
-            email.addClass('form-control-success');
-            let tagerr = document.querySelector(".erremail");
-            tagerr.innerHTML = "";
         }
-
         if (dateN.val() == "") {
             CptErr += 1;
-            dateN.removeClass('form-control-success');
             dateN.addClass('form-control-warning');
             let tagerr = document.querySelector(".errdate");
             tagerr.innerHTML = "<div class='form-control-feedback'>Veiller renseignez le champ email</div>";
-        } else {
-            dateN.removeClass('form-control-warning');
-            dateN.addClass('form-control-success');
-            let tagerr = document.querySelector(".errdate");
-            tagerr.innerHTML = "";
         }
 
         if (age.val() == "") {
             CptErr += 1;
-            age.removeClass('form-control-success');
             age.addClass('form-control-warning');
             let tagerr = document.querySelector(".errage");
             tagerr.innerHTML = "<div class='form-control-feedback'>Veiller renseignez le champ</div>";
-        } else {
-            age.removeClass('form-control-warning');
-            age.addClass('form-control-success');
-            let tagerr = document.querySelector(".errage");
-            tagerr.innerHTML = "";
-        }
-
-        if (cni.val() == "") {
-            CptErr += 1;
-            cni.removeClass('form-control-success');
-            cni.addClass('form-control-warning');
-            let tagerr = document.querySelector(".errcni");
-            tagerr.innerHTML = "<div class='form-control-feedback'>Veiller renseignez le champ email</div>";
-        } else {
-            cni.removeClass('form-control-warning');
-            cni.addClass('form-control-success');
-            let tagerr = document.querySelector(".errcni");
-            tagerr.innerHTML = "";
         }
 
         if (niveau.val() == "") {
             CptErr += 1;
             let tagerr = document.querySelector(".errniveau");
             tagerr.innerHTML = "<div class='form-control-feedback'>Veiller renseignez un niveau</div>";
-        } else {
-            let tagerr = document.querySelector(".errniveau");
-            tagerr.innerHTML = "";
         }
 
         if (CptErr == 0) {
+            document.querySelector(".load-btn-addparticipant").classList.remove("d-none");
+            document.querySelector(".load-txt-addparticipant").classList.add("d-none");
             $.ajax({
-                url: "/Update-participant",
+                url: route,
                 method: "post",
                 data: {
                     nom: nom.val(),
+                    id: id,
                     prenom: prenom.val(),
                     telephone: telephone.val(),
                     email: email.val(),
@@ -519,7 +335,13 @@ $(document).ready(function () {
                 },
                 success: function (res) {
                     if (res.status == "success") {
-                        alert();
+                        document.querySelector(".load-btn-addparticipant").classList.add("d-none");
+                        document.querySelector(".load-txt-addparticipant").classList.remove("d-none");
+                        $(' .errors_participant').load(location.href + ' .errors_participant');
+                        $(' #load-table').load(location.href + ' #load-table');
+                        $('#FormaddParticipant')[0].reset();
+                        saClose.click();
+                        closeM.click();
                     }
                 },
                 error: function (err) {
@@ -527,10 +349,619 @@ $(document).ready(function () {
                     $.each(error.errors, function (index, value) {
                         $('.errors_participant').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + value + '<button type="button" class="close" data-dismiss="alert" aria-label="Close" id="sa-err-close"><span aria-hidden="true">&times;</span></button>');
                     });
+                    document.querySelector(".load-btn-addparticipant").classList.add("d-none");
+                    document.querySelector(".load-txt-addparticipant").classList.remove("d-none");
                 }
             })
         }
 
     })
 
+    // $('#CourForm').submit(function (event) {
+
+    //     var fileInput = $('#video')[0];
+    //     var file = fileInput.files[0];
+    //     var content = $('#content');
+    //     var libeller = $('#libeller');
+    //     var num = $('#num');
+    //     var formation = $('#formation');
+    //     var deofile = $('#deofile');
+    //     var desc = $('#desc');
+    //     var miniatureInput = $('#miniature')[0];
+    //     var miniature = miniatureInput.files[0];
+
+
+
+
+    //     if (libeller.val() == "") {
+    //         libeller.addClass("form-control-warning");
+    //         let tagerr = document.querySelector(".err-libeller");
+    //         tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez titre du cour</div>";
+    //         scrollTop();
+    //         return false;
+    //     } else {
+    //         libeller.removeClass("form-control-warning");
+    //         let tagerr = document.querySelector(".err-libeller");
+    //         tagerr.innerHTML = "";
+    //     }
+
+    //     if (num.val() == "") {
+    //         num.addClass("form-control-warning");
+    //         let tagerr = document.querySelector(".err-num");
+    //         tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez le numero du cour</div>";
+    //         scrollTop();
+    //         return false;
+    //     } else {
+    //         num.removeClass("form-control-warning");
+    //         let tagerr = document.querySelector(".err-num");
+    //         tagerr.innerHTML = "";
+    //     }
+
+    //     if (!miniature) {
+    //         let tagerr = document.querySelector(".err-miniature");
+    //         tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez une images pour le cour</div>";
+    //         scrollTop();
+    //         return false;
+    //     } else {
+    //         let tagerr = document.querySelector(".err-miniature");
+    //         tagerr.innerHTML = "";
+    //     }
+
+    //     var allowedExtensionsImages = ['png', 'jpg', 'webp', 'PNG', 'JPG']; // Formats vidéo acceptés
+    //     var extensionImages = miniature.name.split('.').pop().toLowerCase();
+
+    //     if (allowedExtensionsImages.indexOf(extensionImages) === -1) {
+    //         let tagerr = document.querySelector(".err-miniature");
+    //         tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez une image de format valide</div>";
+    //         scrollTop();
+    //         return false; // Empêche la soumission du formulaire
+    //     } else {
+    //         let tagerr = document.querySelector(".err-miniature");
+    //         tagerr.innerHTML = "";
+    //     }
+
+    //     // Vérification de l'existence d'un fichier
+    //     if (!file) {
+    //         let tagerr = document.querySelector(".err-video");
+    //         tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez une video</div>";
+    //         scrollTop();
+    //         return false;
+    //     } else {
+    //         let tagerr = document.querySelector(".err-video");
+    //         tagerr.innerHTML = "";
+    //     }
+
+    //     // Vérification du type de fichier
+    //     var allowedExtensions = ['mp4', 'webm', 'ogg']; // Formats vidéo acceptés
+    //     var extension = file.name.split('.').pop().toLowerCase();
+
+    //     if (allowedExtensions.indexOf(extension) === -1) {
+    //         let tagerr = document.querySelector(".err-video");
+    //         tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez une video dans un format valide</div>";
+    //         scrollTop();
+    //         return false; // Empêche la soumission du formulaire
+    //     } else {
+    //         let tagerr = document.querySelector(".err-video");
+    //         tagerr.innerHTML = "";
+    //     }
+
+    //     // if (deofile.val() == "") {
+    //     //     deofile.addClass("form-control-warning");
+    //     //     let tagerr = document.querySelector(".err-deofile");
+    //     //     tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez le l'id de la video youtube</div>";
+    //     //     scrollTop();
+    //     //     return false;
+    //     // } else {
+    //     //     deofile.removeClass("form-control-warning");
+    //     //     let tagerr = document.querySelector(".err-deofile");
+    //     //     tagerr.innerHTML = "";
+    //     // }
+
+    //     if (formation.val() == "") {
+    //         let tagerr = document.querySelector(".err-formation");
+    //         tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller choisir une formation</div>";
+    //         scrollTop();
+    //         return false;
+    //     } else {
+    //         let tagerr = document.querySelector(".err-formation");
+    //         tagerr.innerHTML = "";
+    //     }
+
+    //     if (desc.val() == "") {
+    //         desc.addClass("form-control-warning");
+    //         let tagerr = document.querySelector(".err-desc");
+    //         tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez une description</div>";
+    //         scrollTop();
+    //         return false;
+    //     } else {
+    //         desc.removeClass("form-control-warning");
+    //         let tagerr = document.querySelector(".err-desc");
+    //         tagerr.innerHTML = "";
+    //     }
+
+
+    //     if (content.val() == "") {
+    //         let tagerr = document.querySelector(".err-content");
+    //         tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez le contenue textuel du cour</div>";
+    //         scrollTop();
+    //         return false;
+    //     } else {
+    //         let tagerr = document.querySelector(".err-content");
+    //         tagerr.innerHTML = "";
+    //     }
+
+    //     document.querySelector(".load-btn-cour").classList.remove("d-none");
+    //     document.querySelector(".load-txt-cour").classList.add("d-none");
+
+    //     // Si le fichier est valide, la soumission continue normalement
+    //     return true; // Permet la soumission du formulaire
+    // });
+
+
+
+
+    // Soumission du formulaire en AJAX
+    $('#CourForm').on('submit', function (e) {
+        e.preventDefault(); // Empêche la soumission par défaut
+
+        var fileInput = $('#video')[0];
+        var file = fileInput.files[0];
+        var content = $('#content');
+        var libeller = $('#libeller');
+        var num = $('#num');
+        var formation = $('#formation');
+        var desc = $('#desc');
+        var miniatureInput = $('#miniature')[0];
+        var miniature = miniatureInput.files[0];
+
+
+        if (libeller.val() == "") {
+            libeller.addClass("form-control-warning");
+            let tagerr = document.querySelector(".err-libeller");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez titre du cour</div>";
+            scrollTop();
+            return false;
+        } else {
+            libeller.removeClass("form-control-warning");
+            let tagerr = document.querySelector(".err-libeller");
+            tagerr.innerHTML = "";
+        }
+
+        if (num.val() == "") {
+            num.addClass("form-control-warning");
+            let tagerr = document.querySelector(".err-num");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez le numero du cour</div>";
+            scrollTop();
+            return false;
+        } else {
+            num.removeClass("form-control-warning");
+            let tagerr = document.querySelector(".err-num");
+            tagerr.innerHTML = "";
+        }
+
+        if (!miniature) {
+            let tagerr = document.querySelector(".err-miniature");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez une images pour le cour</div>";
+            scrollTop();
+            return false;
+        } else {
+            let tagerr = document.querySelector(".err-miniature");
+            tagerr.innerHTML = "";
+        }
+
+        var allowedExtensionsImages = ['png', 'jpg', 'webp', 'PNG', 'JPG']; // Formats vidéo acceptés
+        var extensionImages = miniature.name.split('.').pop().toLowerCase();
+
+        if (allowedExtensionsImages.indexOf(extensionImages) === -1) {
+            let tagerr = document.querySelector(".err-miniature");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez une image de format valide</div>";
+            scrollTop();
+            return false;
+        } else {
+            let tagerr = document.querySelector(".err-miniature");
+            tagerr.innerHTML = "";
+        }
+
+        // Vérification de l'existence d'un fichier
+        if (!file) {
+            let tagerr = document.querySelector(".err-video");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez une video</div>";
+            scrollTop();
+            return false;
+        } else {
+            let tagerr = document.querySelector(".err-video");
+            tagerr.innerHTML = "";
+        }
+
+        // Vérification du type de fichier
+        var allowedExtensions = ['mp4', 'webm', 'ogg']; // Formats vidéo acceptés
+        var extension = file.name.split('.').pop().toLowerCase();
+
+        if (allowedExtensions.indexOf(extension) === -1) {
+            let tagerr = document.querySelector(".err-video");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez une video dans un format valide</div>";
+            scrollTop();
+            return false;
+        } else {
+            let tagerr = document.querySelector(".err-video");
+            tagerr.innerHTML = "";
+        }
+
+
+        if (formation.val() == "") {
+            let tagerr = document.querySelector(".err-formation");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller choisir une formation</div>";
+            scrollTop();
+            return false;
+        } else {
+            let tagerr = document.querySelector(".err-formation");
+            tagerr.innerHTML = "";
+        }
+
+        if (desc.val() == "") {
+            desc.addClass("form-control-warning");
+            let tagerr = document.querySelector(".err-desc");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez une description</div>";
+            scrollTop();
+            return false;
+        } else {
+            desc.removeClass("form-control-warning");
+            let tagerr = document.querySelector(".err-desc");
+            tagerr.innerHTML = "";
+        }
+
+
+        if (content.val() == "") {
+            let tagerr = document.querySelector(".err-content");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller renseignez le contenue textuel du cour</div>";
+            scrollTop();
+            return false;
+        } else {
+            let tagerr = document.querySelector(".err-content");
+            tagerr.innerHTML = "";
+        }
+
+        document.querySelector(".load-btn-cour").classList.remove("d-none");
+        document.querySelector(".load-txt-cour").classList.add("d-none");
+        var sa = document.getElementById("sa-success");
+        var saModal = document.getElementById("sa-start");
+
+
+        // const formData = new FormData(this); // Récupère toutes les données du formulaire
+        // filesToUpload.forEach(file => {
+        //     formData.append('pieces[]', file); // Ajoute les fichiers au FormData
+        // });
+
+        scrollTop();
+
+        $.ajax({
+            url: $(this).attr('action'), // URL de la route Laravel
+            type: 'POST',
+            data: new FormData(this), // Envoie les données du formulaire en utilisant FormData
+            processData: false,
+            contentType: false,
+            xhr: function () {
+                let xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener('progress', function (event) {
+                    if (event.lengthComputable) {
+                        let percentComplete = (event.loaded / event.total) * 100;
+                        $('.progress').show();
+                        $('.progress-bar').css('width', percentComplete + '%');
+                        let tagerr = document.querySelector(".progress-bar");
+                        tagerr.innerHTML = Math.round(percentComplete) + '%';
+                    }
+                });
+                return xhr;
+            },
+
+            success: function (res) {
+                if (res.status == "success") {
+                    $("#IdCour").val(res.idCour);
+                    sa.click();
+                    $('#CourForm')[0].reset();
+                    document.querySelector(".load-btn-cour").classList.add("d-none");
+                    document.querySelector(".load-txt-cour").classList.remove("d-none");
+                    $(' .myListe').load(location.href + ' .myListe');
+                    saModal.click();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // Affichez un message d'erreur
+                console.error('Erreur lors du téléchargement', textStatus, errorThrown);
+            }
+        });
+    });
+
+    $('#myFormFiles').on('submit', function (e) {
+
+        e.preventDefault();
+
+        const formData = new FormData(this); // Récupère toutes les données du formulaire
+        filesToUpload.forEach(file => {
+            formData.append('pieces[]', file); // Ajoute les fichiers au FormData
+        });
+
+        filesToUpload.length = 0;
+
+        $.ajax({
+            url: $(this).attr('action'), // URL de la route Laravel
+            type: 'POST',
+            data: formData, // Envoie les données du formulaire en utilisant FormData
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                // console.log('effectuer');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // Affichez un message d'erreur
+                // console.error('Erreur lors du téléchargement', textStatus, errorThrown);
+            }
+        });
+    });
+
+    $('#ExerciceForm').on('submit', function (e) {
+        e.preventDefault();
+
+        let cour = $('#cour');
+        let libeller = $('#libeller');
+        let time = $('#time');
+        let desc = $('#desc');
+
+        if (cour.val() == "") {
+            let tagerr = document.querySelector(".errExercices");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller Choisir un cour</div>";
+            scrollTop();
+            return false;
+        } else {
+            let tagerr = document.querySelector(".errExercices");
+            tagerr.innerHTML = "";
+        }
+
+        if (libeller.val() == "") {
+            let tagerr = document.querySelector(".errlibeller");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller Renseigner le libeller du cour</div>";
+            scrollTop();
+            return false;
+        } else {
+            let tagerr = document.querySelector(".errlibeller");
+            tagerr.innerHTML = "";
+        }
+
+        if (time.val() == "") {
+            let tagerr = document.querySelector(".errtime");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller Renseigner la durée de l'exercice</div>";
+            scrollTop();
+            return false;
+        } else {
+            let tagerr = document.querySelector(".errtime");
+            tagerr.innerHTML = "";
+        }
+
+        if (desc.val() == "") {
+            let tagerr = document.querySelector(".errdesc");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller Renseigner la description</div>";
+            scrollTop();
+            return false;
+        } else {
+            let tagerr = document.querySelector(".errdesc");
+            tagerr.innerHTML = "";
+        }
+
+        document.querySelector(".save-load-btn-ma").classList.remove("d-none");
+        document.querySelector(".save-bu-ma").classList.add("d-none");
+        const sa = document.getElementById("sa-success");
+
+
+        const formData = new FormData(this);
+
+        $.ajax({
+            url: $(this).attr('action'), // URL de la route Laravel
+            type: 'POST',
+            data: formData, // Envoie les données du formulaire en utilisant FormData
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                if (res.status == "success") {
+                    $('#ExerciceForm')[0].reset();
+                    $('#QuestionListe').empty();
+                    document.querySelector(".save-load-btn-ma").classList.add("d-none");
+                    document.querySelector(".save-bu-ma").classList.remove("d-none");
+                    $("#idEx").val(res.idExercices);
+                    document.querySelector(".exrcices").classList.add("d-none");
+                    document.querySelector(".question").classList.remove("d-none");
+                    sa.click();
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // Affichez un message d'erreur
+                console.error('Erreur lors du téléchargement', textStatus, errorThrown);
+            }
+        });
+    })
+
+    $('#FormQuestion').on('submit', function (e) {
+        e.preventDefault();
+
+        let question = $('#question');
+        const sa = document.getElementById("sa-success");
+
+
+
+        if (question.val() == "") {
+            let tagerr = document.querySelector(".questionLibeller");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller Renseigner le libeller de la question</div>";
+            scrollTop();
+            return false;
+        } else {
+            let tagerr = document.querySelector(".questionLibeller");
+            tagerr.innerHTML = "";
+        }
+
+        const formData = new FormData(this);
+
+        document.querySelector(".save-load-question").classList.remove("d-none");
+        document.querySelector(".btn-load-question").classList.add("d-none");
+
+
+        $.ajax({
+            url: $(this).attr('action'), // URL de la route Laravel
+            type: 'POST',
+            data: formData, // Envoie les données du formulaire en utilisant FormData
+            processData: false,
+            contentType: false,
+            success: function (res) {
+
+                if (res.status == "success") {
+                    sa.click();
+                    $('#FormQuestion')[0].reset();
+                    $.each(res.questions, function (index, question) {
+                        $('#QuestionListe').append('<div class="row mb-3"> <div class="col-md-6 col-sm-12"> <h5 class="pb-3">' + question.Question + '</h5> <div class="form-group"> <div class="custom-control custom-radio mb-5" id="' + question.id + '"> </div></div></div><div class="col-md-6 col-sm-12 text-right"><button class="btn btn-primary"  id="btnChoix" data-toggle="modal" data-target="#success-modal" data-id="' + question.id + '"><i class="icon-copy fa fa-plus" aria-hidden="true" ></i></button>');
+                    });
+                    document.querySelector(".save-load-question").classList.add("d-none");
+                    document.querySelector(".btn-load-question").classList.remove("d-none");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // Affichez un message d'erreur
+                console.error('Erreur lors du téléchargement', textStatus, errorThrown);
+            }
+        });
+    })
+
+    $(document).on('click', '#btnChoix', function (e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        $("#idQuestion").val(id);
+    })
+
+    $('#ChoixForm').on('submit', function (e) {
+        e.preventDefault();
+
+        let libellerChoix = $('#libellerChoix');
+        let iscorect = $('#iscorect');
+        const sa = document.getElementById("sa-success");
+
+        if (libellerChoix.val() == "") {
+            let tagerr = document.querySelector(".libellerChoix");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Veiller Renseigner le libeller du choix</div>";
+            return false;
+        } else {
+            let tagerr = document.querySelector(".libellerChoix");
+            tagerr.innerHTML = "";
+        }
+
+        if (iscorect.val() == "") {
+            let tagerr = document.querySelector(".iscorecterr");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1'>Renseigner un choix pour la question</div>";
+            return false;
+        } else {
+            let tagerr = document.querySelector(".iscorecterr");
+            tagerr.innerHTML = "";
+        }
+
+        document.querySelector(".save-load-choix").classList.remove("d-none");
+        document.querySelector(".save-choix").classList.add("d-none");
+
+        const formData = new FormData(this);
+        $.ajax({
+            url: $(this).attr('action'), // URL de la route Laravel
+            type: 'POST',
+            data: formData, // Envoie les données du formulaire en utilisant FormData
+            processData: false,
+            contentType: false,
+            success: function (res) {
+
+                if (res.status == "success") {
+                    $('#ChoixForm')[0].reset();
+                    sa.click();
+                    // console.log(res.Choixes);
+                    $.each(res.Choixes, function (index, choix) {
+                        $('#' + choix.question_id + '').append('<div class="custom-control custom-radio mb-5"> <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" value="' + choix.id + '" /> <label class="custom-control-label" for="customRadio1">' + choix.content + '</label></div>');
+                    });
+                    document.querySelector(".save-load-choix").classList.add("d-none");
+                    document.querySelector(".save-choix").classList.remove("d-none");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // Affichez un message d'erreur
+                console.error('Erreur lors du téléchargement', textStatus, errorThrown);
+            }
+        });
+    });
+
+    $(document).on('click', '#SelectFormCour', function (e) {
+        e.preventDefault();
+        let idCour = $('#idCour').val();
+        $("#idEx").val(idCour);
+        let idEx = $('#idEx').val();
+        if (idCour != "") {
+            $('#QuestionListe').empty();
+            document.querySelector(".exrcices").classList.add("d-none");
+            document.querySelector(".question").classList.remove("d-none");
+        }
+
+    })
+
+    $(document).on('click', '#NewExercice', function (e) {
+        e.preventDefault();
+        document.querySelector(".exrcices").classList.remove("d-none");
+        document.querySelector(".question").classList.add("d-none");
+    })
+
+    // $('#DeleteCour').on('click', function (e) {
+    //     e.preventDefault();
+    //     let id = $(this).data('id');
+    //     alert(id);
+    // });
+
+    $(document).on('submit', '#QuizForm', function (e) {
+        e.preventDefault();
+        let modal = $('#modal-success');
+        document.querySelector(".save-load-btn-ma").classList.remove("d-none");
+        document.querySelector(".save-bu-ma").classList.add("d-none");
+        const formData = new FormData(this);
+        $.ajax({
+            url: $(this).attr('action'), // URL de la route Laravel
+            type: 'POST',
+            data: formData, // Envoie les données du formulaire en utilisant FormData
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                document.querySelector(".save-load-btn-ma").classList.add("d-none");
+                document.querySelector(".save-bu-ma").classList.remove("d-none");
+                if (res.status == "success") {
+                    $('#scorePart').append('<h5 class="text-center text-primary">Score : ' + res.score + ' points</h5>');
+                    modal.click();
+                } else {
+                    modal.click();
+                }
+            },
+        });
+    })
+
+    $(document).on('submit', '#RegisterParticipant', function (e) {
+        e.preventDefault();
+        alert();
+        const formData = new FormData(this);
+        $.ajax({
+            url: $(this).attr('action'), // URL de la route Laravel
+            type: 'POST',
+            data: formData,  // Envoie les données du formulaire en utilisant FormData
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                if (res.status == "success") {
+                    $('#sa-success').click();
+                    $('.load-txt').removeClass('d-none');
+                    $('.load-btn').addClass('d-none');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                // Affichez un message d'erreur
+                console.error('Erreur lors du téléchargement', textStatus, errorThrown);
+            }
+        });
+    })
+
 })
+

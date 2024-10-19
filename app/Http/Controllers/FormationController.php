@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Formation;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
 
 class FormationController extends Controller
 {
@@ -14,7 +14,7 @@ class FormationController extends Controller
     {
         $request->validate(
             [
-                'name' => 'required',
+                'nom' => 'required',
                 'duree' => 'required',
                 'prix' => 'required',
             ],
@@ -25,16 +25,20 @@ class FormationController extends Controller
             ]
         );
 
+        $file = $request->file('miniature');
+        $name = storage::disk('public')->put('FormationImg', $file);
+
         $userRandom = Auth::user()->random;
         $formation = new Formation();
-        $formation->nom = $request->name;
+        $formation->nom = $request->nom;
         $formation->durée = $request->duree;
         $formation->note = $request->note;
         $formation->prix = $request->prix;
         $formation->Niveau_requie = $request->prerequit;
-        $formation->EnLigne = "0";
+        $formation->EnLigne = $request->customRadio;
         $formation->randomUser =  $userRandom;
         $formation->statue =  "1";
+        $formation->img =  $name;
         $formation->save();
 
         return response()->json([
@@ -76,6 +80,7 @@ class FormationController extends Controller
                 'prix.required' => 'Veillez reseignez le prix de la formation',
             ]
         );
+
         if ($request->enligne == 2) {
             $ligne = Formation::where('id', $request->id)->value('Enligne');
         } else {
@@ -88,11 +93,16 @@ class FormationController extends Controller
             'note' => $request->note,
             'prix' => $request->prix,
             'Niveau_requie' => $request->niveau,
-            'Enligne' => $ligne,
+            'Enligne' => $request->enligne,
         ]);
 
         return response()->json([
             'status' => "success",
         ]);
+    }
+    public function welcome()
+    {
+        $formations = Formation::all();
+        return view('welcome', compact('formations'));
     }
 }

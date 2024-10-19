@@ -27,7 +27,18 @@
 
 			<div class="pd-20 card-box mb-30">
 				<div class="errors_calss"></div>
-				<form action="" id="FormationForm">
+				<form action="{{route('add.formation')}}" id="FormationForm">
+					<div class="row">
+						<div class="col-md-12 col-sm-12 mb-3">
+							<label>Miniature de la formations</label>
+							<div class="custom-file has-warning">
+								<input type="file" class="custom-file-input" name="miniature" id="miniature" />
+								<label class="custom-file-label">Choisir une image</label>
+								<div class="err-miniature"></div>
+							</div>
+						</div>
+					</div>
+
 					<div class="row">
 						<div class="col-md-12 col-sm-12">
 							<div class="form-group">
@@ -51,7 +62,23 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-12 col-sm-12">
+						<div class="col-md-6 col-sm-12">
+							<label for="">La formation est en ligne ?</label>
+							<div class="form-group">
+								<div class="custom-control custom-radio mb-5">
+									<input type="radio" id="customRadio1" name="customRadio" class="custom-control-input"
+										value="1" />
+									<label class="custom-control-label" for="customRadio1">Oui</label>
+								</div>
+								<div class="custom-control custom-radio mb-5">
+									<input type="radio" id="customRadio2" name="customRadio" name="customRadio" value="0"
+										class="custom-control-input" />
+									<label class="custom-control-label" for="customRadio2">Nom</label>
+								</div>
+								<div class="errsex  has-warning"></div>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-12">
 							<div class="form-group">
 								<label>Niveau scolaire require</label>
 								<input type="text" class="form-control prerequit" name="prerequit" id="prerequit">
@@ -76,62 +103,24 @@
 		</div>
 	</div>
 
-	<button type="button" class="btn mb-20 btn-primary btn-block d-none" id="sa-success">Click me</button>
+	<button type="button" class="btn mb-20 btn-primary btn-block d-none" id="sa-success"></button>
 
 	<!-- welcome modal start -->
-	<div class="welcome-modal">
-		<button class="welcome-modal-close">
-			<i class="bi bi-x-lg"></i>
-		</button>
-		<iframe class="w-100 border-0" src="https://embed.lottiefiles.com/animation/31548"></iframe>
-		<div class="text-center">
-			<h3 class="h5 weight-500 text-center mb-2">
-				Open source
-				<span role="img" aria-label="gratitude">❤️</span>
-			</h3>
-			<div class="pb-2">
-				<a class="github-button" href="https://github.com/dropways/deskapp"
-					data-color-scheme="no-preference: dark; light: light; dark: light;" data-icon="octicon-star"
-					data-size="large" data-show-count="true"
-					aria-label="Star dropways/deskapp dashboard on GitHub">Star</a>
-				<a class="github-button" href="https://github.com/dropways/deskapp/fork"
-					data-color-scheme="no-preference: dark; light: light; dark: light;" data-icon="octicon-repo-forked"
-					data-size="large" data-show-count="true"
-					aria-label="Fork dropways/deskapp dashboard on GitHub">Fork</a>
-			</div>
-		</div>
-		<div class="text-center mb-1">
-			<div>
-				<a href="https://github.com/dropways/deskapp" target="_blank" class="btn btn-light btn-block btn-sm">
-					<span class="text-danger weight-600">STAR US</span>
-					<span class="weight-600">ON GITHUB</span>
-					<i class="fa fa-github"></i>
-				</a>
-			</div>
-			<script async defer="defer" src="https://buttons.github.io/buttons.js"></script>
-		</div>
-		<a href="https://github.com/dropways/deskapp" target="_blank" class="btn btn-success btn-sm mb-0 mb-md-3 w-100">
-			DOWNLOAD
-			<i class="fa fa-download"></i>
-		</a>
-		<p class="font-14 text-center mb-1 d-none d-md-block">
-			Available in the following technologies:
-		</p>
-		<div class="d-none d-md-flex justify-content-center h1 mb-0 text-danger">
-			<i class="fa fa-html5"></i>
-		</div>
-	</div>
-	<button class="welcome-modal-btn">
-		<i class="fa fa-download"></i> Download
-	</button>
 	<!-- welcome modal end -->
+	<script>
+		const route = "{{route('add.formation')}}";
+	</script>
 	<!-- js -->
 	<script src="{{asset('assets/vendors/scripts/core.js')}}"></script>
+	<script src="{{asset('assets/module/main.js')}}"></script>
 	<script src="{{asset('assets/vendors/scripts/script.min.js')}}"></script>
 	<script src="{{asset('assets/vendors/scripts/process.js')}}"></script>
 	<script src="{{asset('assets/vendors/scripts/layout-settings.js')}}"></script>
 	<script src="{{asset('assets/src/plugins/cropperjs/dist/cropper.js')}}"></script>
 	<script src="{{asset('assets/vendors/scripts/advanced-components.js')}}"></script>
+
+	<script src="{{asset('assets/src/plugins/sweetalert2/sweetalert2.all.j')}}s"></script>
+	<script src="{{asset('assets/src/plugins/sweetalert2/sweet-alert.init.js')}}"></script>
 
 	<script src="{{asset('assets/src/plugins/switchery/switchery.min.js')}}"></script>
 	<!-- bootstrap-tagsinput js -->
@@ -140,10 +129,8 @@
 	<script src="{{asset('assets/src/plugins/bootstrap-touchspin/jquery.bootstrap-touchspin.js')}}"></script>
 	<script src="{{asset('assets/vendors/scripts/advanced-components.js')}}"></script>
 
-	<script src="{{asset('assets/src/plugins/sweetalert2/sweetalert2.all.j')}}s"></script>
-	<script src="{{asset('assets/src/plugins/sweetalert2/sweet-alert.init.js')}}"></script>
 
-	<script src="{{asset('assets/module/main.js')}}"></script>
+
 
 	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NXZMQSS" height="0" width="0"
 			style="display: none; visibility: hidden"></iframe></noscript>

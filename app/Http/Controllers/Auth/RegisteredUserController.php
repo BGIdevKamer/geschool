@@ -32,18 +32,19 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        function generateToken() {
+        function generateToken()
+        {
             $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $token = str_shuffle($chars);
             return substr($token, 0, 8) . substr($token, 26, 2);
         }
-        
+
         $token = generateToken();
-         
+
         // 
 
         $user = User::create([

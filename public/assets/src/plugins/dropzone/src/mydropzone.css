@@ -1,0 +1,220 @@
+.myContainer {
+    text-align: center;
+    width: 100%;
+    height: 435px;
+    margin: auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: white;
+    border-radius: 16px;
+    /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); */
+}
+
+.myhearder-section {
+    padding: 24px 0px;
+}
+
+.myhearder-section h1 {
+    font-weight: 500;
+    margin: 0px;
+    margin-bottom: 8px;
+
+}
+
+.myhearder-section p {
+    margin: 5px;
+    font-size: 0.95rem;
+    color: #707EA0;
+}
+
+.myDrop-section {
+    min-height: 350px;
+    border: 1px dashed #A8B3E3;
+    background-image: linear-gradient(180deg, white, #F1F6FF);
+    margin: 5px 35px 35px 35px;
+    border-radius: 12px;
+    position: relative;
+
+}
+
+.myDrop-section div.myCol:first-child {
+    opacity: 1;
+    visibility: visible;
+    transition: 0.2s;
+    transform: scale(1);
+    width: 200px;
+    margin: auto;
+}
+
+.myDrop-section div.myCol:last-child {
+    font-size: 40px;
+    font-weight: 700;
+    position: absolute;
+    color: #c0cae1;
+    top: 0px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 200px;
+    height: 55px;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.6);
+    transition-duration: 0.2s;
+}
+
+/* we will use */
+.drag-over-effect div.myCol:first-child {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: scale(1.1);
+}
+
+.drag-over-effect div.myCol:last-child {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.myDrop-section .myCloud-icon {
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+
+.myDrop-section span,
+.myDrop-section button {
+    display: block;
+    margin: auto;
+    color: #707EA0;
+    margin-bottom: 10px;
+}
+
+.myDrop-section button {
+    color: white;
+    background-color: #5874C6;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 7px 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.myDrop-section input {
+    display: none;
+}
+
+.myListe-section {
+    display: none;
+    text-align: left;
+    margin: 0px 35px;
+    padding-bottom: 20px;
+}
+
+.myListe-section .myListe-title {
+    font-size: 0.95rem;
+    color: #707EA0;
+}
+
+.myListe-section li {
+    display: flex;
+    margin: 15px 0px;
+    padding-top: 4px;
+    padding-bottom: 2px;
+    border-radius: 8px;
+    transition-duration: 0.2s;
+}
+
+.myListe-section li:hover {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+
+}
+
+.myListe-section li .myCol {
+    flex: .1;
+}
+
+.myListe-section li .myCol:nth-child(1) {
+    flex: .15;
+    text-align: center;
+}
+
+.myListe-section li .myCol:nth-child(2) {
+    flex: .75;
+    text-align: left;
+    font-size: 0.9rem;
+    color: #3e4046;
+    padding: 8px 10px;
+}
+
+.myListe-section li .myCol:nth-child(2) div.myName {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 250px;
+    display: inline-block;
+}
+
+.myListe-section li .myCol .myFile-name span {
+    color: #707EA0;
+    float: right;
+}
+
+.myListe-section li .myFile-progress {
+    width: 100%;
+    height: 5px;
+    margin-top: 8px;
+    border-radius: 8px;
+    background-color: #dee6fd;
+}
+
+.myListe-section li .myFile-progress span {
+    display: block;
+    width: 50%;
+    height: 100%;
+    border-radius: 8px;
+    background-image: linear-gradient(120deg, #6b99fd, #9385ff);
+    transition-duration: .45s;
+}
+
+.myListe-section li .myCol .myFile-size {
+    font-size: 0.75rem;
+    margin-top: 3px;
+    color: #707EA0;
+}
+
+.myListe-section li .myCol .fa {
+    color: #8694d2;
+    font-size: 20px;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+}
+
+.myListe-section li .myCol .fa-check {
+    color: #50a156;
+    background-color: transparent;
+}
+
+.myIn-prog .myCol img {
+    position: relative;
+    /* top: 10px; */
+    width: 70px;
+}
+
+.myListe-section li.complete span,
+.myListe-section li.complete .myFile-progress,
+.myListe-section li.complete .fa-check {
+    display: none;
+}
+
+.myListe-section li.myIn-prog .myFile-size,
+.myListe-section li.myIn-prog .fa-close {
+    display: none;
+}

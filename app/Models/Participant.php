@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Formation;
-use App\Models\FormationParticipantPayement;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Participant extends Model
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Formation;
+use App\Models\FormationParticipant;
+use Illuminate\Notifications\Notifiable;
+
+class Participant extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
+
     protected $fillable = [
         'nom',
         'prenom',
@@ -20,14 +23,17 @@ class Participant extends Model
         'age',
         'cni',
         'NiveauScolaire',
+        'password',
         'randomUser',
     ];
-    public function Formations()
+
+
+    protected $hidden = [
+        'password', // Cachez le mot de passe lors de la sérialisation
+    ];
+
+    public function FormationParticipants()
     {
-        return $this->belongsToMany(Formation::class, 'formation_participant')->whithPivot(['anneeScolaire']);
-    }
-    public function payements()
-    {
-        return $this->hasMany(FormationParticipantPayement::class);
+        return $this->hasMany(FormationParticipant::class);
     }
 }

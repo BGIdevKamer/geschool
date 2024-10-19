@@ -60,28 +60,29 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
     public function updateInfo(Request $request)
-    { 
+    {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'rs' => ['required','string', 'max:255'],
-            'ville' => ['required','string', 'max:255'],
-            'numero' => ['required','max:9'],
-            'adress' => ['required','max:255'],
+            'rs' => ['required', 'string', 'max:255'],
+            'ville' => ['required', 'string', 'max:255'],
+            'numero' => ['required', 'max:9'],
+            'logo' => ['required'],
+            'adress' => ['required', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
         ]);
-        
-        $name = storage::disk('public')->put('profilImg',$request->logo);
 
-        User::where('id',Auth::user()->id)->update([
-            'name'=>$request->name,
-            'raisonSocial'=>$request->rs,
-            'email'=>$request->email,
-            'ville'=>$request->ville,
-            'telephone'=>$request->numero,
-            'adress'=>$request->adress,
-            'logo'=>$name,
-         ]);
+        $name = storage::disk('public')->put('profilImg', $request->logo);
 
-         return Redirect::to('/profil');
+        User::where('id', Auth::user()->id)->update([
+            'name' => $request->name,
+            'raisonSocial' => $request->rs,
+            'email' => $request->email,
+            'ville' => $request->ville,
+            'telephone' => $request->numero,
+            'adress' => $request->adress,
+            'logo' => $name,
+        ]);
+
+        return Redirect::to('/profil');
     }
 }

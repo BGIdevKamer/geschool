@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Participant;
-use App\Models\FormationParticipantPayement;
+use App\Models\Tranche;
+use App\Models\Cour;
 
 class Formation extends Model
 {
@@ -20,13 +21,12 @@ class Formation extends Model
         'Niveau_requie',
         'randomUser',
     ];
-    public function Participants()
+    public function cours()
     {
-        return $this->belongsToMany(Participant::class)
-            ->withPivot(['anneeScolaire']);
+        return $this->hasMany(Cour::class);
     }
-    public function payements()
+    public function Tranches()
     {
-        return $this->hasMany(FormationParticipantPayement::class);
+        return $this->hasMany(Tranche::class);
     }
 }

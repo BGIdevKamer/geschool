@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'participant' => [
+            'driver' => 'session',
+            'provider' => 'participants', // Assurez-vous que cela correspond à votre fournisseur
+        ],
     ],
 
     /*
@@ -63,6 +67,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+
+        'participants' => [ // Assurez-vous que ce nom correspond à celui utilisé dans le gardien
+            'driver' => 'eloquent',
+            'model' => App\Models\Participant::class, // Remplacez par votre modèle Participant
         ],
 
         // 'users' => [
@@ -93,6 +102,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'participants' => [
+            'provider' => 'participants',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

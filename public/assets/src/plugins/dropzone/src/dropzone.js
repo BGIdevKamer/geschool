@@ -215,7 +215,7 @@ class Dropzone extends Emitter {
        * the event `maxfilesexceeded` will be called. The dropzone element gets the
        * class `dz-max-files-reached` accordingly so you can provide visual feedback.
        */
-      maxFilesize: 256,
+      maxFilesize: 5,
 
       /**
        * The name of the file param that gets transferred.
@@ -476,12 +476,12 @@ class Dropzone extends Emitter {
        * Allows you to translate the different units. Starting with `tb` for terabytes and going down to
        * `b` for bytes.
        */
-      dictFileSizeUnits: {tb: "TB", gb: "GB", mb: "MB", kb: "KB", b: "b"},
+      dictFileSizeUnits: { tb: "TB", gb: "GB", mb: "MB", kb: "KB", b: "b" },
       /**
        * Called when dropzone initialized
        * You can add event listeners here
        */
-      init() {},
+      init() { },
 
       /**
        * Can be an **object** of additional parameters to transfer to the server, **or** a `Function`
@@ -525,7 +525,7 @@ class Dropzone extends Emitter {
        * and the `done` function as second. `done()` needs to be invoked when everything
        * needed to finish the upload process is done.
        */
-      chunksUploaded: function(file, done) { done(); },
+      chunksUploaded: function (file, done) { done(); },
 
       /**
        * Gets called when the browser is not supported.
@@ -778,7 +778,7 @@ class Dropzone extends Emitter {
           };
 
           for (let removeLink of file.previewElement.querySelectorAll("[data-dz-remove]")) {
-             removeLink.addEventListener("click", removeFileEvent);
+            removeLink.addEventListener("click", removeFileEvent);
           }
         }
       },
@@ -844,10 +844,10 @@ class Dropzone extends Emitter {
       uploadprogress(file, progress, bytesSent) {
         if (file.previewElement) {
           for (let node of file.previewElement.querySelectorAll("[data-dz-uploadprogress]")) {
-              node.nodeName === 'PROGRESS' ?
-                  (node.value = progress)
-                  :
-                  (node.style.width = `${progress}%`)
+            node.nodeName === 'PROGRESS' ?
+              (node.value = progress)
+              :
+              (node.style.width = `${progress}%`)
           }
         }
       },
@@ -863,7 +863,7 @@ class Dropzone extends Emitter {
       sending() {
       },
 
-      sendingmultiple() {},
+      sendingmultiple() { },
 
       // When the complete upload is finished and successful
       // Receives `file`
@@ -873,14 +873,14 @@ class Dropzone extends Emitter {
         }
       },
 
-      successmultiple() {},
+      successmultiple() { },
 
       // When the upload is canceled.
       canceled(file) {
         return this.emit("error", file, this.options.dictUploadCanceled);
       },
 
-      canceledmultiple() {},
+      canceledmultiple() { },
 
       // When the upload is finished, either with success or an error.
       // Receives `file`
@@ -893,15 +893,15 @@ class Dropzone extends Emitter {
         }
       },
 
-      completemultiple() {},
+      completemultiple() { },
 
-      maxfilesexceeded() {},
+      maxfilesexceeded() { },
 
-      maxfilesreached() {},
+      maxfilesreached() { },
 
-      queuecomplete() {},
+      queuecomplete() { },
 
-      addedfiles() {}
+      addedfiles() { }
     };
 
 
@@ -1092,7 +1092,7 @@ class Dropzone extends Emitter {
         this.hiddenFileInput.style.width = "0";
         document.querySelector(this.options.hiddenInputContainer).appendChild(this.hiddenFileInput);
         return this.hiddenFileInput.addEventListener("change", () => {
-          let {files} = this.hiddenFileInput;
+          let { files } = this.hiddenFileInput;
           if (files.length) {
             for (let file of files) {
               this.addFile(file);
@@ -1270,7 +1270,7 @@ class Dropzone extends Emitter {
     if (this.options.dictFallbackText) {
       fieldsString += `<p>${this.options.dictFallbackText}</p>`;
     }
-    fieldsString += `<input type="file" name="${this._getParamName(0)}" ${this.options.uploadMultiple ? 'multiple="multiple"' : undefined } /><input type="submit" value="Upload!"></div>`;
+    fieldsString += `<input type="file" name="${this._getParamName(0)}" ${this.options.uploadMultiple ? 'multiple="multiple"' : undefined} /><input type="submit" value="Upload!"></div>`;
 
     let fields = Dropzone.createElement(fieldsString);
     if (this.element.tagName !== "FORM") {
@@ -1309,28 +1309,28 @@ class Dropzone extends Emitter {
   // Activates all listeners stored in @listeners
   setupEventListeners() {
     return this.listeners.map((elementListeners) =>
-        (() => {
-          let result = [];
-          for (let event in elementListeners.events) {
-            let listener = elementListeners.events[event];
-            result.push(elementListeners.element.addEventListener(event, listener, false));
-          }
-          return result;
-        })());
+      (() => {
+        let result = [];
+        for (let event in elementListeners.events) {
+          let listener = elementListeners.events[event];
+          result.push(elementListeners.element.addEventListener(event, listener, false));
+        }
+        return result;
+      })());
   }
 
 
   // Deactivates all listeners stored in @listeners
   removeEventListeners() {
     return this.listeners.map((elementListeners) =>
-        (() => {
-          let result = [];
-          for (let event in elementListeners.events) {
-            let listener = elementListeners.events[event];
-            result.push(elementListeners.element.removeEventListener(event, listener, false));
-          }
-          return result;
-        })());
+      (() => {
+        let result = [];
+        for (let event in elementListeners.events) {
+          let listener = elementListeners.events[event];
+          result.push(elementListeners.element.removeEventListener(event, listener, false));
+        }
+        return result;
+      })());
   }
 
   // Removes all event listeners and cancels all files in the queue or being processed.
@@ -1404,7 +1404,7 @@ class Dropzone extends Emitter {
 
     // Even if it's a folder, files.length will contain the folders.
     if (files.length) {
-      let {items} = e.dataTransfer;
+      let { items } = e.dataTransfer;
       if (items && items.length && (items[0].webkitGetAsEntry != null)) {
         // The browser supports dropping of folders, so handle items instead of files
         this._addFilesFromItems(items);
@@ -1420,7 +1420,7 @@ class Dropzone extends Emitter {
     }
 
     this.emit("paste", e);
-    let {items} = e.clipboardData;
+    let { items } = e.clipboardData;
 
     if (items.length) {
       return this._addFilesFromItems(items);
@@ -1429,7 +1429,7 @@ class Dropzone extends Emitter {
 
 
   handleFiles(files) {
-    for(let file of files) {
+    for (let file of files) {
       this.addFile(file);
     }
   }
@@ -1473,29 +1473,29 @@ class Dropzone extends Emitter {
 
     var readEntries = () => {
       return dirReader.readEntries(entries => {
-            if (entries.length > 0) {
-              for (let entry of entries) {
-                if (entry.isFile) {
-                  entry.file(file => {
-                    if (this.options.ignoreHiddenFiles && (file.name.substring(0, 1) === '.')) {
-                      return;
-                    }
-                    file.fullPath = `${path}/${file.name}`;
-                    return this.addFile(file);
-                  });
-                } else if (entry.isDirectory) {
-                  this._addFilesFromDirectory(entry, `${path}/${entry.name}`);
+        if (entries.length > 0) {
+          for (let entry of entries) {
+            if (entry.isFile) {
+              entry.file(file => {
+                if (this.options.ignoreHiddenFiles && (file.name.substring(0, 1) === '.')) {
+                  return;
                 }
-              }
-
-              // Recursively call readEntries() again, since browser only handle
-              // the first 100 entries.
-              // See: https://developer.mozilla.org/en-US/docs/Web/API/DirectoryReader#readEntries
-              readEntries();
+                file.fullPath = `${path}/${file.name}`;
+                return this.addFile(file);
+              });
+            } else if (entry.isDirectory) {
+              this._addFilesFromDirectory(entry, `${path}/${entry.name}`);
             }
-            return null;
           }
-          , errorHandler);
+
+          // Recursively call readEntries() again, since browser only handle
+          // the first 100 entries.
+          // See: https://developer.mozilla.org/en-US/docs/Web/API/DirectoryReader#readEntries
+          readEntries();
+        }
+        return null;
+      }
+        , errorHandler);
     };
 
     return readEntries();
@@ -1633,7 +1633,7 @@ class Dropzone extends Emitter {
         // The image has not been resized
         return callback(file);
       } else {
-        let {resizeMimeType} = this.options;
+        let { resizeMimeType } = this.options;
         if (resizeMimeType == null) {
           resizeMimeType = file.type;
         }
@@ -1681,10 +1681,10 @@ class Dropzone extends Emitter {
       let loadExif = callback => callback(1);
       if ((typeof EXIF !== 'undefined' && EXIF !== null) && fixOrientation) {
         loadExif = callback =>
-            EXIF.getData(img, function () {
-              return callback(EXIF.getTag(this, 'Orientation'));
-            })
-        ;
+          EXIF.getData(img, function () {
+            return callback(EXIF.getTag(this, 'Orientation'));
+          })
+          ;
       }
 
       return loadExif(orientation => {
@@ -1764,7 +1764,7 @@ class Dropzone extends Emitter {
 
   // Goes through the queue and processes files if there aren't too many already.
   processQueue() {
-    let {parallelUploads} = this.options;
+    let { parallelUploads } = this.options;
     let processingLength = this.getUploadingFiles().length;
     let i = processingLength;
 
@@ -1921,7 +1921,7 @@ class Dropzone extends Emitter {
           // Clear the data from the chunk
           chunk.dataBlock = null;
 
-          for (let i = 0; i < file.upload.totalChunkCount; i ++) {
+          for (let i = 0; i < file.upload.totalChunkCount; i++) {
             if (file.upload.chunks[i] === undefined) {
               return handleNextChunk();
             }
@@ -2264,7 +2264,7 @@ class Dropzone extends Emitter {
   }
 
   static uuidv4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
       let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
@@ -2331,18 +2331,18 @@ Dropzone.discover = function () {
     dropzones = [];
     // IE :(
     let checkElements = elements =>
-        (() => {
-          let result = [];
-          for (let el of elements) {
-            if (/(^| )dropzone($| )/.test(el.className)) {
-              result.push(dropzones.push(el));
-            } else {
-              result.push(undefined);
-            }
+      (() => {
+        let result = [];
+        for (let el of elements) {
+          if (/(^| )dropzone($| )/.test(el.className)) {
+            result.push(dropzones.push(el));
+          } else {
+            result.push(undefined);
           }
-          return result;
-        })()
-    ;
+        }
+        return result;
+      })()
+      ;
     checkElements(document.getElementsByTagName("div"));
     checkElements(document.getElementsByTagName("form"));
   }
@@ -2418,7 +2418,7 @@ Dropzone.dataURItoBlob = function (dataURI) {
   }
 
   // write the ArrayBuffer to a blob
-  return new Blob([ab], {type: mimeString});
+  return new Blob([ab], { type: mimeString });
 };
 
 // Returns an array without the rejected item
@@ -2586,7 +2586,7 @@ let detectVerticalSquash = function (img) {
   canvas.height = ih;
   let ctx = canvas.getContext("2d");
   ctx.drawImage(img, 0, 0);
-  let {data} = ctx.getImageData(1, 0, 1, ih);
+  let { data } = ctx.getImageData(1, 0, 1, ih);
 
 
   // search image edge pixel position in case it is squashed vertically.

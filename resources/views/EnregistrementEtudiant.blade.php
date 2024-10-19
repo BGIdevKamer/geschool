@@ -31,14 +31,14 @@
 				<div class="errors_participant"></div>
 				<div class="row">
 					<div class="col-md-6 col-sm-12">
-						<label for="">Nom</label>
+						<label for="">Nom <small class="text-danger">*</small> </label>
 						<div class="form-group has-warning">
 							<input type="text" class="form-control" name="nomEtudiant" id="nomEtudiant">
 							<div class="errname"></div>
 						</div>
 					</div>
 					<div class="col-md-6 col-sm-12">
-						<label>Prenom</label>
+						<label>Prenom <small class="text-danger">*</small> </label>
 						<div class="form-group has-warning">
 							<input type="text" class="form-control" name="prenomEtudiant" id="prenomEtudiant">
 							<div class="errprenom"></div>
@@ -47,7 +47,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-6 col-sm-12 ">
-						<label>Telephone</label>
+						<label>Telephone <small class="text-danger">*</small> </label>
 						<div class="form-group has-warning">
 							<input type="number" class="form-control" name="telephoneEtudiant" id="telephoneEtudiant">
 							<div class="errtel"></div>
@@ -63,7 +63,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-12 col-sm-12">
-						<label>Date de naissance</label>
+						<label>Date de naissance <small class="text-danger">*</small> </label>
 						<div class="form-group has-warning">
 							<input class="form-control" placeholder="Choisir une date" type="date" name="datenEtudiant" id="datenEtudiant" />
 							<div class="errdate"></div>
@@ -72,7 +72,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-6 col-sm-12">
-						<label for="">Choisir le sexe</label>
+						<label for="">Choisir le sexe <small class="text-danger">*</small></label>
 						<div class="form-group">
 							<div class="custom-control custom-radio mb-5">
 								<input type="radio" id="customRadio1" name="customRadio" class="custom-control-input"
@@ -88,7 +88,7 @@
 						</div>
 					</div>
 					<div class="col-md-6 col-sm-12">
-						<label>Ages</label>
+						<label>Ages <small class="text-danger">*</small> </label>
 						<div class="form-group has-warning">
 							<input type="number" class="form-control" name="ageEtudiant" id="ageEtudiant">
 							<div class="errage"></div>
@@ -107,9 +107,10 @@
 					<div class="col-md-6 col-sm-12">
 						<div class="form-group">
 							<label>Niveau scolaire</label>
-							<div class="form-group has-warning">
+							<div class="form-group has-warning ">
 								<select class="custom-select2 form-control" name="state" id="niveauEtudiant"
 									style="width: 100%; height: 38px">
+									<option value="">Selectionner</option>
 									<option value="Bac">Bac</option>
 									<option value="Bac+1">Bac +1</option>
 									<option value="Bac+2">Bac +2</option>
@@ -126,7 +127,7 @@
 				<div class="row">
 					<div class="col-md-12 col-sm-12">
 						<div class="form-group">
-							<label>Formation/Speciliter</label>
+							<label>Formation/Speciliter <small class="text-danger">*</small> </label>
 							<div class="form-group has-warning">
 								<select class="custom-select2 form-control" name="state" id="formation"
 									style="width: 100%; height: 38px">
@@ -164,15 +165,18 @@
 							</div>
 						</div>
 					</div>
-				</div>
-				<hr>
-				<h3 class="text-primary p-3">Premier payements</h3>
-				<div class="row">
-					<div class="col-md-12 col-sm-12">
-						<label>Montant</label>
-						<div class="form-group has-warning">
-							<input type="number" class="form-control" id="montant">
-							<div class="errmontant"></div>
+					<div class="col-md-6 col-sm-12">
+						<div class="form-group">
+							<label>Niveau</label>
+							<select class="selectpicker form-control" data-style="btn-outline-primary"
+								data-size="5" name="niv" id="niv">
+								<option value="">Choisir le niveau</option>
+								<option value="1">Niveau I</option>
+								<option value="2">Niveau II</option>
+								<option value="3">Niveau III</option>
+								<option value="4">Niveau IV</option>
+								<option value="5">Niveau VI</option>
+							</select>
 						</div>
 					</div>
 				</div>
@@ -188,53 +192,61 @@
 	</div>
 </div>
 
-<button type="button" class="btn mb-20 btn-primary btn-block d-none" id="sa-success">Click me</button>
+<!-- Success modal -->
+<a
+	href="#"
+	class="btn-block"
+	data-toggle="modal"
+	data-target="#success-modal"
+	type="button"
+	class="d-none"
+	id="modal-success">
+</a>
 
-<!-- welcome modal start -->
-<div class="welcome-modal">
-	<button class="welcome-modal-close">
-		<i class="bi bi-x-lg"></i>
-	</button>
-	<iframe class="w-100 border-0" src="https://embed.lottiefiles.com/animation/31548"></iframe>
-	<div class="text-center">
-		<h3 class="h5 weight-500 text-center mb-2">
-			Open source
-			<span role="img" aria-label="gratitude">❤️</span>
-		</h3>
-		<div class="pb-2">
-			<a class="github-button" href="https://github.com/dropways/deskapp"
-				data-color-scheme="no-preference: dark; light: light; dark: light;" data-icon="octicon-star"
-				data-size="large" data-show-count="true" aria-label="Star dropways/deskapp dashboard on GitHub">Star</a>
-			<a class="github-button" href="https://github.com/dropways/deskapp/fork"
-				data-color-scheme="no-preference: dark; light: light; dark: light;" data-icon="octicon-repo-forked"
-				data-size="large" data-show-count="true" aria-label="Fork dropways/deskapp dashboard on GitHub">Fork</a>
+<div
+	class="modal fade"
+	id="success-modal"
+	tabindex="-1"
+	role="dialog"
+	aria-labelledby="exampleModalCenterTitle"
+	aria-hidden="true">
+	<div
+		class="modal-dialog modal-dialog-centered"
+		role="document">
+		<div class="modal-content">
+			<div class="modal-body text-center font-18">
+				<h3 class="mb-20">Succes</h3>
+				<div class="mb-30 text-center">
+					<img src="{{asset('assets/vendors/images/success.png')}}" />
+				</div>
+				Lorem ipsum dolor sit amet, consectetur adipisicing
+				elit, sed do eiusmod
+			</div>
+			<div class="modal-footer justify-content-center">
+				<button
+					type="button"
+					class="btn btn-primary">
+					Payements
+				</button>
+				<button
+					type="button"
+					class="btn btn-secondary"
+					data-dismiss="modal">
+					Fermer
+				</button>
+			</div>
 		</div>
-	</div>
-	<div class="text-center mb-1">
-		<div>
-			<a href="https://github.com/dropways/deskapp" target="_blank" class="btn btn-light btn-block btn-sm">
-				<span class="text-danger weight-600">STAR US</span>
-				<span class="weight-600">ON GITHUB</span>
-				<i class="fa fa-github"></i>
-			</a>
-		</div>
-		<script async defer="defer" src="https://buttons.github.io/buttons.js"></script>
-	</div>
-	<a href="https://github.com/dropways/deskapp" target="_blank" class="btn btn-success btn-sm mb-0 mb-md-3 w-100">
-		DOWNLOAD
-		<i class="fa fa-download"></i>
-	</a>
-	<p class="font-14 text-center mb-1 d-none d-md-block">
-		Available in the following technologies:
-	</p>
-	<div class="d-none d-md-flex justify-content-center h1 mb-0 text-danger">
-		<i class="fa fa-html5"></i>
 	</div>
 </div>
-<button class="welcome-modal-btn">
-	<i class="fa fa-download"></i> Download
-</button>
+</div>
+</div>
+<!-- Confirmation modal -->
+<!-- welcome modal start -->
+
 <!-- welcome modal end -->
+<script>
+	const route = "{{route('add.participant')}}";
+</script>
 <!-- js -->
 <script src="{{asset('assets/vendors/scripts/core.js')}}"></script>
 <script src="{{asset('assets/vendors/scripts/script.min.js')}}"></script>
