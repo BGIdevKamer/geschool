@@ -18,7 +18,7 @@
                                     <a href="{{route('dashboard')}}">Acceuil</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    {{$cour->formation->nom}}
+                                    {{$cour->Module->nom}}
                                 </li>
                             </ol>
                         </nav>

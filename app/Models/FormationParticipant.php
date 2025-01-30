@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Formation;
 use App\Models\Participant;
 use App\Models\Payement;
+use App\Models\Composition;
 
 class FormationParticipant extends Model
 {
@@ -29,5 +30,9 @@ class FormationParticipant extends Model
     public function Payements()
     {
         return $this->hasMany(Payement::class);
+    }
+    public function compositions()
+    {
+        return $this->hasMany(Composition::class);
     }
 }

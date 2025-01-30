@@ -13,10 +13,39 @@ $(document).ready(function () {
             behavior: 'smooth'
         });
     }
+    function reset() {
+        const dataSelect = document.querySelector('select[name="DataTables_Table_0_length"]');
+        const option10 = Array.from(dataSelect.options).find(option => option.value === "25");
+
+        if (option10) {
+            option10.select = true;
+            dataSelect.dispatchEvent(new Event('change'));
+        } else {
+            alert('input non valide');
+        }
+    }
     // Enregistrer une  nouvelle formation
     //  validation & envoie des infortion en ajax
     $(document).on('submit', '#FormationForm', function (e) {
         e.preventDefault();
+
+        let insc = $('#tranche_1').val();
+        let pr = $('#tranche_2').val();
+        let dr = $('#tranche_3').val();
+        let tr = $('#tranche_4').val();
+        let prix = $('#prix').val();
+
+        let sum = parseInt(insc) + parseInt(pr) + parseInt(dr) + parseInt(tr);
+
+        if (sum != prix) {
+            let tagerr = document.querySelector(".err");
+            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1 text-danger'>la somme des tranche et l'iscription doit etre egale au prix de la  formation</div>";
+            return false;
+        } else {
+            let tagerr = document.querySelector(".err");
+            tagerr.innerHTML = "";
+        }
+
 
         const formData = new FormData(this);
 
@@ -119,70 +148,70 @@ $(document).ready(function () {
         })
     })
     // Enregistrement d'un etudiant envoie en ajx
-    $(document).on('click', '#addParticipantbtn', function (e) {
-        e.preventDefault();
-        //recuperation des info dans le formulaire en fonction des id
-        let nom = $('#nomEtudiant');
-        let prenom = $('#prenomEtudiant');
-        let telephone = $('#telephoneEtudiant');
-        let email = $('#emailEtudiant');
-        let dateN = $('#datenEtudiant');
-        var sexe = $('input[name="customRadio"]').filter(':checked').val();
-        let age = $('#ageEtudiant');
-        let cni = $('#cniEtudiant');
-        let niveau = $('#niveauEtudiant');
-        let formation = $('#formation');
-        let anneescolaire = $('#anneescolaire');
-        let niv = $('#niv');
-        // let montant = $('#montant');
+    // $(document).on('click', '#addParticipantbtn', function (e) {
+    //     e.preventDefault();
+    //     //recuperation des info dans le formulaire en fonction des id
+    //     let nom = $('#nomEtudiant');
+    //     let prenom = $('#prenomEtudiant');
+    //     let telephone = $('#telephoneEtudiant');
+    //     let email = $('#emailEtudiant');
+    //     let dateN = $('#datenEtudiant');
+    //     var sexe = $('input[name="customRadio"]').filter(':checked').val();
+    //     let age = $('#ageEtudiant');
+    //     let cni = $('#cniEtudiant');
+    //     let niveau = $('#niveauEtudiant');
+    //     let formation = $('#formation');
+    //     let anneescolaire = $('#anneescolaire');
+    //     let niv = $('#niv');
+    //     // let montant = $('#montant');
 
-        $(' .load-select').load(location.href + ' .load-select');
+    //     $(' .load-select').load(location.href + ' .load-select');
 
-        const sa = document.getElementById("modal-success");
+    //     const sa = document.getElementById("modal-success");
 
 
 
-        document.querySelector(".load-btn-addparticipant").classList.remove("d-none");
-        document.querySelector(".load-txt-addparticipant").classList.add("d-none");
+    //     document.querySelector(".load-btn-addparticipant").classList.remove("d-none");
+    //     document.querySelector(".load-txt-addparticipant").classList.add("d-none");
 
-        $.ajax({
-            url: route,
-            method: "post",
-            data: {
-                nom: nom.val(),
-                prenom: prenom.val(),
-                telephone: telephone.val(),
-                email: email.val(),
-                dateN: dateN.val(),
-                sexe: sexe,
-                age: age.val(),
-                cni: cni.val(),
-                niveau: niveau.val(),
-                formation: formation.val(),
-                anneescolaire: anneescolaire.val(),
-                niv: niv.val(),
-            },
-            success: function (res) {
-                if (res.status == "success") {
-                    document.querySelector(".load-btn-addparticipant").classList.add("d-none");
-                    document.querySelector(".load-txt-addparticipant").classList.remove("d-none");
-                    $('#FormaddParticipant')[0].reset();
-                    $(' .errors_participant').load(location.href + ' .errors_participant');
-                    sa.click();
-                }
-            },
-            error: function (err) {
-                let error = err.responseJSON;
-                $.each(error.errors, function (index, value) {
-                    $('.errors_participant').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + value + '<button type="button" class="close" data-dismiss="alert" aria-label="Close" id="sa-err-close"><span aria-hidden="true">&times;</span></button>');
-                });
-                document.querySelector(".load-btn-addparticipant").classList.add("d-none");
-                document.querySelector(".load-txt-addparticipant").classList.remove("d-none");
-                scrollTop();
-            }
-        })
-        // }
-    })
+    //     $.ajax({
+    //         url: route,
+    //         method: "post",
+    //         data: {
+    //             nom: nom.val(),
+    //             prenom: prenom.val(),
+    //             telephone: telephone.val(),
+    //             email: email.val(),
+    //             dateN: dateN.val(),
+    //             sexe: sexe,
+    //             age: age.val(),
+    //             cni: cni.val(),
+    //             niveau: niveau.val(),
+    //             formation: formation.val(),
+    //             anneescolaire: anneescolaire.val(),
+    //             niv: niv.val(),
+    //         },
+    //         success: function (res) {
+    //             if (res.status == "success") {
+    //                 document.querySelector(".load-btn-addparticipant").classList.add("d-none");
+    //                 document.querySelector(".load-txt-addparticipant").classList.remove("d-none");
+    //                 $('#FormaddParticipant')[0].reset();
+    //                 $(' .errors_participant').load(location.href + ' .errors_participant');
+    //                 sa.click();
+    //             }
+    //         },
+    //         error: function (err) {
+    //             let error = err.responseJSON;
+    //             $.each(error.errors, function (index, value) {
+    //                 $('.errors_participant').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + value + '<button type="button" class="close" data-dismiss="alert" aria-label="Close" id="sa-err-close"><span aria-hidden="true">&times;</span></button>');
+    //             });
+    //             document.querySelector(".load-btn-addparticipant").classList.add("d-none");
+    //             document.querySelector(".load-txt-addparticipant").classList.remove("d-none");
+    //             scrollTop();
+    //         }
+    //     })
+    //     // }
+    // })
 
     // Suppression d'un etudiant/participant
     $(document).on('click', '#deleteParticipant', function (e) {
@@ -770,11 +799,18 @@ $(document).ready(function () {
                     document.querySelector(".exrcices").classList.add("d-none");
                     document.querySelector(".question").classList.remove("d-none");
                     sa.click();
+                } else {
+                    document.querySelector(".save-load-btn-ma").classList.add("d-none");
+                    document.querySelector(".save-bu-ma").classList.remove("d-none");
                 }
             },
-            error: function (jqXHR, textStatus, errorThrown) {
-                // Affichez un message d'erreur
-                console.error('Erreur lors du téléchargement', textStatus, errorThrown);
+            error: function (err) {
+                let error = err.responseJSON;
+                $.each(error.errors, function (index, value) {
+                    $('.errors_participant').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + value + '<button type="button" class="close" data-dismiss="alert" aria-label="Close" id="sa-err-close"><span aria-hidden="true">&times;</span></button>');
+                });
+                document.querySelector(".load-btn-addparticipant").classList.add("d-none");
+                document.querySelector(".load-txt-addparticipant").classList.remove("d-none");
             }
         });
     })
@@ -956,12 +992,340 @@ $(document).ready(function () {
                     $('.load-btn').addClass('d-none');
                 }
             },
+            // error: function (jqXHR, textStatus, errorThrown) {
+            //     // Affichez un message d'erreur
+            //     console.error('Erreur lors du téléchargement', textStatus, errorThrown);
+            // }
+        });
+    })
+
+    $(document).on('submit', '#FormMatieres', function (e) {
+        e.preventDefault();
+        const sa = document.getElementById("sa-success");
+        let close = $('#closeSave');
+        document.querySelector(".load-btn-save").classList.remove("d-none");
+        document.querySelector(".btn-txt-save").classList.add("d-none");
+        const formData = new FormData(this);
+        $.ajax({
+            url: $(this).attr('action'), // URL de la route Laravel
+            type: 'POST',
+            data: formData, // Envoie les données du formulaire en utilisant FormData
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                document.querySelector(".load-btn-save").classList.add("d-none");
+                document.querySelector(".btn-txt-save").classList.remove("d-none");
+                $(' #load-table').load(location.href + ' #load-table');
+                $('#FormMatieres')[0].reset();
+                sa.click();
+                close.click();
+            },
             error: function (jqXHR, textStatus, errorThrown) {
                 // Affichez un message d'erreur
                 console.error('Erreur lors du téléchargement', textStatus, errorThrown);
             }
         });
     })
+
+    $(document).on('click', '#suppMatieres', function (e) {
+        e.preventDefault();
+        let id = $('#idDelete').val();
+        let modalClose = $('#data-dismiss');
+        const sa = document.getElementById("sa-success");
+        document.querySelector(".load-btn-Deleteparticipant").classList.remove("d-none");
+        document.querySelector(".load-txt-Deleteparticipant").classList.add("d-none");
+        $.ajax({
+            url: route,
+            method: "post",
+            data: {
+                id: id
+            },
+            success: function (res) {
+                if (res.status == "success") {
+                    document.querySelector(".load-btn-Deleteparticipant").classList.add("d-none");
+                    document.querySelector(".load-txt-Deleteparticipant").classList.remove("d-none");
+                    modalClose.click();
+                    $(' #load-table').load(location.href + ' #load-table');
+                    sa.click();
+                }
+            },
+            error: function (err) {
+                let error = err.responseJSON;
+                $.each(error.errors, function (index, value) {
+                    $('.errors').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + value + '<button type="button" class="close" data-dismiss="alert" aria-label="Close" id="sa-err-close"><span aria-hidden="true">&times;</span></button>');
+                });
+                document.querySelector(".load-btn-Deleteparticipant").classList.add("d-none");
+                document.querySelector(".load-txt-Deleteparticipant").classList.remove("d-none");
+            }
+        })
+    })
+
+    $(document).on('click', '#modifyMatieres', function (e) {
+        e.preventDefault();
+        let categorie = $(this).data('categorie');
+        let id = $(this).data('id');
+        let libeller = $(this).data('libeller');
+        let heures = $(this).data('heures');
+        let coefs = $(this).data('coefs');
+        // alert(categorie);
+
+        $('#upId').val(id);
+        $('#uplibeller').val(libeller);
+        $('#upheure').val(heures);
+        $('#upcoefs').val(coefs);
+        $('#upcategorie').val(categorie);
+    })
+
+    $(document).on('submit', '#FormModifyMatieres', function (e) {
+        e.preventDefault();
+        const sa = document.getElementById("sa-success");
+        let close = $('#close');
+        document.querySelector(".load-btn").classList.remove("d-none");
+        document.querySelector(".btn-txt").classList.add("d-none");
+        const formData = new FormData(this);
+        $.ajax({
+            url: $(this).attr('action'), // URL de la route Laravel
+            type: 'POST',
+            data: formData, // Envoie les données du formulaire en utilisant FormData
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                document.querySelector(".load-btn").classList.add("d-none");
+                document.querySelector(".btn-txt").classList.remove("d-none");
+                $(' #load-table').load(location.href + ' #load-table');
+                $('#FormModifyMatieres')[0].reset();
+                sa.click();
+                close.click();
+            },
+        });
+    })
+
+    $(document).on('submit', '#FormEvaluation', function (e) {
+        e.preventDefault();
+        const sa = document.getElementById("sa-success");
+        let close = $('#close');
+        document.querySelector(".load-btn").classList.remove("d-none");
+        document.querySelector(".btn-txt").classList.add("d-none");
+        const formData = new FormData(this);
+        $.ajax({
+            url: $(this).attr('action'), // URL de la route Laravel
+            type: 'POST',
+            data: formData, // Envoie les données du formulaire en utilisant FormData
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                document.querySelector(".load-btn").classList.add("d-none");
+                document.querySelector(".btn-txt").classList.remove("d-none");
+                $(' .load-Evaluation').load(location.href + ' .load-Evaluation');
+                $('#FormEvaluation')[0].reset();
+                sa.click();
+                close.click();
+            }, error: function (err) {
+                $.each(error.errors, function (index, value) {
+                    $('.errors').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + value + '<button type="button" class="close" data-dismiss="alert" aria-label="Close" id="sa-err-close"><span aria-hidden="true">&times;</span></button>');
+                });
+                document.querySelector(".load-btn").classList.add("d-none");
+                document.querySelector(".btn-txt").classList.remove("d-none");
+            }
+        });
+    })
+
+    $(document).on('submit', '#form-charge', function () {
+        document.querySelector(".load-btn-ex").classList.remove("d-none");
+        document.querySelector(".btn-txt-ex").classList.add("d-none");
+    })
+
+    $(document).on('submit', '#form-delete', function () {
+        document.querySelector(".load-btn-Delete").classList.remove("d-none");
+        document.querySelector(".load-txt-Delete").classList.add("d-none");
+    })
+
+    $(document).on('submit', '#form-update', function () {
+        document.querySelector(".load-btn-update").classList.remove("d-none");
+        document.querySelector(".btn-txt-update").classList.add("d-none");
+    })
+
+    $(document).on('click', '#modifySession', function (e) {
+        e.preventDefault();
+        let libeller = $(this).data('libeller');
+        let description = $(this).data('description');
+        let numero = $(this).data('numero');
+        let id = $(this).data('id');
+
+        $("#idUpdate").val(id);
+        $("#libellerSession").val(libeller);
+        $("#descriptionSession").val(description);
+        $("#numeroSession").val(numero);
+    })
+
+    $(document).on('click', '#modifyCategorie', function (e) {
+        e.preventDefault();
+        let libeller = $(this).data('libeller');
+        let id = $(this).data('id');
+
+        $("#categorieId").val(id);
+        $("#upcategorieLibeller").val(libeller);
+    })
+
+    $(document).on('click', '#deleteCategorie', function (e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+
+        $("#idDeleteCategorie").val(id);
+    })
+
+    $(document).on('click', '#deleteEnseigant', function (e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+
+        $("#idEnseigant").val(id);
+    })
+
+    $(document).on('click', '#deleteSalle', function (e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+
+        $("#idSalle").val(id);
+    })
+
+    $(document).on('click', '#deleteSession', function (e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        let emploie_id = $(this).data('emploie_id');
+
+        $("#id").val(id);
+        $("#emploie_id").val(emploie_id);
+    });
+
+    $(document).on('click', '#delete', function (e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+
+        $("#id").val(id);
+    })
+
+    // if (telephone.val() == "" || telephone.val().length != 9) {
+    //     CptErr += 1;
+    //     telephone.addClass('form-control-warning');
+    //     let tagerr = document.querySelector(".errtel");
+    //     tagerr.innerHTML = "<div class='form-control-feedback'>Renseignez correctement le telephone | 9 carracteres</div>";
+    // }
+
+    $(document).on('click', '#saveEnseignants', function (e) {
+        let telephone = $('#phone');
+        if (telephone.val() == "" || telephone.val().length != 9) {
+            e.preventDefault();
+            telephone.addClass('form-control-warning');
+            let tagerr = document.querySelector(".errtel");
+            tagerr.innerHTML = "<div class='form-control-feedback has-warning'>Renseignez correctement le telephone | 9 carracteres</div>";
+        }
+    })
+
+    $(document).ready(function () {
+        // Fonction pour mettre à jour l'appréciation en temps réel
+        function updateAppreciation(id) {
+            const noteInput = $(`input[name="participant_${id}"]`);
+            const appreciationInput = $(`input[name="appreciation_${id}"]`);
+
+            // Vérifiez si les champs existent
+            if (!noteInput.length || !appreciationInput.length) {
+                console.error(`Les champs pour l'ID ${id} n'existent pas.`);
+                return;
+            }
+
+            const note = parseInt(noteInput.val());
+
+            let appreciation = "";
+            if (isNaN(note)) {
+                appreciationInput.val("");
+                return; // Traiter le cas où la note n'est pas un nombre
+            }
+
+            if (note <= 10) {
+                appreciation = "Passable";
+            } else if (note >= 11) {
+                if (note <= 16) {
+                    appreciation = "Bien";
+                } else if (note > 16) {
+                    appreciation = "Excellent";
+                } else if (note = 11) {
+                    appreciation = "Bien";
+                } else {
+                    appreciation = "Tres Bien";
+                }
+            }
+
+
+            appreciationInput.val(appreciation);
+        }
+
+        // Attach event listener à chaque input de note
+        $('input[name^="participant_"]').on('input', function () {
+            const id = this.name.split('_')[1];
+            updateAppreciation(id);
+        });
+
+    });
+
+    $(document).on('click', '#ModifyEnseignant', function (e) {
+        e.preventDefault();
+        let nom = $(this).data('nom');
+        let prenom = $(this).data('prenom');
+        let phone = $(this).data('phone');
+        let email = $(this).data('email');
+        let id = $(this).data('id');
+        // alert(categorie);
+
+        $('#idEnseignant').val(id);
+        $('#nomEnseignant').val(nom);
+        $('#prenomEnseignant').val(prenom);
+        $('#phoneEnseignant').val(phone);
+        $('#emailEnseignant').val(email);
+    })
+
+    $(document).on('click', '#modfiySalle', function (e) {
+        e.preventDefault();
+        let nom = $(this).data('nom');
+        let places = $(this).data('places');
+        let description = $(this).data('description');
+        let id = $(this).data('id');
+        // alert(categorie);
+
+        $('#salleId').val(id);
+        $('#nomSalle').val(nom);
+        $('#placeSalle').val(places);
+        $('#descriptionSalle').val(description);
+    })
+
+    $(document).on('click', '#modifySession', function (e) {
+        e.preventDefault();
+        let nom = $(this).data('nom');
+        // alert(categorie);
+
+        $('#salleId').val(id);
+    })
+
+    $(document).on('click', '#deleteModal', function (e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+
+        $('#id').val(id);
+    });
+
+    $(document).on('click', '#updateModule', function (e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        let libeller = $(this).data('libeller');
+        let description = $(this).data('description');
+        let formation_id = $(this).data('formation_id');
+
+        $('#idupdate').val(id);
+        $('#updatelibeller').val(libeller);
+        $('#updatedescription').val(description);
+        $('#ancienneValue').val(formation_id);
+    })
+
+
 
 })
 

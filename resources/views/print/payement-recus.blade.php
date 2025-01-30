@@ -68,7 +68,7 @@
     }
 
     .wrapper-invoice .invoice .invoice-logo-brand img {
-        max-width: 50px !important;
+        max-width: 80px !important;
         width: 100%;
         object-fit: fill;
     }
@@ -261,19 +261,23 @@
 <body>
     @foreach($payPrint as $pay)
     <section class="wrapper-invoice">
+
         <!-- switch mode rtl by adding class rtl on invoice class -->
         <div class="invoice">
+
             <div class="invoice-information">
-                <!-- <p><b>Invoice #</b> : 12345</p> -->
-                <p>Date de creation : <strong>{{$pay->pay_date}}</strong> </p>
-                <!-- <p><b>Due Date</b> : May, 09 2022</p> -->
+                <p><b>Recus #</b> : {{$pay->id}}</p>
+                <p><b>Date de creation </b>: {{$pay->pay_date}}</p>
+                <p><b>Date de payement</b> : {{$pay->pay_date}}</p>
             </div>
+
             @foreach($identify as $identif)
             <!-- logo brand invoice -->
             <div class="invoice-logo-brand">
                 <!-- <h2>Tampsh.</h2> -->
-                <img src="{{asset('assets/assets/image/logo.PNG')}}" alt="" />
+                <img src="{{ public_path('storage/assets/identifies/'.$identif->logo.'') }}" alt="" />
             </div>
+            <br>
             <!-- invoice head -->
             <div class="invoice-head">
                 <div class="head client-info">
@@ -288,11 +292,16 @@
 
                     <p>-</p>
                     <p>{{$pay->FormationParticipant->Participant->nom}} {{$pay->FormationParticipant->Participant->prenom}}</p>
-                    <p>{{$pay->FormationParticipant->Formation->nom}}</p>
+                    <p>{{$pay->FormationParticipant->Formation->nom}} @if(!empty($pay->FormationParticipant->niv)) {{$pay->FormationParticipant->niv}} @endif</p>
                     <p>Anneé scolaire : {{$pay->FormationParticipant->anneeScolaire}}</p>
-                    <p>Delivré par : <strong>{{Auth::user()->name}}</strong> </p>
+                </div>
+                <br>
+                <div class="head client-info">
+                    <p>Delivré par : <strong>{{Auth::user()->name}}</strong> le <strong>{{$pay->pay_date}}</strong></p>
                 </div>
             </div>
+
+            <br>
             <!-- invoice body-->
             <div class="invoice-body">
                 <table class="table">
@@ -304,44 +313,32 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{$motif}}</td>
-                            <td>{{$pay->montant}}</td>
+                            <td>{{$pay->motif}}</td>
+                            <td>{{$pay->montant}} Fcfa</td>
                         </tr>
                         <tr>
                             <td>Reste a payé</td>
-                            <td>{{$reste}}</td>
+                            <td>{{$reste}} Fcfa</td>
                         </tr>
                     </tbody>
                 </table>
+                <br>
                 <div class="flex-table">
                     <div class="flex-column"></div>
                     <div class="flex-column">
                         <table class="table-subtotal">
                             <tbody>
                                 <tr>
-                                    <td>
-                                        <h5></h5>
-                                    </td>
-                                    <td>
-                                        <h5>Payement informations</h5>
-                                    </td>
-                                    <td>
-                                        <h5></h5>
-                                    </td>
+                                    <td>total a payer</td>
+                                    <td>{{$prix}}.000 Fcfa</td>
                                 </tr>
-                                @foreach ($Tranches as $Tranche)
-                                <tr>
-                                    <td>{{$Tranche->libeller}}</td>
-                                    <td>{{$Tranche->montant}}</td>
-                                </tr>
-                                @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <!-- invoice total  -->
                 <div class="invoice-total-amount">
-                    <p>Total : {{$formationPrix}}</p>
+                    <p>Signature</p>
                 </div>
             </div>
             <!-- invoice footer -->

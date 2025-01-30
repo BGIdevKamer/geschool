@@ -3,7 +3,26 @@
 @include('header')
 
 <div class="main-container">
-
+	<div class="row">
+		@foreach($formations as $formation)
+		@if(!empty($formation->img))
+		<div class="col-md-4 mb-20">
+			<a href="#" class="card-box d-block mx-auto pd-20 text-secondary">
+				<div class="img pb-30">
+					<img src="{{Storage::url($formation->img)}}" alt="" />
+				</div>
+				<div class="content">
+					<h3 class="h4">{{$formation->nom}}</h3>
+					<p class="max-width-200">
+						{{$formation->note}}
+					</p>
+					<button class="btn btn-success">Detaille</button>
+				</div>
+			</a>
+		</div>
+		@endif
+		@endforeach
+	</div>
 </div>
 <!-- welcome modal start -->
 

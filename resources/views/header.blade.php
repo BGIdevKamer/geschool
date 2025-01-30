@@ -79,7 +79,7 @@
 </head>
 
 <body>
-	<div class="pre-loader">
+	<!-- <div class="pre-loader">
 		<div class="pre-loader-box">
 			<div class="loader-logo">
 				<img src="{{Storage::url(Auth::user()->logo)}}" alt="" width="200px" />
@@ -90,7 +90,7 @@
 			<div class="percent" id="percent1">0%</div>
 			<div class="loading-text">Loading...</div>
 		</div>
-	</div>
+	</div> -->
 
 	<div class="header">
 		<div class="header-left">
@@ -396,16 +396,62 @@
 							<li><a href="{{route('liste.Formation')}}">Listes Formations</a></li>
 						</ul>
 					</li>
+					<li>
+						<a href="{{route('Payement.index')}}" class="dropdown-toggle no-arrow">
+							<span class="micon bi bi-archive"></span><span class="mtext">Nouveau Payements</span>
+						</a>
+					</li>
 					<li class="dropdown">
 						<a href="javascript:;" class="dropdown-toggle">
-							<span class="micon bi bi-textarea-resize"></span><span class="mtext">Payement</span>
+							<span class="micon bi bi-table"></span><span class="mtext">Evaluations</span>
+						</a>
+						<ul class="submenu">
+							<li><a href="{{route('index.composition')}}">Enregistrements</a></li>
+							<li><a href="{{route('index.Evaluation')}}">Sessions</a></li>
+							<li><a href="{{route('Bulletin.index')}}">Bulletin de note</a></li>
+							<li><a href="{{route('Bulletin.Liste')}}">Bulletin generer</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="{{route('matieres.index')}}" class="dropdown-toggle no-arrow">
+							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Matieres</span>
+						</a>
+					</li>
+					<li>
+						<a href="{{route('index.Enseigant')}}" class="dropdown-toggle no-arrow">
+							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Enseignants</span>
+						</a>
+					</li>
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle">
+							<span class="micon bi bi-textarea-resize"></span><span class="mtext">Emploie de temps</span>
 						</a>
 						<ul class="submenu">
 							<li>
-								<a href="{{route('Payement.index')}}">Nauveau payements</a>
+								<a href="{{route('index.Emploie')}}">Enregistrement</a>
 							</li>
-							<li><a href="">Listes Payements</a></li>
-							<li><a href="">Tranches</a></li>
+							<li><a href="{{route('index.Salles')}}">Salles</a></li>
+							<li><a href="{{route('heure.DeCour')}}">Heures de cour</a></li>
+							<li><a href="">Hauraires d'enseigants</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle">
+							<span class="micon bi bi-textarea-resize"></span><span class="mtext">Rappors</span>
+						</a>
+						<ul class="submenu">
+							<li class="dropdown">
+								<a href="javascript:;" class="dropdown-toggle">
+									<span class="micon fa fa-plug"></span><span class="mtext">Payement</span>
+								</a>
+								<ul class="submenu child">
+									<li><a href="{{route('Payement.RapportIndex')}}">Payement Etudiant</a></li>
+									<li><a href="{{route('Transaction.RapportIndex')}}">Transactions</a></li>
+								</ul>
+							</li>
+							<li>
+							<li><a href="">Etudians</a></li>
+							<li><a href="">Enseignants</a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
@@ -417,8 +463,9 @@
 								<a href="{{route('cour.index')}}">Cours</a>
 							</li>
 							<li><a href="{{route('Exercice')}}">Exercices</a></li>
-							<li><a href="">Evaluation</a></li>
-							<li><a href="">Seances</a></li>
+							<li><a href="{{route('Module.index')}}">Module</a></li>
+							<li><a href="{{route('Evaluations.Exercices')}}">Evaluation</a></li>
+							<li><a href="{{route('note.Resources')}}">Notes</a></li>
 						</ul>
 					</li>
 					<li>
@@ -426,26 +473,13 @@
 							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Courriels</span>
 						</a>
 					</li>
-					<li>
+					<!-- <li>
 						<a href="calendar.html" class="dropdown-toggle no-arrow">
 							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Session de formation</span>
 						</a>
-					</li>
-					<li>
-						<a href="calendar.html" class="dropdown-toggle no-arrow">
-							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Modules</span>
-						</a>
-					</li>
+					</li> -->
+
 					@if(Auth::user()->plants()->where('date_fin','>',now())->where('libeller','=', 'standard')->exists() || Auth::user()->plants()->where('date_fin','>',now())->where('libeller','=', 'premium')->exists())
-					<li class="dropdown">
-						<a href="javascript:;" class="dropdown-toggle">
-							<span class="micon bi bi-table"></span><span class="mtext">Evaluations</span>
-						</a>
-						<ul class="submenu">
-							<li><a href="basic-table.html">Enregistrements</a></li>
-							<li><a href="datatable.html">Listes des notes</a></li>
-						</ul>
-					</li>
 					<li>
 						<a href="calendar.html" class="dropdown-toggle no-arrow">
 							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Revelever de note</span>
@@ -453,13 +487,14 @@
 					</li>
 					<li class="dropdown">
 						<a href="javascript:;" class="dropdown-toggle">
-							<span class="micon bi bi-archive"></span><span class="mtext">Payements</span>
+							<span class="micon bi bi-archive"></span><span class="mtext"></span>
 						</a>
 						<ul class="submenu">
 							<li><a href="ui-buttons.html">Enregistrements</a></li>
 							<li><a href="ui-cards.html">Listes des payements</a></li>
 						</ul>
 					</li>
+
 					@if(Auth::user()->plants()->where('date_fin','>',now())->where('libeller','=', 'premium')->exists())
 					<li>
 						<a href="calendar.html" class="dropdown-toggle no-arrow">

@@ -92,13 +92,19 @@
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label>Formation</label>
+                                <label>Module</label>
                                 <div class="form-group has-warning">
-                                    <select class="custom-select2 form-control" name="state" id="formation"
+                                    <select class="custom-select2 form-control" name="state" id="module"
                                         style="width: 100%; height: 38px">
-                                        <option value="">Choisir une formation</option>
+                                        <option value="">Choisir un Module</option>
                                         @foreach ($formations as $formation)
-                                        <option value="{{$formation->id}}">{{$formation->nom}}</option>
+                                        @if($formation->Modules()->exists())
+                                        <optgroup label="{{$formation->nom}}">
+                                            @foreach($formation->Modules as $module)
+                                            <option value="{{$module->id}}">{{$module->libeller}}</option>
+                                            @endforeach
+                                        </optgroup>
+                                        @endif
                                         @endforeach
                                     </select>
                                     <div class="err-formation"></div>

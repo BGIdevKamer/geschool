@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('libeller');
             $table->text('description');
             $table->time('duree');
-            $table->foreign('cour_id')->references('id')->on('cours')->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('cour_id');
+            $table->unsignedBigInteger('cour_id')->nullable()->nullable();
+            $table->unsignedBigInteger('formation_id')->nullable()->nullable();
+            $table->unsignedBigInteger('module_id')->nullable()->nullable();
             $table->timestamps();
         });
     }

@@ -1,3 +1,4 @@
+€
 <!DOCTYPE html>
 <html>
 @include('header')
@@ -27,7 +28,8 @@
 
 			<div class="pd-20 card-box mb-30">
 				<div class="errors_calss"></div>
-				<form action="{{route('add.formation')}}" id="FormationForm">
+				<form action="{{route('add.formation')}}" id="FormationForm" method="post" enctype="multipart/form-data">
+					@csrf
 					<div class="row">
 						<div class="col-md-12 col-sm-12 mb-3">
 							<label>Miniature de la formations</label>
@@ -43,7 +45,7 @@
 						<div class="col-md-12 col-sm-12">
 							<div class="form-group">
 								<label>Nom de la formations</label>
-								<input type="text" class="form-control name" name="nom" id="nom">
+								<input type="text" class="form-control name" name="nom" id="nom" required>
 							</div>
 						</div>
 					</div>
@@ -51,13 +53,13 @@
 						<div class="col-md-6 col-sm-12">
 							<div class="form-group">
 								<label>Durée de la formation</label>
-								<input class="duree" id="duree" type="text" value="" name="duree" />
+								<input class="duree" id="duree" type="text" value="" name="duree" required />
 							</div>
 						</div>
 						<div class="col-md-6 col-sm-12">
 							<div class="form-group">
 								<label>Prix de la formation</label>
-								<input class="prix" id="prix" type="text" value="" name="prix" />
+								<input class="prix" id="prix" type="text" value="" name="prix" required />
 							</div>
 						</div>
 					</div>
@@ -67,12 +69,12 @@
 							<div class="form-group">
 								<div class="custom-control custom-radio mb-5">
 									<input type="radio" id="customRadio1" name="customRadio" class="custom-control-input"
-										value="1" />
+										value="1" required />
 									<label class="custom-control-label" for="customRadio1">Oui</label>
 								</div>
 								<div class="custom-control custom-radio mb-5">
 									<input type="radio" id="customRadio2" name="customRadio" name="customRadio" value="0"
-										class="custom-control-input" />
+										class="custom-control-input" required />
 									<label class="custom-control-label" for="customRadio2">Nom</label>
 								</div>
 								<div class="errsex  has-warning"></div>
@@ -89,6 +91,33 @@
 						<div class="form-group">
 							<label>Note</label>
 							<textarea class="form-control note" name="note" id="note"></textarea>
+						</div>
+					</div>
+					<div class="err"></div>
+					<div class="row">
+						<div class="col-md-3 col-sm-12">
+							<div class="form-group">
+								<label>Inscription</label>
+								<input type="text" class="form-control" name="tranche_1" id="tranche_1" required>
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-12">
+							<div class="form-group">
+								<label>1er tranche</label>
+								<input type="text" class="form-control" name="tranche_2" id="tranche_2" required>
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-12">
+							<div class="form-group">
+								<label>2em tranche</label>
+								<input type="text" class="form-control" name="tranche_3" id="tranche_3">
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-12">
+							<div class="form-group">
+								<label>3em tranche</label>
+								<input type="text" class="form-control" name="tranche_4" id="tranche_4">
+							</div>
 						</div>
 					</div>
 					<button class="btn btn-primary" id="Envoyer">

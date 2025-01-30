@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('numero')->nullable();
             $table->string('libeller');
             $table->string('desc');
-            $table->foreignIdFor(Formation::class)->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('module_id')->nullable();
             $table->string('videoLink')->nullable();
             $table->string('imgLink')->nullable();
             $table->string('youtubeid')->nullable();

@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Tranche extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'libeller',
+        'montant',
+        'formation_id',
+    ];
 }

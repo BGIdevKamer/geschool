@@ -22,6 +22,7 @@ class AuthController extends Controller
             ]
         );
 
+
         $field = filter_var($request->identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'telephone';
         $credentials = [$field => $request->identifier, 'password' => $request->password];
         if (Auth::guard('participant')->attempt($credentials)) {
@@ -88,5 +89,18 @@ class AuthController extends Controller
         $id = Auth()->guard('participant')->user()->id;
         $countFormation =  FormationParticipant::where('participant_id', '=', $id)->count();
         return view('participant.Dashboard', compact('countFormation'));
+    }
+    public function dashboardVue()
+    {
+        $userRandom = Auth::user()->random;
+        $formations = Formation::where('randomUser', $userRandom)->get();
+        return view('dashboard', compact('formations'));
+    }
+    public function deconnxion(Request $request)
+    {
+        Auth::guard('participant')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/Participant-login');
     }
 }

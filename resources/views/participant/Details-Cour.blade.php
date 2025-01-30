@@ -18,7 +18,7 @@
                                     <a href="{{route('dashboard')}}">Acceuil</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    {{$cour->formation->nom}}
+                                    {{$cour->Module->nom}}
                                 </li>
                             </ol>
                         </nav>
@@ -69,6 +69,7 @@
                     @endforeach
                 </div>
                 <hr class="mb-3 mt-3">
+                @if($cour->Exercices()->exists())
                 <h3 class="text-primary mb-3">Exercices</h3>
                 <div class="row clearfix">
                     @foreach($cour->Exercices as $exercice)
@@ -86,6 +87,7 @@
                     </div>
                     @endforeach
                 </div>
+                @endif
             </div>
             @endforeach
         </div>

@@ -11,7 +11,7 @@
             </p>
         </div>
         <div class="pb-20">
-            <table class="data-table table stripe hover nowrap " id="load-table">
+            <table class="data-table table stripe hover nowrap">
                 <thead>
                     <tr>
                         <th class="table-plus datatable-nosort">Nom/prenom</th>
@@ -24,7 +24,7 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="load-table">
                     @foreach($participant as $Participants)
                     <tr>
                         <td>{{$Participants->nom}} {{$Participants->prenom}}</td>
@@ -270,13 +270,13 @@
 <script src="{{asset ('assets/src/plugins/datatables/js/responsive.bootstrap4.min.js')}}"></script>
 <script src="{{asset ('assets/src/plugins/datatables/js/dataTables.buttons.min.js')}}"></script>
 <script src="{{asset ('assets/src/plugins/datatables/js/buttons.bootstrap4.min.js')}}"></script>
-<!-- <script src="{{asset ('assets/src/plugins/datatables/js/buttons.print.min.js')}}"></script> -->
-<!-- <script src="{{asset ('assets/src/plugins/datatables/js/buttons.html5.min.js')}}"></script> -->
-<!-- <script src="{{asset ('assets/src/plugins/datatables/js/buttons.flash.min.js')}}"></script> -->
-<!-- <script src="{{asset ('assets/src/plugins/datatables/js/pdfmake.min.js')}}"></script> -->
+<script src="{{asset ('assets/src/plugins/datatables/js/buttons.print.min.js')}}"></script>
+<script src="{{asset ('assets/src/plugins/datatables/js/buttons.html5.min.js')}}"></script>
+<script src="{{asset ('assets/src/plugins/datatables/js/buttons.flash.min.js')}}"></script>
+<script src="{{asset ('assets/src/plugins/datatables/js/pdfmake.min.js')}}"></script>
 <!-- <script src="{{asset ('assets/src/plugins/datatables/js/vfs_fonts.js')}}"></script> -->
 
-<!-- <script src="{{asset ('assets/vendors/scripts/datatable-setting.js')}}"></script> -->
+<script src="{{asset ('assets/vendors/scripts/datatable-setting.js')}}"></script>
 <script src="{{asset('assets/src/plugins/sweetalert2/sweetalert2.all.js')}}"></script>
 <script src="{{asset('assets/src/plugins/sweetalert2/sweet-alert.init.js')}}"></script>
 

@@ -23,24 +23,39 @@
 						</nav>
 					</div>
 				</div>
+				@if(session('success'))
+				<div
+					class="alert alert-success alert-dismissible fade show mt-3"
+					role="alert">
+					<strong>Felicitations!</strong> {{session('success')}}
+					<button
+						type="button"
+						class="close"
+						data-dismiss="alert"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				@endif
 			</div>
 		</div>
 
 		<div class="p-3 card-box mb-30">
-			<form action="" id="FormaddParticipant">
+			<form action="{{route('add.participant')}}" method="post" id="form-charge">
+				@csrf
 				<div class="errors_participant"></div>
 				<div class="row">
 					<div class="col-md-6 col-sm-12">
 						<label for="">Nom <small class="text-danger">*</small> </label>
 						<div class="form-group has-warning">
-							<input type="text" class="form-control" name="nomEtudiant" id="nomEtudiant">
+							<input type="text" class="form-control" name="nom" id="nomEtudiant" required>
 							<div class="errname"></div>
 						</div>
 					</div>
 					<div class="col-md-6 col-sm-12">
 						<label>Prenom <small class="text-danger">*</small> </label>
 						<div class="form-group has-warning">
-							<input type="text" class="form-control" name="prenomEtudiant" id="prenomEtudiant">
+							<input type="text" class="form-control" name="prenom" id="prenomEtudiant" required>
 							<div class="errprenom"></div>
 						</div>
 					</div>
@@ -49,14 +64,14 @@
 					<div class="col-md-6 col-sm-12 ">
 						<label>Telephone <small class="text-danger">*</small> </label>
 						<div class="form-group has-warning">
-							<input type="number" class="form-control" name="telephoneEtudiant" id="telephoneEtudiant">
+							<input type="number" class="form-control" name="telephone" id="telephoneEtudiant" required>
 							<div class="errtel"></div>
 						</div>
 					</div>
 					<div class="col-md-6 col-sm-12">
 						<label>email</label>
 						<div class="form-group has-warning">
-							<input type="email" class="form-control" name="emailEtudiant" id="emailEtudiant">
+							<input type="email" class="form-control" name="email" id="emailEtudiant" required>
 							<div class="erremail"></div>
 						</div>
 					</div>
@@ -65,7 +80,7 @@
 					<div class="col-md-12 col-sm-12">
 						<label>Date de naissance <small class="text-danger">*</small> </label>
 						<div class="form-group has-warning">
-							<input class="form-control" placeholder="Choisir une date" type="date" name="datenEtudiant" id="datenEtudiant" />
+							<input class="form-control" placeholder="Choisir une date" type="date" name="dateN" id="datenEtudiant" required />
 							<div class="errdate"></div>
 						</div>
 					</div>
@@ -75,13 +90,13 @@
 						<label for="">Choisir le sexe <small class="text-danger">*</small></label>
 						<div class="form-group">
 							<div class="custom-control custom-radio mb-5">
-								<input type="radio" id="customRadio1" name="customRadio" class="custom-control-input"
-									value="H" />
+								<input type="radio" id="customRadio1" name="sexe" class="custom-control-input"
+									value="H" required />
 								<label class="custom-control-label" for="customRadio1">Homme</label>
 							</div>
 							<div class="custom-control custom-radio mb-5">
-								<input type="radio" id="customRadio2" name="customRadio" name="customRadio" value="F"
-									class="custom-control-input" />
+								<input type="radio" id="customRadio2" name="sexe" value="F"
+									class="custom-control-input" required />
 								<label class="custom-control-label" for="customRadio2">Femme</label>
 							</div>
 							<div class="errsex  has-warning"></div>
@@ -90,7 +105,7 @@
 					<div class="col-md-6 col-sm-12">
 						<label>Ages <small class="text-danger">*</small> </label>
 						<div class="form-group has-warning">
-							<input type="number" class="form-control" name="ageEtudiant" id="ageEtudiant">
+							<input type="number" class="form-control" name="age" id="ageEtudiant" required>
 							<div class="errage"></div>
 						</div>
 					</div>
@@ -100,7 +115,7 @@
 					<div class="col-md-6 col-sm-12">
 						<label>Numero de Cni</label>
 						<div class="form-group has-warning">
-							<input type="text" class="form-control" id="cniEtudiant" name="cniEtudiant">
+							<input type="text" class="form-control" id="cniEtudiant" name="cni">
 							<div class="errcni"></div>
 						</div>
 					</div>
@@ -108,7 +123,7 @@
 						<div class="form-group">
 							<label>Niveau scolaire</label>
 							<div class="form-group has-warning ">
-								<select class="custom-select2 form-control" name="state" id="niveauEtudiant"
+								<select class="custom-select2 form-control" name="niveau" id="niveauEtudiant"
 									style="width: 100%; height: 38px">
 									<option value="">Selectionner</option>
 									<option value="Bac">Bac</option>
@@ -129,8 +144,8 @@
 						<div class="form-group">
 							<label>Formation/Speciliter <small class="text-danger">*</small> </label>
 							<div class="form-group has-warning">
-								<select class="custom-select2 form-control" name="state" id="formation"
-									style="width: 100%; height: 38px">
+								<select class="custom-select2 form-control" name="formation" id="formation"
+									style="width: 100%; height: 38px" required>
 									<option value="">Choisir une formation</option>
 									@foreach ($Formations as $formation)
 									<option value="{{$formation->id}}">{{$formation->nom}}</option>
@@ -147,9 +162,9 @@
 						<div class="form-group">
 							<label>Année scolaire</label>
 							<div class="form-group has-warning">
-								<select class="custom-select2 form-control" name="state"
+								<select class="custom-select2 form-control" name="anneescolaire"
 									id="anneescolaire"
-									style="width: 100%; height: 38px">
+									style="width: 100%; height: 38px" required>
 									<option value="">Choisir une année scolaire</option>
 									<option value="2024-2025">2024-2025</option>
 									<option value="2025-2026">2025-2026</option>
@@ -180,12 +195,11 @@
 						</div>
 					</div>
 				</div>
-				<button class="btn btn-primary" id="addParticipantbtn">
-					<div class="spinner-border text-light load-btn-addparticipant d-none"
-						style="width: 1rem; height: 1rem;" role="status">
+				<button type="submit" class="btn btn-primary">
+					<div class="spinner-border text-light load-btn-ex d-none" style="width: 1rem; height: 1rem;" role="status">
 						<span class="sr-only">Loading...</span>
 					</div>
-					<span class="load-txt-addparticipant">Enregister</span>
+					<span class="btn-txt-ex">Enregister</span>
 				</button>
 			</form>
 		</div>

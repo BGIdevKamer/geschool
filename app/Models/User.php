@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\plant;
+use App\Models\Identify;
 
 
 class User extends Authenticatable
@@ -23,12 +24,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'raisonSocial',
         'random',
         'logo',
         'telephone',
-        'ville',
-        'adress',
+        'identifie_id',
     ];
 
     /**

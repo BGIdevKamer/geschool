@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Formation;
+use App\Models\Module;
 use App\Models\FormationParticipant;
 use App\Models\Piece;
 use App\Models\Cour;
+use App\Models\Exercice;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -50,7 +52,7 @@ class CoursController extends Controller
         $Cour->libeller = $request->libeller;
         $Cour->numero = $request->num;
         $Cour->desc = $request->desc;
-        $Cour->formation_id = $request->state;
+        $Cour->module_id = $request->state;
         $Cour->videoLink = $nameVideo;
         $Cour->imgLink = $nameMiniature;
         $Cour->Content = $request->content;
@@ -115,11 +117,15 @@ class CoursController extends Controller
         if (Storage::disk('public')->exists($fileRoute)) {
             return Storage::disk('public')->download($fileRoute);
         }
-        return response()->json(['error' => 'File not found'], 404);
+        abort(404);
     }
     public function deleteCour(Request $request, $id)
     {
         $pieces = Piece::where('cour_id', '=', $id)->get();
+        $Exercices = Exercice::where('cour_id', '=', $id)->get();
+        foreach ($Exercices as $exercice) {
+            $exercice->delete();
+        }
         foreach ($pieces as $piece) {
             $piece->delete();
         }
@@ -138,5 +144,15 @@ class CoursController extends Controller
     {
         $cours = Cour::where('id', '=', $id)->get();
         return view('participant.Details-Cour', compact('cours'));
+    }
+    
+    public function ModuleVue($id)
+    {
+        // $userRandom = Auth::user()->random;
+        $cours = Cour::where('module_id', $id)->paginate(5);
+        $Module = Module::find($id);
+        $Exercices = Exercice::where('module_id', $id)->get();
+        $Modules = Module::where("formation_id", $Module->formation_id)->limit(6)->get();
+        return view('moduleCours', compact('cours', 'Module', 'Modules', 'Exercices'));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Formation;
+use App\Models\Tranche;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -17,6 +18,7 @@ class FormationController extends Controller
                 'nom' => 'required',
                 'duree' => 'required',
                 'prix' => 'required',
+                'customRadio' => 'required',
             ],
             [
                 'name.required' => 'Veillez reseignez le nom de la formation',
@@ -26,7 +28,11 @@ class FormationController extends Controller
         );
 
         $file = $request->file('miniature');
-        $name = storage::disk('public')->put('FormationImg', $file);
+        if (!empty($file)) {
+            $name = storage::disk('public')->put('FormationImg', $file);
+        } else {
+            $name = "";
+        }
 
         $userRandom = Auth::user()->random;
         $formation = new Formation();
@@ -40,6 +46,37 @@ class FormationController extends Controller
         $formation->statue =  "1";
         $formation->img =  $name;
         $formation->save();
+
+        for ($i = 1; $i <= 4; $i++) {
+
+            if ($i == 1) {
+                $libeller = "Inscription";
+                $numero = 0;
+            } elseif ($i == 2) {
+                $libeller = "Premier Tranche";
+                $numero = 1;
+            } elseif ($i == 3) {
+                $libeller = "Deuxieme Tranche";
+                $numero = 2;
+            } elseif ($i == 4) {
+                $libeller = "Troisieme Tranche";
+                $numero = 3;
+            }
+
+            $nameRequest = "tranche_$i";
+
+            $montant = $request->$nameRequest;
+
+            if (empty($montant)) {
+                $montant = "0";
+            }
+            $tranche = new Tranche();
+            $tranche->libeller =  $libeller;
+            $tranche->montant =  $montant;
+            $tranche->formation_id =   $formation->id;
+            $tranche->numero = $numero;
+            $tranche->save();
+        }
 
         return response()->json([
             'status' => "success",

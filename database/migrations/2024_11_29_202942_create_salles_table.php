@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tranches', function (Blueprint $table) {
+        Schema::create('salles', function (Blueprint $table) {
             $table->id();
-            $table->foreign('formation_id')->references('id')->on('formations')->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('formation_id');
-            $table->string('libeller');
-            $table->string('montant');
-            $table->date('date_limite');
+            $table->string('nom');
+            $table->string('places')->nullable();
+            $table->string('description')->nullable();
+            $table->string('randomUser');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tranches');
+        Schema::dropIfExists('salles');
     }
 };

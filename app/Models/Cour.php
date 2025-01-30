@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Formation;
-use App\Models\Pieces;
+use App\Models\Piece;
 use App\Models\Exercice;
+use App\Models\Module;
 
 class Cour extends Model
 {
@@ -16,16 +17,16 @@ class Cour extends Model
         'numero',
         'libeller',
         'desc',
-        'formation_id',
+        'module_id',
         'videoLink',
         'youtubeid',
         'imgLink',
         'Content',
     ];
 
-    public function formation()
+    public function Module()
     {
-        return $this->belongsTo(Formation::class);
+        return $this->belongsTo(Module::class);
     }
     public function Pieces()
     {

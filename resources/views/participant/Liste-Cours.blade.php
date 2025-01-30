@@ -9,7 +9,7 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
                         <div class="title">
-                            <h4>Liste des cours</h4>
+                            <h4>Liste des Modules</h4>
                         </div>
                         <nav aria-label="breadcrumb" role="navigation">
                             <ol class="breadcrumb">
@@ -17,7 +17,7 @@
                                     <a href="{{route('dashboard')}}">Accueil</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
-                                    Cours
+                                    Modules
                                 </li>
                             </ol>
                         </nav>
@@ -32,31 +32,20 @@
                 <p>{{$Infos->anneeScolaire}}</p>
             </div>
             <div class="row clearfix">
-                @if(!empty($Infos->Formation->cours))
-                @foreach($Infos->Formation->cours as $cour)
+                @foreach($Infos->Formation->Modules as $module)
                 <div class="col-lg-3 col-md-6 col-sm-12 mb-30">
-                    <div class="card card-box">
-                        <img class="card-img-top" src="{{Storage::url($cour->imgLink)}}" alt="Card image cap" />
-                        <div class="card-body">
-                            <h5 class="card-title weight-500">{{$cour->libeller}}</h5>
-                            <p class="card-text">
-                                {{$cour->desc}}
-                            </p>
-                            <a href="{{route('particpant.cour',['id'=>$cour->id])}}" class="btn btn-primary">Commancer</a>
+                    <div class="da-card">
+                        <div class="da-card-content">
+                            <h5 class="h5 mb-10">{{$module->libeller}}</h5>
+                            <p class="mb-0">{{$module->description}}</p>
+                            <a href="{{route('Module.Participant',['id'=>$module->id])}}" class="btn btn-success mt-3">Commancer <i class="icon-copy bi bi-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
                 @endforeach
-                @else
-                <p class="text-center"><strong>Cette formation n'a aucun cour</strong></p>
-                @endif
             </div>
-
         </div>
-
-
         @endforeach
-
     </div>
 </div>
 <!-- js -->

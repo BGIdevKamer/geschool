@@ -203,14 +203,13 @@
                         class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
                         <a class="dropdown-item" href="/profil"><i class="dw dw-user1"></i> Profile</a>
                         <a class="dropdown-item" href="faq.html"><i class="dw dw-help"></i> Help</a>
-                        <form action="{{ route('logout') }}" method="POST">
+                        <form action="{{ route('deconnxion') }}" method="POST">
                             @csrf
-                            <a class="dropdown-item" href="route('logout')"
+                            <a class="dropdown-item" href="route('deconnxion')"
                                 onclick="event.preventDefault();
-                                                this.closest('form').submit();"><i class="dw dw-logout"></i> Log Out</a>
+                                                this.closest('form').submit();"><i class="dw dw-logout"></i>Deconnxion</a>
 
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -382,7 +381,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="calendar.html" class="dropdown-toggle no-arrow">
+                        <a href="{{route('Evaluations.Participant')}}" class="dropdown-toggle no-arrow">
                             <span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Evaluations</span>
                         </a>
                     </li>

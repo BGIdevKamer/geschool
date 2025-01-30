@@ -56,7 +56,7 @@
             </div>
             <div class="col-lg-4 text-center text-lg-end">
                 <div class="d-inline-flex align-items-center" style="height: 45px;">
-                    <a href="{{route('inscription', ['keys'=> '6n2kXAPjmz'])}}"><small class="me-3 text-dark"><i
+                    <a href="{{route('inscription', ['keys'=> '3COc5oxlfM'])}}"><small class="me-3 text-dark"><i
                                 class="fa fa-user text-primary me-2"></i>Register</small></a>
                     <a href="#"><small class="me-3 text-dark"><i
                                 class="fa fa-sign-in-alt text-primary me-2"></i>Login</small></a>
@@ -122,10 +122,9 @@
                             <div class="col-lg-0 col-xl-5"></div>
                             <div class="col-xl-7 animated fadeInLeft">
                                 <div class="text-sm-center text-md-end">
-                                    <h4 class="text-primary text-uppercase fw-bold mb-4">Welcome To Stocker</h4>
-                                    <h1 class="display-4 text-uppercase text-white mb-4">Invest your money with higher
-                                        return</h1>
-                                    <p class="mb-5 fs-5">abdellamamam Ipsum is simply dummy text of the printing and
+                                    <h4 class="text-primary text-uppercase fw-bold mb-4">Welcome</h4>
+                                    <h1 class="display-4 text-uppercase text-white mb-4">Statistique</h1>
+                                    <p class="mb-5 fs-5"> Ipsum is simply dummy text of the printing and
                                         typesetting industry. Lorem Ipsum has been the industry's standard dummy...
                                     </p>
                                     <div
@@ -158,8 +157,7 @@
                             <div class="col-12 animated fadeInUp">
                                 <div class="text-center">
                                     <h4 class="text-primary text-uppercase fw-bold mb-4">Welcome To Stocker</h4>
-                                    <h1 class="display-4 text-uppercase text-white mb-4">Invest your money with higher
-                                        return</h1>
+                                    <h1 class="display-4 text-uppercase text-white mb-4">Analytics</h1>
                                     <p class="mb-5 fs-5">Lorem Ipsum is simply dummy text of the printing and
                                         typesetting industry. Lorem Ipsum has been the industry's standard dummy...
                                     </p>

@@ -6,10 +6,15 @@ use App\Models\Formation;
 use Illuminate\Http\Request;
 use App\Models\Participant;
 use App\Models\FormationParticipant;
+use App\Models\ExerciceParticipant;
+use App\Models\Identify;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
+use App\Mail\PasswordParticipants;
+
 
 class participantController extends Controller
 {
@@ -45,15 +50,14 @@ class participantController extends Controller
                 'formation.required' => 'Veillez reseignez une formation',
             ]
         );
+        function generateToken()
+        {
+            $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $token = str_shuffle($chars);
+            return substr($token, 0, 8) . substr($token, 26, 2);
+        }
 
-        // function generateToken()
-        // {
-        //     $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        //     $token = str_shuffle($chars);
-        //     return substr($token, 0, 8) . substr($token, 26, 2);
-        // }
-
-        // $token = "abdel12345";
+        $password = generateToken();
 
         $userRandom = Auth::user()->random;
         $participant = new Participant();
@@ -66,9 +70,9 @@ class participantController extends Controller
         $participant->age = $request->age;
         $participant->NiveauScolaire = $request->niveau;
         $participant->cni = $request->cni;
+        $participant->password = Hash::make($password);
         $participant->randomUser = $userRandom;
         $participant->save();
-
         // $formation = Formation::find($request->formation);
 
         // $formation->Participants()->attach($participant->id, [
@@ -79,14 +83,21 @@ class participantController extends Controller
         $FormationParticipant = new FormationParticipant();
         $FormationParticipant->participant_id = $participant->id;
         $FormationParticipant->formation_id = $request->formation;
-        $FormationParticipant->formation_id = $request->formation;
         $FormationParticipant->anneeScolaire = $request->anneescolaire;
         $FormationParticipant->niv = $request->niv;
         $FormationParticipant->save();
 
-        return response()->json([
-            'status' => 'success',
-        ]);
+        // dd($sender);
+        if (!empty($request->email)) {
+
+            $fromEmail = Identify::where('randomUser', $userRandom)->value('email');
+            $name = $request->nom . ' ' . $request->prenom;
+            $formation = Formation::where('id', $request->formation)->value('nom');
+            Mail::to($request->email)->send(new PasswordParticipants($fromEmail, ['password' => $password, 'name' => $name, 'annee_scolaire' => $request->anneescolaire, 'formation' => $formation, 'email' => $request->email])); //envoie avec des données supplémentaires
+            return redirect()->route('Enregistrement.Etudiant')->with('success', 'le participant a ete enregistrer avec success.');
+        }
+
+        return redirect()->route('Enregistrement.Etudiant')->with('success', 'le participant a ete enregistrer avec success.');
     }
     public function Listeparticiapants()
     {
@@ -156,5 +167,24 @@ class participantController extends Controller
         return response()->json([
             'status' => "success",
         ]);
+    }
+    public function noteResources()
+    {
+        $modules = ExerciceParticipant::join('exercices', 'exercices.id', '=', 'exercice_participants.exercice_id')
+            ->where('formation_id', 0)
+            ->where('cour_id', 0)
+            ->get();
+
+        $formations = ExerciceParticipant::join('exercices', 'exercices.id', '=', 'exercice_participants.exercice_id')
+            ->where('module_id', 0)
+            ->where('cour_id', 0)
+            ->get();
+
+        $cours = ExerciceParticipant::join('exercices', 'exercices.id', '=', 'exercice_participants.exercice_id')
+            ->where('module_id', 0)
+            ->where('formation_id', 0)
+            ->get();
+
+        return view('RessourcesNote', compact('modules', 'formations', 'cours'));
     }
 }

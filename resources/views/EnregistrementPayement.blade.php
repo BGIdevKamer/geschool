@@ -26,6 +26,26 @@
             </div>
         </div>
         <div class="pd-20 card-box mb-30">
+            @if(session('err'))
+            <div class="card-box mb-30">
+                <div class="alert alert-success">
+                    {{session('err')}}
+                </div>
+            </div>
+            @endif
+            @if(session('success'))
+            <div class="alert alert-success" role="alert">
+                <h4 class="alert-heading h4">Felicitations!</h4>
+                <p>
+                    Le payement de ce particiapants a bien ete en registrer.
+                    Pour generer rapidement un recus de payement cliker sur <strong>Generer un recus</strong>
+                </p>
+                <hr />
+                <p class="mb-0">
+                    <a href="{{route('print.Payement',['id'=>session('success')])}}" class="btn btn-success">Generer un recus</a>
+                </p>
+            </div>
+            @endif
             <div class="error_class_marchant"></div>
 
             <form method="post" action="{{route('add.payement')}}" id="FormMarchandises">
@@ -38,7 +58,7 @@
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
                         <div class="form-group">
-                            <label>Veiller entrez le nom prenom, formation niveau, anneé scolaire,</label>
+                            <label>Veiller entrez le <strong>nom prenom</strong> , <strong>formation niveau</strong>, <strong>anneé scolaire</strong>,</label>
                             <select
                                 class="custom-select2 form-control select-expediteur"
                                 name="FormationPayement"
@@ -47,7 +67,7 @@
                                 <option value="">Choisir l'Apprenant</option>
                                 @foreach($participants as $participant)
                                 @foreach($participant->FormationParticipants as $FormationParticipant)
-                                <option value="{{$FormationParticipant->id}}">{{$FormationParticipant->Participant->nom}} {{$FormationParticipant->Participant->prenom}}, {{$FormationParticipant->Formation->nom}} {{$FormationParticipant->niv}}, {{$FormationParticipant->anneeScolaire}}</option>
+                                <option value="{{$FormationParticipant->id}}">{{$FormationParticipant->Participant->nom}} {{$FormationParticipant->Participant->prenom}}, {{$FormationParticipant->Formation->nom}} @if(!empty($FormationParticipant->niv)) {{$FormationParticipant->niv}} @endif, {{$FormationParticipant->anneeScolaire}} </option>
                                 @endforeach
                                 @endforeach
                             </select>
@@ -69,14 +89,14 @@
                                 <div class="form-group">
                                     <div class="form-group">
                                         <label>Note</label>
-                                        <textarea class="form-control" name="notes" id="notes" required></textarea>
+                                        <textarea class="form-control" name="notes" id="notes"></textarea>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="">
-                            <button class="btn btn-primary" id="add_marchandises">
+                            <button class="btn btn-primary" id="addPayement">
                                 <div class="spinner-border text-light save-load-btn-ma d-none" style="width: 1rem; height: 1rem;" role="status">
                                     <span class="sr-only">Loading...</span>
                                 </div>
@@ -91,7 +111,6 @@
         </div>
     </div>
 </div>
-
 </div>
 </div>
 <!-- Confirmation modal -->
@@ -103,7 +122,7 @@
 <script src="{{asset('assets/vendors/scripts/process.js')}}"></script>
 <script src="{{asset('assets/vendors/scripts/layout-settings.js')}}"></script>
 <script src="{{asset('assets/src/plugins/cropperjs/dist/cropper.js')}}"></script>
-<script src="{{asset('assets/module/main.js')}}"></script>
+<!-- <script src="{{asset('assets/module/main.js')}}"></script> -->
 <script src="{{asset('assets/vendors/scripts/advanced-components.js')}}"></script>
 
 <script src="{{asset('assets/src/plugins/sweetalert2/sweetalert2.all.j')}}"></script>

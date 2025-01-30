@@ -35,12 +35,36 @@
                                 <select class="custom-select2 form-control" name="idCour" id="idCour"
                                     style="width: 100%; height: 38px">
                                     @foreach($Cours as $cour)
-                                    <optgroup label="{{$cour->libeller}}" data-max-options="2">
+                                    @if($cour->Exercices()->exists())
+                                    <optgroup label="Exos du cour : {{$cour->libeller}}" data-max-options="2">
                                         @foreach($cour->Exercices as $exercice)
                                         <option value="{{$exercice->id}}">{{$exercice->libeller}}</option>
                                         @endforeach
                                     </optgroup>
+                                    @endif
                                     @endforeach
+
+                                    @foreach($Formations as $formation)
+                                    @if($formation->Exercices()->exists())
+                                    <optgroup label="Exos de la formation : {{$formation->nom}}" data-max-options="2">
+                                        @foreach($formation->Exercices as $exercice)
+                                        <option value="{{$exercice->id}}">{{$exercice->libeller}}</option>
+                                        @endforeach
+                                    </optgroup>
+                                    @endif
+                                    @endforeach
+
+                                    @foreach($Modules as $module)
+                                    @if($module->Exercices()->exists())
+                                    <optgroup label="Exos de fin de module : {{$module->libeller}}" data-max-options="2">
+                                        @foreach($module->Exercices as $exercice)
+                                        <option value="{{$exercice->id}}">{{$exercice->libeller}}</option>
+                                        @endforeach
+                                    </optgroup>
+                                    @endif
+                                    @endforeach
+
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>
@@ -53,19 +77,41 @@
                 <div class="errors_calss"></div>
                 <h3 class="text-primary pb-3">Enregistrement exercice</h3>
                 <form action="{{route('add.Exercice')}}" method="post" id="ExerciceForm">
+                    @csrf
                     <div class="form-group">
+                        <label>Cour/Formation/module <small class="text-danger">*</small> </label>
+                        <div class="form-group has-warning">
+                            <select class="custom-select2 form-control" name="cfm" id="cfm"
+                                style="width: 100%; height: 38px">
+                                <option value="">Choisir</option>
+                                <option value="0">Module</option>
+                                <option value="1">Formation</option>
+                                <option value="2">Cour</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" id="">
                         <label>Cour <small class="text-danger">*</small> </label>
                         <div class="form-group has-warning">
-                            <select class="custom-select2 form-control" name="cour" id="cour"
+                            <select class="custom-select2 form-control" name="idcfm" id="idcfm"
                                 style="width: 100%; height: 38px">
                                 <option value="">Choisir un cour</option>
-                                @foreach($Formations as $formation)
-                                <optgroup label="{{$formation->nom}}" data-max-options="2">
-                                    @foreach($formation->cours as $cour)
-                                    <option value="{{$cour->id}}">{{$cour->libeller}}</option>
+                                <optgroup label="Module">
+                                    @foreach($Modules as $Module)
+                                    <option value="{{$Module->id}}">{{$Module->libeller}} : <strong>{{$Module->Formation->nom}}</strong> </option>
                                     @endforeach
                                 </optgroup>
-                                @endforeach
+                                <optgroup label="Formations">
+                                    @foreach($Formations as $formation)
+                                    <option value="{{$formation->id}}">{{$formation->nom}}</option>
+                                    @endforeach
+                                </optgroup>
+                                <optgroup label="Cours">
+                                    @foreach($Cours as $Cour)
+                                    <option value="{{$Cour->id}}">{{$Cour->libeller}}</option>
+                                    @endforeach
+                                </optgroup>
                             </select>
                             <div class="errExercices"></div>
                         </div>
@@ -158,7 +204,6 @@
 
 
 </div>
-
 
 
 <div
