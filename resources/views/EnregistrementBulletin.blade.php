@@ -60,22 +60,20 @@
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label>année scolaire</label>
+                            <label for="">Années scolaire</label>
+                            <div class="form-group has-warning">
                                 <select class="custom-select2 form-control" name="anneescolaire"
                                     id="anneescolaire"
                                     style="width: 100%; height: 38px" required>
                                     <option value="">Choisir une année scolaire</option>
-                                    <option value="2024-2025">2024-2025</option>
-                                    <option value="2025-2026">2025-2026</option>
-                                    <option value="2026-2027">2026-2027</option>
-                                    <option value="2027-2028">2027-2028</option>
-                                    <option value="2028-2029">2028-2029</option>
-                                    <option value="2029-2030">2029-2030</option>
-                                    <option value="2030-2031">2030-2031</option>
-                                    <option value="2031-2032">2031-2032</option>
-                                    <option value="2032-2033">2032-2033</option>
+                                    @foreach($years as $year)
+                                    <option value="{{$year->Years}}" @if($year->active == 1) selected @endif @if(count($years)==0) disabled @endif>{{$year->Years}}</option>
+                                    @endforeach
                                 </select>
+                                @if(count($years) == 0)
+                                <p class="text-warnning"> veill Crée et activer les années scolaires <a href="{{route('General.index')}}" class="btn btn-primary"> Continuer </a></p>
+                                @endif
+                                <div class="erranneescolaire"></div>
                             </div>
                         </div>
                     </div>

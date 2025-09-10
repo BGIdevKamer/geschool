@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\FormationParticipant;
 use App\Models\Matiere;
+use App\Models\Evaluation;
 
 class Composition extends Model
 {
@@ -24,5 +25,9 @@ class Composition extends Model
     public function Matiere()
     {
         return $this->belongsTo(Matiere::class);
+    }
+    public function Evaluation()
+    {
+        return $this->belongsTo(Evaluation::class);
     }
 }

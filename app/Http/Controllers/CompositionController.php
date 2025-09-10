@@ -10,6 +10,7 @@ use App\Models\Formation;
 use App\Models\Matiere;
 use App\Models\Composition;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Years;
 
 class CompositionController extends Controller
 {
@@ -17,10 +18,14 @@ class CompositionController extends Controller
     {
         $userRandom = Auth::user()->random;
         $participants =  Participant::where('randomUser', '=', $userRandom)->get();
+
+        $years = Years::where('randomUser', Auth::user()->random)->get();
+        $y = Years::where('randomUser', '=', $userRandom)->where('active', 1)->value('Years');
+
         $Evaluation =  Evaluation::where('randomUser', '=', $userRandom)->get();
         $Matiere =  Matiere::where('randomUser', '=', $userRandom)->get();
         $Formations =  Formation::where('randomUser', '=', $userRandom)->get();
-        return view('Composition', compact('participants', 'Evaluation', 'Matiere', 'Formations'));
+        return view('Composition', compact('participants', 'Evaluation', 'Matiere', 'Formations', 'years', 'y'));
     }
     public function  addEvaluation(Request $request)
     {
@@ -175,5 +180,18 @@ class CompositionController extends Controller
             }
         }
         return redirect()->route('index.composition')->with('success', 'les notes on ete enregistrez avec success.');
+    }
+    public function deleteComposition(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+            'participant_id' => 'required|integer',
+        ]);
+
+        $composition = Composition::find($request->id);
+
+        if ($composition->delete()) {
+            return redirect()->route('Participant.Detail', ['id' => $request->participant_id])->with('success', 'La note a été avec success veiller la reenregistrer si besoin');
+        }
     }
 }

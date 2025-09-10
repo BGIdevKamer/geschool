@@ -15,7 +15,7 @@
                         <nav aria-label="breadcrumb" role="navigation">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="{{route('dashboard')}}">Acceuil</a>
+                                    <a href="{{route('dashboard')}}">Accueil</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
                                     {{$cour->Module->nom}}
@@ -45,7 +45,11 @@
                 </div>
                 <div class="container mt-5 mb-5">
                     {!!$cour->Content!!}
+                    <div class="m-3">
+                        <a href="" class="btn btn-success">Terminer</a>
+                    </div>
                 </div>
+                @if(count($cour->Pieces) != 0)
                 <h2 class="pt-2">Telechargements</h2>
                 <p class=" pb-3">Cliquez pour lancer le Telechargements</p>
                 <div class="row clearfix">
@@ -68,6 +72,7 @@
                     </div>
                     @endforeach
                 </div>
+                @endif
                 <hr class="mb-3 mt-3">
                 @if($cour->Exercices()->exists())
                 <h3 class="text-primary mb-3">Exercices</h3>

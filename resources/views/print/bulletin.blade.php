@@ -393,7 +393,7 @@
                         @foreach($bulletinData as $Data)
                         @if($Data['categorie'] == $categorie['id'])
                         <tr>
-                            <td>{{$Data['libelle']}} | s<em><strong>{{$Data['enseigant']}}</strong></em> </td>
+                            <td>{{$Data['libelle']}} | <em><strong>{{$Data['enseigant']}}</strong></em> </td>
                             <td>{{$Data['note_obtenue_non_coefficient']}}</td>
                             <td>{{$Data['coef']}}</td>
                             <td>{{$Data['note_obtenue_coefficient']}}</td>
@@ -416,40 +416,48 @@
                             <tr>
                                 <th>Resumer du travail</th>
                                 <th>{{$data[0]['Evaluation']}}</th>
+                                @if(!empty($prevData)) <th style="padding-left: 15px;">Rappel {{$prevData[0]['evaluation']}}</th> @endif
                             </tr>
                         </thead>
                         <tr>
                             <td>Total points</td>
                             <td>{{$data[0]['totalPoints']}}</td>
+                            @if(!empty($prevData)) <td style="padding-left: 15px;">{{$prevData[0]['totalPoints']}}</td> @endif
                         </tr>
                         <tr>
                             <td>Total coefficients</td>
                             <td>{{$data[0]['totalCoefficients']}}</td>
+                            @if(!empty($prevData)) <td style="padding-left: 15px;">{{$prevData[0]['totalCoefficients']}}</td> @endif
                         </tr>
                         <tr>
                             <td>Moyenne de l'eleve</td>
                             <td>{{$data[0]['moy']}}</td>
+                            @if(!empty($prevData)) <td style="padding-left: 15px;">{{$prevData[0]['moy']}}</td> @endif
                         </tr>
                         <tr>
                             <td>Rang de l'eleve</td>
                             <td>{{$data[0]['rank']}}è / {{$data[0]['effectif']}}</td>
+                            @if(!empty($prevData))<td style="padding-left: 15px;">{{$prevData[0]['rank']}}è</td>@endif
                         </tr>
                         <tr>
                             <td>Appreciat travail</td>
-                            <td>{{$data[0]['appreciation']}}
-                            </td>
+                            <td>{{$data[0]['appreciation']}}</td>
+                            @if(!empty($prevData)) <td style="padding-left: 15px;">{{$prevData[0]['appreciation']}}</td>@endif
                         </tr>
                         <tr>
                             <td>Tableu d'honneur</td>
                             <td>{{$data[0]['Tn']}}</td>
+                            @if(!empty($prevData))<td style="padding-left: 15px;">{{$prevData[0]['tn']}}</td>@endif
                         </tr>
                         <tr>
                             <td>Moyenne du premier</td>
                             <td>{{$data[0]['max_moy']}}</td>
+                            @if(!empty($prevData))<td style="padding-left: 15px;">{{$prevData[0]['max_moy']}}</td>@endif
                         </tr>
                         <tr>
                             <td>Moyenne du dernier</td>
                             <td>{{$data[0]['min_moy']}}</td>
+                            @if(!empty($prevData))<td style="padding-left: 15px;">{{$prevData[0]['min_moy']}}</td>@endif
                         </tr>
                         <tr>
                             <td>Moy.Géné.classe</td>

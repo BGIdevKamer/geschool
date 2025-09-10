@@ -33,8 +33,8 @@
                                         <div class="row no-gutters">
                                             <div class="col-lg-8 col-md-12 col-sm-12">
                                                 <div class="blog-caption">
-                                                    <h3 class="mb-2">
-                                                        <a href="#">{{ $exercice->libeller }}</a>
+                                                    <h3 class="mb-2 text-success">
+                                                        {{ $exercice->libeller }}
                                                     </h3>
                                                     <div class="blog-by">
                                                         <p>{{ $exercice->description }}</p>
@@ -48,7 +48,7 @@
                                                         </div>
                                                         @if($data[$FormationParticipant->id] == 100)
                                                         <div class="pt-10">
-                                                            <a href="{{ route('Exercice.View', ['id' => $exercice->id]) }}" class="btn btn-outline-primary">Voir plus</a>
+                                                            <a href="{{ route('Exercice.View', ['id' => $exercice->id]) }}" class="btn btn-outline-primary">Commencer</a>
                                                         </div>
                                                         @endif
                                                     </div>

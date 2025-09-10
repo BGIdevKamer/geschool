@@ -92,9 +92,19 @@
         class="login-wrap d-flex align-items-center flex-wrap justify-content-center">
         <div class="container">
             <div class="row align-items-center">
+                
                 <div class="col-md-6 col-lg-7">
-                    <img src="vendors/images/login-page-img.png" alt="" />
+                    <div class="h3 text-primary">
+                        <em>
+                            <h1 class="">TWheyStats Academy  </h1>
+                             <h3 class="text-sm text-primary">Statistique et santé publique</h3>
+                             <h6><< Votre compétence est notre satisfaction.>></h6>
+                            
+                        </em>
+                    </div>
+                    <img src="{{asset('assets/src/images/regis.png')}}" alt="" />
                 </div>
+
                 <div class="col-md-6 col-lg-5">
                     <div class="login-box bg-white box-shadow border-radius-10">
                         <div class="login-title">

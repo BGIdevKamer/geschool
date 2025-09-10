@@ -15,7 +15,7 @@
                         <nav aria-label="breadcrumb" role="navigation">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="{{route('dashboard')}}">Acceuil</a>
+                                    <a href="{{route('dashboard')}}">Accueil</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
                                     {{$cour->Module->nom}}
@@ -26,6 +26,20 @@
                     <div class="col-md-6 col-sm-12 text-right">
                     </div>
                 </div>
+                @if(session('success'))
+                <div
+                    class="alert alert-success alert-dismissible fade show mt-3"
+                    role="alert">
+                    <strong>Felicitations!</strong> {{session('success')}}
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @endif
             </div>
             <div class="pd-20 card-box mb-30">
                 <div class="clearfix mb-20">
@@ -46,6 +60,7 @@
                 <div class="container mt-5 mb-5">
                     {!!$cour->Content!!}
                 </div>
+                @if(count($cour->Pieces) != 0)
                 <h2 class="pt-2">Telechargements</h2>
                 <p class=" pb-3">Cliquez pour lancer le Telechargements</p>
                 <div class="row clearfix">
@@ -68,6 +83,7 @@
                     </div>
                     @endforeach
                 </div>
+                @endif
                 <hr class="mb-3 mt-3">
                 <h3 class="text-primary mb-3">Exercices</h3>
                 <div class="row clearfix">

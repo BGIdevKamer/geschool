@@ -50,9 +50,12 @@ class RegisteredUserController extends Controller
 
         // Enregistrement du logo
         $fileLogo = $request->file('logo');
-        $pathLogo = 'assets/identifies/';
+        // $pathLogo = 'assets/identifies/';
         $filenameLogo = uniqid() . '.' . $fileLogo->getClientOriginalExtension();
-        $nameLogo = storage::disk('public')->put($pathLogo . $filenameLogo, file_get_contents($fileLogo->getRealPath()));
+
+        $responses=$request->file('logo')->move(public_path('assets/identifies'), $filenameLogo);
+        // $nameLogo = storage::disk('public')->put($pathLogo . $filenameLogo, file_get_contents($fileLogo->getRealPath()));
+
 
         //enregistrement photo de profil
         $imageUser = $request->file('photo');
@@ -60,17 +63,6 @@ class RegisteredUserController extends Controller
             $nameImageUser = storage::disk('public')->put('userFile', $imageUser);
         }
 
-
-        $Identify = new Identify();
-        $Identify->email = $request->emailE;
-        $Identify->raisonSocial = $request->Rs;
-        $Identify->logo = $nameLogo;
-        $Identify->ville = $request->ville;
-        $Identify->adress = $request->adress;
-        $Identify->Bp = $request->Bp;
-        $Identify->type = $request->type;
-        $Identify->telephone = $request->phone;
-        $Identify->save();
 
 
         function generateToken()
@@ -82,11 +74,32 @@ class RegisteredUserController extends Controller
 
         $token = generateToken();
 
+
+        $Identify = new Identify();
+        $Identify->email = $request->emailE;
+        $Identify->raisonSocial = $request->Rs;
+        $Identify->logo = $filenameLogo;
+        $Identify->ville = $request->ville;
+        $Identify->adress = $request->adress;
+        $Identify->Bp = $request->Bp;
+        $Identify->randomUser = $token;
+        $Identify->type = $request->type;
+        $Identify->telephone = $request->phone;
+        $Identify->save();
+       
+
+        if ($request->type == "4") {
+            $role = "OnlineAdmin";
+        } else {
+            $role = "Admin";
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'telephone' => $request->telephone,
             'logo' => $nameImageUser,
+            'role' => $role,
             'password' => Hash::make($request->password),
             'random' => $token,
             'identifie_id' => $Identify->id,

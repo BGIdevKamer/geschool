@@ -9,7 +9,7 @@
 				<div class="row">
 					<div class="col-md-6 col-sm-12">
 						<div class="title">
-							<h4>Enregistrement Etudians</h4>
+							<h4>Enregistrement @if(Session::get('type') == "1" OR Session::get('type') == "2") Elèves @else Etudiants @endif</h4>
 						</div>
 						<nav aria-label="breadcrumb" role="navigation">
 							<ol class="breadcrumb">
@@ -38,6 +38,14 @@
 				</div>
 				@endif
 			</div>
+			@if($errors->any())
+			@foreach($errors->all() as $error)
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				{{$error}}
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close" id="sa-err-close"><span aria-hidden="true">&times;</span></button>
+			</div>
+			@endforeach
+			@endif
 		</div>
 
 		<div class="p-3 card-box mb-30">
@@ -69,7 +77,7 @@
 						</div>
 					</div>
 					<div class="col-md-6 col-sm-12">
-						<label>email</label>
+						<label>Email</label>
 						<div class="form-group has-warning">
 							<input type="email" class="form-control" name="email" id="emailEtudiant" required>
 							<div class="erremail"></div>
@@ -102,47 +110,66 @@
 							<div class="errsex  has-warning"></div>
 						</div>
 					</div>
+					@if(Session::get('type') == "4")
 					<div class="col-md-6 col-sm-12">
-						<label>Ages <small class="text-danger">*</small> </label>
-						<div class="form-group has-warning">
-							<input type="number" class="form-control" name="age" id="ageEtudiant" required>
-							<div class="errage"></div>
+						<label>Age</label>
+						<div class="form-group has-warning ">
+							<select class="custom-select2 form-control" name="age" id="ageEtudiant"
+								style="width: 100%; height: 38px" required>
+								<option value="">Sélectionner</option>
+								<option value="18-23">18-23</option>
+								<option value="24-29">24-29</option>
+								<option value="30-35">30-35</option>
+								<option value="35-40">35-40</option>
+								<option value="40+">40+</option>
+							</select>
+							<div class="errniveau"></div>
 						</div>
 					</div>
+					@else
+					<div class="col-md-6 col-sm-12">
+						<div class="form-group">
+							<label>Age</label>
+							<div class="form-group has-warning">
+								<input type="text" class="form-control" name="age" id="ageEtudiant" required>
+								<div class="errcni"></div>
+							</div>
+						</div>
+					</div>
+					@endif
 				</div>
 
 				<div class="row">
-					<div class="col-md-6 col-sm-12">
+					<!-- <div class="col-md-6 col-sm-12">
 						<label>Numero de Cni</label>
 						<div class="form-group has-warning">
 							<input type="text" class="form-control" id="cniEtudiant" name="cni">
 							<div class="errcni"></div>
 						</div>
-					</div>
+					</div> -->
+					@if(Session::get('type') != "1" AND Session::get('type') != "2")
 					<div class="col-md-6 col-sm-12">
 						<div class="form-group">
-							<label>Niveau scolaire</label>
+							<label>Diplôme le plus élevé</label>
 							<div class="form-group has-warning ">
 								<select class="custom-select2 form-control" name="niveau" id="niveauEtudiant"
 									style="width: 100%; height: 38px">
 									<option value="">Selectionner</option>
-									<option value="Bac">Bac</option>
-									<option value="Bac+1">Bac +1</option>
-									<option value="Bac+2">Bac +2</option>
-									<option value="Bac+3">Bac +3</option>
-									<option value="Bac+4">Bac +4</option>
-									<option value="Bac+5">Bac +5</option>
-									<option value="Autres">Autres</option>
+									<option value="Bac">Licence / Bachelor's degree</option>
+									<option value="Bac">Master / Master's degree</option>
+									<option value="Bac">Doctorat / PhD </option>
+									<option value="Bac">Autres</option>
 								</select>
 								<div class="errniveau"></div>
 							</div>
 						</div>
 					</div>
+					@endif
 				</div>
 				<div class="row">
 					<div class="col-md-12 col-sm-12">
 						<div class="form-group">
-							<label>Formation/Speciliter <small class="text-danger">*</small> </label>
+							<label>@if(Session::get('type') == "4") Approches de la formation @elseif(Session::get('type') == "1" OR Session::get('type') == "2") Classe @else Formation @endif<small class="text-danger">*</small> </label>
 							<div class="form-group has-warning">
 								<select class="custom-select2 form-control" name="formation" id="formation"
 									style="width: 100%; height: 38px" required>
@@ -156,7 +183,6 @@
 						</div>
 					</div>
 				</div>
-
 				<div class="row">
 					<div class="col-md-6 col-sm-12">
 						<div class="form-group">
@@ -166,20 +192,18 @@
 									id="anneescolaire"
 									style="width: 100%; height: 38px" required>
 									<option value="">Choisir une année scolaire</option>
-									<option value="2024-2025">2024-2025</option>
-									<option value="2025-2026">2025-2026</option>
-									<option value="2026-2027">2026-2027</option>
-									<option value="2027-2028">2027-2028</option>
-									<option value="2028-2029">2028-2029</option>
-									<option value="2029-2030">2029-2030</option>
-									<option value="2030-2031">2030-2031</option>
-									<option value="2031-2032">2031-2032</option>
-									<option value="2032-2033">2032-2033</option>
+									@foreach($years as $year)
+									<option value="{{$year->Years}}" @if($year->active == 1) selected @endif @if(count($years)==0) disabled @endif>{{$year->Years}}</option>
+									@endforeach
 								</select>
+								@if(count($years) == 0)
+								<p class="text-warnning mt-3"> Veiller Crée et activer les années scolaires <a href="{{route('General.index')}}" class="btn btn-primary"> Continuer </a></p>
+								@endif
 								<div class="erranneescolaire"></div>
 							</div>
 						</div>
 					</div>
+					@if(Session::get('type') == "3")
 					<div class="col-md-6 col-sm-12">
 						<div class="form-group">
 							<label>Niveau</label>
@@ -194,7 +218,28 @@
 							</select>
 						</div>
 					</div>
+					@endif
 				</div>
+				@if(Session::get('type') == "4")
+				<div class="row">
+					<div class="col-md-6 col-sm-12">
+						<label>Secteur d'activité</label>
+						<div class="form-group has-warning">
+							<input type="text" class="form-control" id="activite" name="activite">
+							<div class="errcni"></div>
+						</div>
+					</div>
+					<div class="col-md-6 col-sm-12">
+						<div class="form-group">
+							<label>Pays d'origine</label>
+							<div class="form-group has-warning">
+								<input type="text" class="form-control" id="Pays" name="Pays">
+								<div class="errcni"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				@endif
 				<button type="submit" class="btn btn-primary">
 					<div class="spinner-border text-light load-btn-ex d-none" style="width: 1rem; height: 1rem;" role="status">
 						<span class="sr-only">Loading...</span>

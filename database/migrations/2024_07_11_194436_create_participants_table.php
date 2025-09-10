@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('age');
             $table->string('NiveauScolaire')->nullable();
             $table->string('cni')->nullable();
+            $table->string('photo')->nullable();
+            $table->string('activite')->nullable();
+            $table->string('Pays')->nullable();
             $table->string('password')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

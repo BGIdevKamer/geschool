@@ -53,6 +53,7 @@
                                                         <div class="pt-10">
                                                             <a href="{{route('view.cour',['id'=>$cour->id])}}" class="btn btn-outline-primary">Voir plus</a>
                                                             <a href="{{route('delete.cour',['id'=>$cour->id])}}" class="btn btn-outline-danger"><i class="icon-copy fa fa-trash" aria-hidden="true"></i></a>
+                                                            <a href="{{route('Update.cour',['id'=>$cour->id])}}" class="btn btn-outline-primary"><i class="icon-copy fa fa-mail-forward" aria-hidden="true"></i></a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -124,26 +125,6 @@
                                             <span>{{$exercice->Module->libeller}}</span>
                                         </li>
                                         @endforeach
-                                </div>
-                            </div>
-                            <div class="card-box overflow-hidden">
-                                <h5 class="pd-20 h5 mb-0">Archives</h5>
-                                <div class="list-group">
-                                    <a
-                                        href="#"
-                                        class="list-group-item d-flex align-items-center justify-content-between">January 2020</a>
-                                    <a
-                                        href="#"
-                                        class="list-group-item d-flex align-items-center justify-content-between">February 2020</a>
-                                    <a
-                                        href="#"
-                                        class="list-group-item d-flex align-items-center justify-content-between">March 2020</a>
-                                    <a
-                                        href="#"
-                                        class="list-group-item d-flex align-items-center justify-content-between">April 2020</a>
-                                    <a
-                                        href="#"
-                                        class="list-group-item d-flex align-items-center justify-content-between">May 2020</a>
                                 </div>
                             </div>
                         </div>

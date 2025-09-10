@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 @include('header')
@@ -39,20 +40,21 @@
                 </div>
                 @endif
             </div>
-            <div class="pd-20 card-box mb-30">
-                <h3 class="m-3 text-primary">Rapport des Payements des Etudiants</h3>
 
-                <form action="{{route('Payement.RapportCreate')}}">
+            <div class="pd-20 card-box mb-30">
+                <h3 class="m-3 text-primary">Rapport des Payements des @if(Session::get('type') == "1" OR Session::get('type') == "2") Elèves @else Etudiants @endif</h3>
+
+                <form action="{{route('Payement.RapportCreate')}}" method="post">
                     @csrf
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
                                 <div class="form-group">
-                                    <label>Formation/Speciliter <small class="text-danger">*</small> </label>
+                                    <label>@if(Session::get('type') == "4") Approche de formation @elseif(Session::get('type') == "1" OR Session::get('type') == "2") Classe @else Formation @endif <small class="text-danger">*</small> </label>
                                     <div class="form-group has-warning">
                                         <select class="custom-select2 form-control" name="formation" id="formation"
                                             style="width: 100%; height: 38px">
-                                            <option value="">Choisir une formation</option>
+                                            <option value="">Choisir une classe</option>
                                             @foreach ($Formations as $formation)
                                             <option value="{{$formation->id}}">{{$formation->nom}}</option>
                                             @endforeach
@@ -62,24 +64,38 @@
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label>année scolaire</label>
+                            <label for="">Année scolaire</label>
+                            <div class="form-group has-warning">
                                 <select class="custom-select2 form-control" name="anneescolaire"
                                     id="anneescolaire"
                                     style="width: 100%; height: 38px" required>
                                     <option value="">Choisir une année scolaire</option>
-                                    <option value="2024-2025">2024-2025</option>
-                                    <option value="2025-2026">2025-2026</option>
-                                    <option value="2026-2027">2026-2027</option>
-                                    <option value="2027-2028">2027-2028</option>
-                                    <option value="2028-2029">2028-2029</option>
-                                    <option value="2029-2030">2029-2030</option>
-                                    <option value="2030-2031">2030-2031</option>
-                                    <option value="2031-2032">2031-2032</option>
-                                    <option value="2032-2033">2032-2033</option>
+                                    @foreach($years as $year)
+                                    <option value="{{$year->Years}}" @if($year->active == 1) selected @endif @if(count($years)==0) disabled @endif>{{$year->Years}}</option>
+                                    @endforeach
+                                </select>
+                                @if(count($years) == 0)
+                                <p class="text-warnning"> veill Crée et activer les années scolaires <a href="{{route('General.index')}}" class="btn btn-primary"> Continuer </a></p>
+                                @endif
+                                <div class="erranneescolaire"></div>
+                            </div>
+                        </div>
+                        @if(Session::get('type') == "3")
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label>Niveau</label>
+                                <select class="selectpicker form-control" data-style="btn-outline-primary"
+                                    data-size="5" name="niv" id="niv">
+                                    <option value="">Choisir le niveau</option>
+                                    <option value="1">Niveau I</option>
+                                    <option value="2">Niveau II</option>
+                                    <option value="3">Niveau III</option>
+                                    <option value="4">Niveau IV</option>
+                                    <option value="5">Niveau VI</option>
                                 </select>
                             </div>
                         </div>
+                        @endif
                     </div>
                     <button type="submit" class="btn btn-primary">
                         Enregister
@@ -87,6 +103,77 @@
                 </form>
 
             </div>
+
+            <div class="pd-20 card-box mb-30">
+                <h3 class="m-3 text-primary">Rapport des Payements</h3>
+                <form action="{{route('Transaction.RapportCreate')}}" method="post" id="">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label>@if(Session::get('type') == "4") Approche de formation @elseif(Session::get('type') == "1" OR Session::get('type') == "2") Classe @else Formation @endif <small class="text-danger">*</small> </label>
+                                    <div class="form-group has-warning">
+                                        <select class="custom-select2 form-control" name="form" id="form"
+                                            style="width: 100%; height: 38px">
+                                            <option value="">Choisir une classe</option>
+                                            @foreach ($Formations as $formation)
+                                            <option value="{{$formation->id}}">{{$formation->nom}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Date Debut</label>
+                                    <input
+                                        class="form-control month-picker"
+                                        placeholder="Select Month"
+                                        name="start_date"
+                                        required
+                                        type="text" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Date Debut</label>
+                                    <input
+                                        class="form-control month-picker"
+                                        name="end_date"
+                                        required
+                                        placeholder="Select Month"
+                                        type="text" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if(Session::get('type') == "3")
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label>Niveau</label>
+                                <select class="selectpicker form-control" data-style="btn-outline-primary"
+                                    data-size="5" name="niveau" id="niveau">
+                                    <option value="">Choisir le niveau</option>
+                                    <option value="1">Niveau I</option>
+                                    <option value="2">Niveau II</option>
+                                    <option value="3">Niveau III</option>
+                                    <option value="4">Niveau IV</option>
+                                    <option value="5">Niveau VI</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    <button type="submit" class="btn btn-primary">
+                        Enregister
+                    </button>
+                </form>
+            </div>
+
         </div>
     </div>
 

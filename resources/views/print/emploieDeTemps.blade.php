@@ -287,7 +287,7 @@
                 <td>
                     <div class="invoice-logo-brand">
                         <samp style="visibility: hidden;text-align: center;"> ------ </samp>
-                        <img src="{{ public_path('storage/assets/identifies/'.$information.'') }}" alt="" />
+                        <img src="{{ public_path('assets/identifies/'.$information.'') }}" alt="" />
                         <samp style="visibility: hidden;text-align: center;"> ------ </samp>
                     </div>
                     <div class="" style="visibility: hidden;text-align: center;">

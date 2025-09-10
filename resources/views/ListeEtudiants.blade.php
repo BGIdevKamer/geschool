@@ -6,7 +6,7 @@
     <!-- Simple Datatable start -->
     <div class="card-box mb-30">
         <div class="pd-20">
-            <h4 class="text-blue h4">Liste des Etudians</h4>
+            <h4 class="text-blue h4">@if(Session::get('type') == "4") Liste des participants @elseif(Session::get('type') == "1" OR Session::get('type') == "2") Liste des eleves @else Liste des etudiants @endif</h4>
             <p class="mb-0">
             </p>
         </div>
@@ -20,7 +20,6 @@
                         <th>date naissance</th>
                         <th>sexe</th>
                         <th>age</th>
-                        <th>Niveau scolaire</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -33,7 +32,6 @@
                         <td>{{$Participants->dateN}}</td>
                         <td>{{$Participants->sexe}}</td>
                         <td>{{$Participants->age}}</td>
-                        <td>{{$Participants->NiveauScolaire}}</td>
                         <td>
                             <div class="dropdown">
                                 <a class="btn btn-link font-24 p-0 line-height-1 no-arrow dropdown-toggle"
@@ -41,7 +39,7 @@
                                     <i class="dw dw-more"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-                                    <a class="dropdown-item" href="#"><i class="dw dw-eye"></i> Detaille</a>
+                                    <a class="dropdown-item" href="{{route('Participant.Detail',['id'=>$Participants->id])}}"><i class="dw dw-eye"></i> Detaille</a>
                                     <a class="dropdown-item" href="#"
                                         id="updateParticipants"
                                         class="btn-block" data-toggle="modal"
@@ -118,7 +116,7 @@
         </div>
     </div>
 
-    <div class="modal fade bs-example-modal-lg" id="Modal-update" tabindex="-1" role="dialog"
+    <!-- <div class="modal fade bs-example-modal-lg" id="Modal-update" tabindex="-1" role="dialog"
         aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -247,7 +245,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
 </div>
 

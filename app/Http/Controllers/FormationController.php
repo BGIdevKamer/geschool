@@ -16,7 +16,7 @@ class FormationController extends Controller
         $request->validate(
             [
                 'nom' => 'required',
-                'duree' => 'required',
+                'duree' => 'nullable',
                 'prix' => 'required',
                 'customRadio' => 'required',
             ],
@@ -78,15 +78,14 @@ class FormationController extends Controller
             $tranche->save();
         }
 
-        return response()->json([
-            'status' => "success",
-        ]);
+        return redirect()->route('Enregistrement.Formation')->with('success', 'Formation enregistrer avec succes');
     }
 
     public function ListeFormation()
     {
         $userRandom = Auth::user()->random;
         $formations = Formation::where('randomUser', $userRandom)->get();
+        
         return view('listeformations', compact('formations'));
     }
 
@@ -108,12 +107,11 @@ class FormationController extends Controller
         $request->validate(
             [
                 'nom' => 'required',
-                'duree' => 'required',
+                'duree' => 'nullable',
                 'prix' => 'required',
             ],
             [
                 'nom.required' => 'Veillez reseignez le nom de la formation',
-                'duree.required' => 'Veillez reseignez la durée de la formation',
                 'prix.required' => 'Veillez reseignez le prix de la formation',
             ]
         );

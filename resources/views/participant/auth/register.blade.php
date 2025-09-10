@@ -57,6 +57,7 @@
     <div class="login-header box-shadow">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <div class="brand-logo">
+                <!-- <img src="{{ asset('assets/identifies/' . $Identify->logo) }}" alt="Logo" width="200px" class="py-3" /> -->
             </div>
             <div class="login-menu">
                 <ul>
@@ -69,7 +70,12 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6 col-lg-7">
-                    <img src="{{asset('assets/vendors/images/register-page-img.png')}}" alt="" />
+                    <h3 class="h3 text-primary">
+                        <em>
+                            << Votre compétence est notre satisfaction.>>
+                        </em>
+                    </h3>
+                    <img src="{{asset('assets/src/images/regis.png')}}" alt="" />
                 </div>
                 <div class="col-md-6 col-lg-5">
                     <div class="register-box bg-white box-shadow border-radius-10">
@@ -83,6 +89,7 @@
                                             <label class="col-sm-4 col-form-label">Email Address<strong class="text-danger">*</strong> </label>
                                             <div class="col-sm-8">
                                                 <input type="email" class="form-control" value="{{old('email')}}" id="email" name="email" required />
+                                                <input type="hidden" value="{{$Identify->randomUser}}" name="randomUser">
                                             </div>
                                             <div class="form-control-feedback text-danger">
                                                 @error("email")
@@ -151,11 +158,11 @@
                                             <div class="col-sm-8">
                                                 <div class="custom-control custom-radio custom-control-inline pb-0">
                                                     <input type="radio" id="male" name="gender"
-                                                        class="custom-control-input" />
+                                                        class="custom-control-input" value="F" />
                                                     <label class="custom-control-label" for="male">Male</label>
                                                 </div>
                                                 <div class="custom-control custom-radio custom-control-inline pb-0">
-                                                    <input type="radio" id="female" name="gender"
+                                                    <input type="radio" id="female" name="gender" value="M"
                                                         class="custom-control-input" />
                                                     <label class="custom-control-label" for="female">Female</label>
                                                 </div>
@@ -263,7 +270,7 @@
                                 <h5>Demande D'admission</h5>
                                 <section>
                                     <div class="form-wrap max-width-600 mx-auto">
-                                        <div class="form-group row">
+                                        <!-- <div class="form-group row">
                                             <label class="col-sm-4 col-form-label">Formation <strong class="text-danger"> * </strong></label>
                                             <div class="col-sm-8">
                                                 <select class="form-control selectpicker" name="formation" id="formation" title="Choisir une Formation">
@@ -277,11 +284,27 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row align-items-center">
-                                            <label class="col-sm-4 col-form-label">Sujet</label>
+                                        </div> -->
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Pays d'origine <strong class="text-danger"> * </strong> </label>
                                             <div class="col-sm-8">
-                                                <input class="form-control" type="text" value="Demande d'admission" disabled>
+                                                <input type="text" class="form-control" value="{{old('Pays')}}" id="Pays" name="Pays" required />
+                                            </div>
+                                            <div class="form-control-feedback text-danger">
+                                                @error("Pays")
+                                                {{ $message }}
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Secteur d'activité <strong class="text-danger"> * </strong> </label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" value="{{old('activite')}}" id="activite" name="activite" required />
+                                            </div>
+                                            <div class="form-control-feedback text-danger">
+                                                @error("activite")
+                                                {{ $message }}
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="form-group row align-items-center">

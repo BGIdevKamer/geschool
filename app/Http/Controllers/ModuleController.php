@@ -76,7 +76,9 @@ class ModuleController extends Controller
     public function ModuleParticipant($id)
     {
         // $id = Auth()->guard('participant')->user()->id;
-        $cours = Cour::where('module_id', $id)->paginate(5);
+        $cours = Cour::where('module_id', $id)
+            ->orderBy('numero', 'asc')
+            ->paginate(5);
         $Module = Module::find($id);
         $Exercices = Exercice::where('module_id', $id)->get();
         $Modules = Module::where("formation_id", $Module->formation_id)->limit(6)->get();

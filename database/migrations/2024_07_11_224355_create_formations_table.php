@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('formations', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
-            $table->string('durée');
+            $table->string('durée')->nullable();
             $table->string('note')->nullable();
             $table->string('prix');
             $table->string('Niveau_requie')->nullable();

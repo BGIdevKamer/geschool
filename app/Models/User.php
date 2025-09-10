@@ -26,6 +26,7 @@ class User extends Authenticatable
         'password',
         'random',
         'logo',
+        'role',
         'telephone',
         'identifie_id',
     ];
@@ -53,5 +54,10 @@ class User extends Authenticatable
     public function plants()
     {
         return $this->belongsToMany(plant::class);
+    }
+
+    public function Identify()
+    {
+        return $this->belongsTo(Identify::class);
     }
 }

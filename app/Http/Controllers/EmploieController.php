@@ -10,6 +10,7 @@ use App\Models\Enseigant;
 use App\Models\Salle;
 use App\Models\Heure;
 use App\Models\Identify;
+use App\Models\Years;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -23,7 +24,8 @@ class EmploieController extends Controller
         $userRandom = Auth::user()->random;
         $Formations =  Formation::where('randomUser', '=', $userRandom)->get();
         $Emploies = Emploie::where('randomUser', '=', $userRandom)->get();
-        return view('EnregistrementEmploie', compact('Formations', 'Emploies'));
+        $years = Years::where('randomUser', Auth::user()->random)->get();
+        return view('EnregistrementEmploie', compact('Formations', 'Emploies', 'years'));
     }
 
     public function store(Request $request)
@@ -102,6 +104,7 @@ class EmploieController extends Controller
             'Vendredi',
             'Samedi',
         ];
+
         return view('EngistrementSessionCour', compact('sessions', 'heures', 'Matieres', 'Salles', 'Enseigants', 'id', 'jours', 'Emploie', 'ListeSession'));
     }
     public function sessionAdd(Request $request)
@@ -267,5 +270,80 @@ class EmploieController extends Controller
         $pdf = PDF::loadView('print.emploieDeTemps', compact('heures', 'sessions', 'Emploie', 'information'));
         $pdf->setPaper('A4', 'landscape');
         return $pdf->stream();
+    }
+    public function destroy(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer'
+        ]);
+
+        $Emploie = Emploie::find($request->id);
+
+        if ($Emploie->delete()) {
+            return redirect()->route('index.Emploie')->with('destroy', 'Emploie de temps supprimer avec succes !');
+        }
+    }
+    public function update(Request $request)
+    {
+        $request->validate([
+            'titreUpdate' => 'required',
+            'idUpdate' => 'required',
+            'formationUpdate' => 'nullable|integer',
+            'anneescolaireUpdatate' => 'nullable',
+            'datesUpdate' => 'required',
+            'noteUpdate' => 'nullable',
+        ]);
+
+        $dateSub = explode(" - ", $request->datesUpdate);
+        $emploie = Emploie::find($request->idUpdate);
+
+        if (!empty($request->nivUpdate)) {
+            $verify = Emploie::where('formation_id', '=', $request->formationUpdate)
+                ->where('niveau', '=', $request->nivUpdate)
+                ->where('anneeScolaire', '=', $request->anneescolaireUpdatate)
+                ->exists();
+            //verifier sur l'annee scolaire
+        } else {
+            $verify = Emploie::where('formation_id', '=', $request->formationUpdate)
+                ->where('anneeScolaire', '=', $request->anneescolaireUpdatate)
+                ->exists();
+            //verifier sur l'annee scolaire
+        }
+
+        if (empty($request->formationUpdate)) {
+            $formation = $emploie->formation_id;
+        } else {
+            $formation = $request->formationUpdate;
+        }
+
+        if (empty($request->anneescolaireUpdatate)) {
+            $anneeScolaire = $emploie->anneeScolaire;
+        } else {
+            $anneeScolaire = $request->anneescolaireUpdatate;
+        }
+
+        if (empty($request->nivUpdate)) {
+            $niv = $emploie->niveau;
+        } else {
+            $niv = $request->nivUpdate;
+        }
+
+        if (!$verify) {
+            Emploie::where('id', $request->idUpdate)->update([
+                'formation_id' => $formation,
+                'anneeScolaire' => $anneeScolaire,
+                'date_debut' => $dateSub[0],
+                'date_fin' => $dateSub[1],
+                'note' => $request->noteUpdate,
+                'titre' => $request->titreUpdate,
+                'niveau' => $niv,
+            ]);
+            return redirect()->route('index.Emploie')->with('destroy', 'Emploie de temps Modifier avec succes !');
+        } else {
+            $Emploie = Emploie::where('formation_id', '=', $request->formationUpdate)->first();
+            return redirect()->route('index.Emploie')->with([
+                'success' => $Emploie->id,
+            ]);
+        }
     }
 }

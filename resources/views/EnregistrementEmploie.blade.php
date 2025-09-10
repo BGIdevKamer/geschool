@@ -37,6 +37,13 @@
                     </p>
                 </div>
                 @endif
+                @if(session('destroy'))
+                <div
+                    class="alert alert-success alert-dismissible fade show mt-3"
+                    role="alert">
+                    <strong>Felicitations!</strong> {{session('destroy')}}
+                </div>
+                @endif
             </div>
             <div class="pd-20 card-box mb-30">
                 <form action="{{route('store.Emploie')}}" method="post" id="form-charge">
@@ -67,22 +74,20 @@
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-12">
-                            <div class="form-group">
-                                <label>année scolaire</label>
+                            <label for="">Année scolaire</label>
+                            <div class="form-group has-warning">
                                 <select class="custom-select2 form-control" name="anneescolaire"
                                     id="anneescolaire"
                                     style="width: 100%; height: 38px" required>
                                     <option value="">Choisir une année scolaire</option>
-                                    <option value="2024-2025">2024-2025</option>
-                                    <option value="2025-2026">2025-2026</option>
-                                    <option value="2026-2027">2026-2027</option>
-                                    <option value="2027-2028">2027-2028</option>
-                                    <option value="2028-2029">2028-2029</option>
-                                    <option value="2029-2030">2029-2030</option>
-                                    <option value="2030-2031">2030-2031</option>
-                                    <option value="2031-2032">2031-2032</option>
-                                    <option value="2032-2033">2032-2033</option>
+                                    @foreach($years as $year)
+                                    <option value="{{$year->Years}}" @if($year->active == 1) selected @endif @if(count($years)==0) disabled @endif>{{$year->Years}}</option>
+                                    @endforeach
                                 </select>
+                                @if(count($years) == 0)
+                                <p class="text-warnning"> veill Crée et activer les années scolaires <a href="{{route('General.index')}}" class="btn btn-primary"> Continuer </a></p>
+                                @endif
+                                <div class="erranneescolaire"></div>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-12">
@@ -162,14 +167,25 @@
                                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
                                         <a class="dropdown-item" href="{{route('session.Cour',['id'=>$Emploie->id])}}"><i class="dw dw-eye"></i> Detaille</a>
                                         <a class="dropdown-item" href="#"
-                                            id="updateParticipants"
-                                            class="btn-block" data-toggle="modal"
-                                            data-target="#Modal-update" type="button"><i class="icon-copy dw dw-edit-2"></i> Modifier</a>
+                                            id="updateEmploie"
+                                            class="btn-block"
+                                            data-toggle="modal"
+                                            data-id="{{$Emploie->id}}"
+                                            data-titre="{{$Emploie->titre}}"
+                                            data-formation_id="{{$Emploie->formation_id}}"
+                                            data-anneeScolaire="{{$Emploie->anneeScolaire}}"
+                                            data-niveau="{{$Emploie->niveau}}"
+                                            data-date_debut="{{$Emploie->date_debut}}"
+                                            data-date_fin="{{$Emploie->date_fin}}"
+                                            data-note="{{$Emploie->note}}"
+                                            data-target="#Modal-update"
+                                            type="button"><i class="icon-copy dw dw-edit-2"></i> Modifier</a>
                                         <a class="dropdown-item text-danger" href="#"
                                             class="btn-block"
-                                            id="deleteParticipant"
+                                            id="deleteModal"
                                             data-toggle="modal"
-                                            data-target="#alert-modal"
+                                            data-target="#delete-modal"
+                                            data-id="{{$Emploie->id}}"
                                             type="button"><i class=" dw dw-delete-3"></i>
                                             Supprimer</a>
                                     </div>
@@ -179,6 +195,163 @@
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div
+        class="modal fade"
+        id="delete-modal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="myLargeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content bg-danger text-white">
+                <div class="modal-body text-center">
+                    <h3 class="text-white mb-15">
+                        <i class="fa fa-exclamation-triangle"></i> Supprimer
+                    </h3>
+                    <div class="errors"></div>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing
+                    elit, sed
+                    <form action="{{route('destroy.Emploie')}}" method="post">
+                        @csrf
+                        <input type="hidden" id="id" name="id">
+                        <button
+                            type="submit"
+                            class="btn btn-light"
+                            id="">
+                            <div class="spinner-border text-primary load-btn-Deleteparticipant d-none"
+                                style="width: 1rem; height: 1rem;" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <span class="load-txt-Deleteparticipant">Continuer</span>
+                        </button>
+                    </form>
+                    <button
+                        type="button"
+                        id="data-dismiss"
+                        class="btn btn-light d-none"
+                        data-dismiss="modal">
+                        Annuler
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-lg" id="Modal-update" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myLargeModalLabel">
+                        Modifier L'emploie de temps
+                    </h4>
+                    <button type="button" class="close" id="close" data-dismiss="modal" aria-hidden="true">
+                        ×
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{route('update.Emploie')}}" method="post" id="form-update">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <div class="form-group">
+                                    <label>Titre</label>
+                                    <input type="text" class="form-control" name="titreUpdate" id="titreUpdate" required>
+                                    <input type="text" class="form-control" name="idUpdate" id="idUpdate">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label>Formation/Speciliter <small class="text-danger">*</small> </label>
+                                        <div class="form-group has-warning">
+                                            <select class="custom-select2 form-control" name="formationUpdate" id="formationUpdate"
+                                                style="width: 100%; height: 38px">
+                                                <option value="">valeur Inicial</option>
+                                                @foreach ($Formations as $formation)
+                                                <option value="{{$formation->id}}">{{$formation->nom}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <label for="">Année scolaire</label>
+                                <div class="form-group has-warning">
+                                    <select class="custom-select2 form-control" name="anneescolaireUpdatate" id="anneescolaireUpdatate"
+                                        id="anneescolaire"
+                                        style="width: 100%; height: 38px">
+                                        <option value="">valeur Inicial</option>
+                                        @foreach($years as $year)
+                                        <option value="{{$year->Years}}">{{$year->Years}}</option>
+                                        @endforeach
+                                    </select>
+                                    @if(count($years) == 0)
+                                    <p class="text-warnning"> veill Crée et activer les années scolaires <a href="{{route('General.index')}}" class="btn btn-primary"> Continuer </a></p>
+                                    @endif
+                                    <div class="erranneescolaire"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="form-group">
+                                    <label>Niveau</label>
+                                    <select class="selectpicker form-control" data-style="btn-outline-primary"
+                                        data-size="5" name="nivUpdate" id="nivUpdate">
+                                        <option value="">valeur Inicial</option>
+                                        <option value="1">Niveau I</option>
+                                        <option value="2">Niveau II</option>
+                                        <option value="3">Niveau III</option>
+                                        <option value="4">Niveau IV</option>
+                                        <option value="5">Niveau VI</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>date de debut et date de fin</label>
+                                    <input
+                                        class="form-control datetimepicker-range"
+                                        placeholder="Select Month"
+                                        name="datesUpdate"
+                                        id="datesUpdate"
+                                        type="text" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Note</label>
+                                    <input
+                                        class="form-control"
+                                        placeholder="note"
+                                        name="noteUpdate"
+                                        id="noteUpdate"
+                                        type="text" />
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Fermer
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <div class="spinner-border text-light load-btn-update d-none" style="width: 1rem; height: 1rem;" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <span class="btn-txt-update">Enregister</span>
+                    </button>
+                </div>
+                </form>
             </div>
         </div>
     </div>

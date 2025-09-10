@@ -275,7 +275,7 @@
             <!-- logo brand invoice -->
             <div class="invoice-logo-brand">
                 <!-- <h2>Tampsh.</h2> -->
-                <img src="{{ public_path('storage/assets/identifies/'.$identif->logo.'') }}" alt="" />
+                <img src="{{ public_path('assets/identifies/'.$identif->logo.'') }}"/>
             </div>
             <br>
             <!-- invoice head -->

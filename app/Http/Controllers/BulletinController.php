@@ -15,6 +15,7 @@ use App\Models\Bulletin;
 use App\Models\Identify;
 use App\Models\Emploie;
 use App\Models\Session;
+use App\Models\Years;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -29,7 +30,8 @@ class BulletinController extends Controller
         $Formations = Formation::where('randomUser', Auth::user()->random)
             ->where('statue', '=', '1')->get();
         $Evaluations = Evaluation::where('randomUser', Auth::user()->random)->get();
-        return view('EnregistrementBulletin', compact('Formations', 'Evaluations'));
+        $years = Years::where('randomUser', Auth::user()->random)->get();
+        return view('EnregistrementBulletin', compact('Formations', 'Evaluations', 'years'));
     }
     public function GenerateBulletin(Request $request)
     {
@@ -44,10 +46,12 @@ class BulletinController extends Controller
         $Evaluation =  Evaluation::find($request->evaluation);
         // $Categories =  Categorie::where('randomUser', '=', $userRandom)->get();
 
+
         // Récupérer toutes les FormationParticipant pour l'année scolaire et le niveau spécifiés
         $FormationParticipants = FormationParticipant::where('formation_id', $request->formation)
             ->where('anneeScolaire', $request->anneescolaire)
             ->get();
+
 
         if (count($FormationParticipants) == 0) {
             return redirect()->route('Bulletin.index')->with('success', 'Aucun Bulletin a generer.');
@@ -70,6 +74,7 @@ class BulletinController extends Controller
             // Sauvegarder la moyenne avec l'ID du participant
             $participantsMoyennes[$FormationParticipant->participant_id] = $moyenne;
         }
+
 
         arsort($participantsMoyennes); // Trie le tableau en ordre décroissant
 
@@ -108,6 +113,7 @@ class BulletinController extends Controller
                 ->where('evaluation_id', $request->evaluation)
                 ->with('matiere') // On récupère aussi la matière associée
                 ->get();
+                
 
             // Traitement de chaque composition
 
@@ -236,7 +242,7 @@ class BulletinController extends Controller
                     // ->whereRaw("STR_TO_DATE(emploies.date_fin, '%m/%d/%Y') >= CURDATE()")
                     $Enseignant = Session::where('matiere_id', '=',  $matiere->id)
                         ->join('emploies', 'sessions.emploie_id', '=', 'emploies.id')
-                        ->where('emploies.niveau', "")
+                        ->where('emploies.niveau', null)
                         ->where('emploies.anneeScolaire', $request->anneescolaire)
                         ->where('emploies.formation_id', "=", $request->formation)
                         ->join('enseigants', 'enseigants.id', '=', 'sessions.enseigant_id')
@@ -266,11 +272,20 @@ class BulletinController extends Controller
             }
 
             $rank = 1;
+            $previousMoyenne = null;
+            $equalRank = 1;
 
-            foreach ($participantsMoyennes as $id => $moyenne) {
-                if ($id == $FormationParticipant->id) {
-                    $rang = $rank;
+            foreach ($participantsMoyennes as $participantId => $moyenne) {
+                if ($moyenne !== $previousMoyenne) {
+                    $equalRank = $rank;
                 }
+
+                if ($participantId == $FormationParticipant->participant_id) {
+                    $rang = $equalRank;
+                    break;
+                }
+
+                $previousMoyenne = $moyenne;
                 $rank++;
             }
 
@@ -295,15 +310,69 @@ class BulletinController extends Controller
                 $Tn = "Non";
             }
 
-            // if (!empty($request->eval_prev)) {
-            //     // on recuppere une autre evalution pour l'ajouter dans le bulletin 
-            //     $bulletin = Bulletin::where('evaluation_id', $request->eval_prev)
-            //         ->where('participant_id', $FormationParticipant->Participant->id)
-            //         ->where('formation_id', $FormationParticipant->Formation->id)
-            //         ->where('anneeScolaire', $request->anneescolaire)
-            //         ->orderBy('id', 'desc')
-            //         ->get();
-            // }
+            if (!empty($request->eval_prev)) {
+                // on recuppere une autre evalution pour l'ajouter dans le bulletin 
+                $bulletin = Bulletin::where('evaluation_id', $request->eval_prev)
+                    ->where('participant_id', $FormationParticipant->Participant->id)
+                    ->where('formation_id', $FormationParticipant->Formation->id)
+                    ->where('anneeScolaire', $request->anneescolaire)
+                    ->orderBy('id', 'desc')
+                    ->first();
+
+                if (!empty($bulletin)) {
+                    $max_moy = Bulletin::where('evaluation_id', $request->eval_prev)
+                        ->where('formation_id', $FormationParticipant->Formation->id)
+                        ->where('anneeScolaire', $request->anneescolaire)
+                        ->selectRaw('total_point / total_coef as moyenne')
+                        ->orderBy('moyenne', 'desc')
+                        ->first();
+
+                    $min_moy = Bulletin::where('evaluation_id', $request->eval_prev)
+                        ->where('formation_id', $FormationParticipant->Formation->id)
+                        ->where('anneeScolaire', $request->anneescolaire)
+                        ->selectRaw('total_point / total_coef as moyenne')
+                        ->orderBy('moyenne', 'asc')
+                        ->first();
+
+                    $evaluation = Evaluation::where('id', $request->eval_prev)->value('libeller');
+
+                    $moy = $bulletin->total_point / $bulletin->total_coef;
+
+
+                    if ($moy <= 10) {
+                        $app = "Faible";
+                    } elseif ($moy > 10 && $moy <= 12) {
+                        $app = "Passable";
+                    } elseif ($moy > 12 && $moy <= 16) {
+                        $app = "Bien";
+                    } elseif ($moy > 16) {
+                        $app = "Tres bien";
+                    }
+
+                    if ($moy >= 12) {
+                        $Tn = "Oui";
+                    } else {
+                        $Tn = "Non";
+                    }
+
+                    $prevData[] = [
+                        'rank' =>  $bulletin->rank,
+                        'evaluation' =>  $evaluation,
+                        'totalPoints' =>  $bulletin->total_point,
+                        'totalCoefficients' =>  $bulletin->total_coef,
+                        'moy' =>  number_format($moy, 2),
+                        'tn' =>  $Tn,
+                        'appreciation' => $app,
+                        'min_moy' => number_format($min_moy->moyenne, 2),
+                        'max_moy' => number_format($max_moy->moyenne, 2),
+                        'moy_general' => number_format($max_moy->moyenne, 2),
+                    ];
+                } else {
+                    $prevData = [];
+                }
+            } else {
+                $prevData = [];
+            }
 
             $data[] = [
                 'Evaluation' => $Evaluation->libeller,
@@ -330,7 +399,7 @@ class BulletinController extends Controller
             $number =  time();
             $filename = 'Bulletins/' . $FormationParticipant->Participant->nom . '_' . $FormationParticipant->Participant->prenom . '_' . $FormationParticipant->anneeScolaire . '_' . $FormationParticipant->Formation->nom . '_' . $request->evaluation . '_' . $number . '.pdf';
 
-            Pdf::loadView('print.bulletin', compact('bulletinData', 'moyenneGeneraleParticipant', 'identify', 'participants', 'effectif', 'Categories', 'data'))
+            Pdf::loadView('print.bulletin', compact('bulletinData', 'moyenneGeneraleParticipant', 'identify', 'participants', 'effectif', 'Categories', 'data', 'prevData'))
                 ->save(storage_path('app/public/' . $filename));
 
             // enregistrer le  bulletin 
@@ -350,6 +419,7 @@ class BulletinController extends Controller
             $Categories = [];
             $vals = [];
             $data = [];
+            $prevData = [];
         }
         return redirect()->route('Liste.Bulletin', [
             'formation' => $request->formation,

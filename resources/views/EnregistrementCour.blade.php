@@ -10,12 +10,12 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
                         <div class="title">
-                            <h4>Ajouter un cour </h4>
+                            <h4>Ajouter un Cours </h4>
                         </div>
                         <nav aria-label="breadcrumb" role="navigation">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="{{route('dashboard')}}">Acceuil</a>
+                                    <a href="{{route('dashboard')}}">Accueil</a>
                                 </li>
                                 <li class="breadcrumb-item active" aria-current="page">
                                     cours
@@ -41,21 +41,18 @@
                     </div>
                 </div>
                 <div class="errors-messages"></div>
-                <h4 class="h4 text-blue">
-                    Infos
-                </h4>
                 <form action="{{ route('add.cour') }}" id="CourForm" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-6 col-sm-12 ">
-                            <label>Libeller du cour</label>
+                            <label>Titre du cours</label>
                             <div class="form-group has-warning">
                                 <input type="text" class="form-control" name="libeller" id="libeller">
                                 <div class="err-libeller"></div>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            <label>Numero du cour</label>
+                            <label>Numéro du cours</label>
                             <div class="form-group has-warning">
                                 <input type="number" min="1" max="100" class="form-control" name="num" id="num">
                                 <div class="err-num"></div>
@@ -121,7 +118,7 @@
                     </div>
                     <hr>
                     <h4 class="h4 text-blue">
-                        Contenue Textuel
+                        Contenu Textuel
                     </h4>
                     <textarea class="textarea_editor form-control border-radius-0" name="content" id="content"
                         placeholder="Enter text ..."></textarea>

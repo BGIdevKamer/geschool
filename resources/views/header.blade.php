@@ -79,18 +79,7 @@
 </head>
 
 <body>
-	<!-- <div class="pre-loader">
-		<div class="pre-loader-box">
-			<div class="loader-logo">
-				<img src="{{Storage::url(Auth::user()->logo)}}" alt="" width="200px" />
-			</div>
-			<div class="loader-progress" id="progress_div">
-				<div class="bar" id="bar1"></div>
-			</div>
-			<div class="percent" id="percent1">0%</div>
-			<div class="loading-text">Loading...</div>
-		</div>
-	</div> -->
+
 
 	<div class="header">
 		<div class="header-left">
@@ -366,6 +355,71 @@
 		<div class="menu-block customscroll">
 			<div class="sidebar-menu">
 				<ul id="accordion-menu">
+					@if(Session::get('type') == "4")
+					<!-- <li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle">
+							<span class="micon bi bi-textarea-resize"></span><span class="mtext">Ressources</span>
+						</a>
+						<ul class="submenu">
+							<li>
+								<a href="{{route('cour.index')}}">Cours</a>
+							</li>
+							<li><a href="{{route('Exercice')}}">Exercices</a></li>
+							<li><a href="{{route('Module.index')}}">Module</a></li>
+							<li><a href="{{route('Evaluations.Exercices')}}">Evaluation</a></li>
+							<li><a href="{{route('note.Resources')}}">Notes</a></li>
+						</ul>
+					</li> -->
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle">
+							<span class="micon bi bi-textarea-resize"></span><span class="mtext">Participants</span>
+						</a>
+						<ul class="submenu">
+							<li>
+								<a href="{{route('Enregistrement.Etudiant')}}">Enregistrements</a>
+							</li>
+							<li><a href="{{route('liste.particiapants')}}">Liste</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle">
+							<!-- <span class="micon bi bi-textarea-resize"></span><span class="mtext">Statistique</span> -->
+							<span class="micon bi bi-textarea-resize"></span><span class="mtext">Formation</span>
+						</a>
+						<ul class="submenu">
+							<li>
+								<a href="{{route('Enregistrement.Formation')}}">Enregistrement</a>
+							</li>
+							<!-- <li><a href="{{route('liste.Formation')}}">Approches de Formation</a></li> -->
+							<li><a href="{{route('liste.Formation')}}">Liste</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="{{route('Module.index')}}" class="dropdown-toggle no-arrow">
+							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Modules</span>
+						</a>
+					</li>
+					<li>
+						<a href="{{route('cour.index')}}" class="dropdown-toggle no-arrow">
+							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Cours</span>
+						</a>
+					</li>
+					<li>
+						<a href="{{route('Exercice')}}" class="dropdown-toggle no-arrow">
+							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Exercices</span>
+						</a>
+					</li>
+					<li>
+						<a href="{{route('Evaluations.Exercices')}}" class="dropdown-toggle no-arrow">
+							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Evaluation final</span>
+						</a>
+					</li>
+					<li>
+						<a href="{{route('Demande.Admission')}}" class="dropdown-toggle no-arrow">
+							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Admision</span>
+						</a>
+					</li>
+					@else
 					<li class="dropdown">
 						<a href="javascript:;" class="dropdown-toggle">
 							<span class="micon bi bi-house"></span><span class="mtext">Accueil</span>
@@ -374,33 +428,38 @@
 							<li><a href="{{route('dashboard')}}">Tableau de bord</a></li>
 						</ul>
 					</li>
+					@if(Auth::user()->role == 'Scolarite' OR Auth::user()->role == 'Admin')
 					<li class="dropdown">
 						<a href="javascript:;" class="dropdown-toggle">
-							<span class="micon bi bi-textarea-resize"></span><span class="mtext">Etudiants</span>
+							<span class="micon bi bi-textarea-resize"></span><span class="mtext">@if(Session::get('type') == "1" OR Session::get('type') == "2") Elèves @else Etudiants @endif</span>
 						</a>
 						<ul class="submenu">
 							<li>
 								<a href="{{route('Enregistrement.Etudiant')}}">Enregistrements</a>
 							</li>
-							<li><a href="{{route('liste.particiapants')}}">Listes etudiants</a></li>
+							<li><a href="{{route('liste.particiapants')}}">Liste</a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
 						<a href="javascript:;" class="dropdown-toggle">
-							<span class="micon bi bi-textarea-resize"></span><span class="mtext">Formation</span>
+							<span class="micon bi bi-textarea-resize"></span><span class="mtext">@if(Session::get('type') == "4") De l'approche de formation @elseif(Session::get('type') == "1" OR Session::get('type') == "2") Classe @else Formation @endif</span>
 						</a>
 						<ul class="submenu">
 							<li>
 								<a href="{{route('Enregistrement.Formation')}}">Enregistrement</a>
 							</li>
-							<li><a href="{{route('liste.Formation')}}">Listes Formations</a></li>
+							<li><a href="{{route('liste.Formation')}}">Liste</a></li>
 						</ul>
 					</li>
+					@endif
+					@if(Auth::user()->role == 'Secretariat' OR Auth::user()->role == 'Admin')
 					<li>
 						<a href="{{route('Payement.index')}}" class="dropdown-toggle no-arrow">
 							<span class="micon bi bi-archive"></span><span class="mtext">Nouveau Payements</span>
 						</a>
 					</li>
+					@endif
+					@if(Auth::user()->role == 'Scolarite' OR Auth::user()->role == 'Admin')
 					<li class="dropdown">
 						<a href="javascript:;" class="dropdown-toggle">
 							<span class="micon bi bi-table"></span><span class="mtext">Evaluations</span>
@@ -412,6 +471,7 @@
 							<li><a href="{{route('Bulletin.Liste')}}">Bulletin generer</a></li>
 						</ul>
 					</li>
+					@endif
 					<li>
 						<a href="{{route('matieres.index')}}" class="dropdown-toggle no-arrow">
 							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Matieres</span>
@@ -440,75 +500,35 @@
 							<span class="micon bi bi-textarea-resize"></span><span class="mtext">Rappors</span>
 						</a>
 						<ul class="submenu">
-							<li class="dropdown">
-								<a href="javascript:;" class="dropdown-toggle">
-									<span class="micon fa fa-plug"></span><span class="mtext">Payement</span>
-								</a>
-								<ul class="submenu child">
-									<li><a href="{{route('Payement.RapportIndex')}}">Payement Etudiant</a></li>
-									<li><a href="{{route('Transaction.RapportIndex')}}">Transactions</a></li>
-								</ul>
-							</li>
-							<li>
-							<li><a href="">Etudians</a></li>
-							<li><a href="">Enseignants</a></li>
+							<li><a href="{{route('Payement.RapportIndex')}}">Payement</a></li>
+							<li><a href="{{route('Etudient.RapportIndex')}}">@if(Session::get('type') == "1" OR Session::get('type') == "2") Elèves @else Etudiants @endif</a></li>
+							<li><a href="{{route('Etudient.RapportIndex')}}">Enseigants</a></li>
 						</ul>
 					</li>
-					<li class="dropdown">
-						<a href="javascript:;" class="dropdown-toggle">
-							<span class="micon bi bi-textarea-resize"></span><span class="mtext">Ressources</span>
+
+					@if(Auth::user()->role == 'Admin')
+					<li>
+						<a href="{{route('General.index')}}" class="dropdown-toggle no-arrow">
+							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Général</span>
 						</a>
-						<ul class="submenu">
-							<li>
-								<a href="{{route('cour.index')}}">Cours</a>
-							</li>
-							<li><a href="{{route('Exercice')}}">Exercices</a></li>
-							<li><a href="{{route('Module.index')}}">Module</a></li>
-							<li><a href="{{route('Evaluations.Exercices')}}">Evaluation</a></li>
-							<li><a href="{{route('note.Resources')}}">Notes</a></li>
-						</ul>
 					</li>
 					<li>
-						<a href="{{route('courriel.liste')}}" class="dropdown-toggle no-arrow">
-							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Courriels</span>
+						<a href="{{route('index.Identite')}}" class="dropdown-toggle no-arrow">
+							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Identité</span>
 						</a>
 					</li>
+					@endif
+					@endif
 					<!-- <li>
+						<a href="{{route('courriel.liste')}}" class="dropdown-toggle no-arrow">
+							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Courriel</span>
+						</a>
+					</li>
+					<li>
 						<a href="calendar.html" class="dropdown-toggle no-arrow">
 							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Session de formation</span>
 						</a>
 					</li> -->
-
-					@if(Auth::user()->plants()->where('date_fin','>',now())->where('libeller','=', 'standard')->exists() || Auth::user()->plants()->where('date_fin','>',now())->where('libeller','=', 'premium')->exists())
-					<li>
-						<a href="calendar.html" class="dropdown-toggle no-arrow">
-							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Revelever de note</span>
-						</a>
-					</li>
-					<li class="dropdown">
-						<a href="javascript:;" class="dropdown-toggle">
-							<span class="micon bi bi-archive"></span><span class="mtext"></span>
-						</a>
-						<ul class="submenu">
-							<li><a href="ui-buttons.html">Enregistrements</a></li>
-							<li><a href="ui-cards.html">Listes des payements</a></li>
-						</ul>
-					</li>
-
-					@if(Auth::user()->plants()->where('date_fin','>',now())->where('libeller','=', 'premium')->exists())
-					<li>
-						<a href="calendar.html" class="dropdown-toggle no-arrow">
-							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Badges</span>
-						</a>
-					</li>
-					<li>
-						<a href="calendar.html" class="dropdown-toggle no-arrow">
-							<span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Attestations</span>
-						</a>
-					</li>
-					@endif
-
-					@endif
 				</ul>
 			</div>
 		</div>

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Formation;
 use App\Models\FormationParticipant;
+use App\Models\ExerciceParticipant;
 use Illuminate\Notifications\Notifiable;
 
 class Participant extends Authenticatable
@@ -22,6 +23,9 @@ class Participant extends Authenticatable
         'sexe',
         'age',
         'cni',
+        'photo',
+        'activite',
+        'Pays',
         'NiveauScolaire',
         'password',
         'randomUser',
@@ -35,5 +39,9 @@ class Participant extends Authenticatable
     public function FormationParticipants()
     {
         return $this->hasMany(FormationParticipant::class);
+    }
+    public function ExerciceParticipant()
+    {
+        return $this->hasMany(ExerciceParticipant::class);
     }
 }

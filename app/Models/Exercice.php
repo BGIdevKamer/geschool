@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Question;
 use App\Models\Module;
 use App\Models\Formation;
+use App\Models\ExerciceParticipant;
 use App\Models\Cour;
 
 class Exercice extends Model
@@ -35,5 +36,9 @@ class Exercice extends Model
     public function Cour()
     {
         return $this->belongsTo(Cour::class);
+    }
+    public function ExerciceParticipant()
+    {
+        return $this->hasMany(ExerciceParticipant::class);
     }
 }

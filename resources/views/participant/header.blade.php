@@ -366,23 +366,23 @@
             <div class="sidebar-menu">
                 <ul id="accordion-menu">
                     <li>
-                        <a href="calendar.html" class="dropdown-toggle no-arrow">
+                        <a href="{{route('participant.dashboard')}}" class="dropdown-toggle no-arrow">
                             <span class="micon bi bi-house"></span><span class="mtext">Accueil</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{route('Participant.Cours')}}" class="dropdown-toggle no-arrow">
-                            <span class="micon bi bi-file-earmark-text"></span><span class="mtext">Cours</span>
+                            <span class="micon bi bi-file-earmark-text"></span><span class="mtext">Modules</span>
                         </a>
                     </li>
                     <li>
                         <a href="calendar.html" class="dropdown-toggle no-arrow">
-                            <span class="micon bi bi-textarea-resize"></span><span class="mtext">Seances</span>
+                            <span class="micon bi bi-textarea-resize"></span><span class="mtext">Séances</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{route('Evaluations.Participant')}}" class="dropdown-toggle no-arrow">
-                            <span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Evaluations</span>
+                            <span class="micon bi bi-receipt-cutoff"></span><span class="mtext">Evaluation Finale</span>
                         </a>
                     </li>
                     <li>

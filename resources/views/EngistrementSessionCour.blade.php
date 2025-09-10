@@ -25,12 +25,20 @@
         <div class="pd-20 card-box mb-20">
             <h2 class="text-primary">Session de cour</h2>
             <div class="clearfix">
-                <div class="pull-right">
+                <div class="pull-right ml-2">
                     <a
                         href="{{route('Impression.Emploie',['id'=>$Emploie->id])}}"
                         class="btn-block"
                         type="button">
                         <button class="btn btn-primary">Imprimer</button>
+                    </a>
+                </div>
+                <div class="pull-right">
+                    <a
+                        href="{{route('index.Emploie')}}"
+                        class="btn-block"
+                        type="button">
+                        <button class="btn btn-primary">Retour</button>
                     </a>
                 </div>
             </div>
@@ -52,14 +60,7 @@
             <div
                 class="alert alert-warning alert-dismissible fade show mt-3"
                 role="alert">
-                <strong>Attention!</strong> {{session('warning')}}
-                <button
-                    type="button"
-                    class="close"
-                    data-dismiss="alert"
-                    aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <strong>Felicitations!</strong> {{session('warning')}}
             </div>
             @endif
         </div>

@@ -8,13 +8,16 @@ use App\Models\Participant;
 use App\Models\FormationParticipant;
 use App\Models\ExerciceParticipant;
 use App\Models\Identify;
+use App\Models\Courriel;
+use App\Models\Years;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use App\Mail\PasswordParticipants;
-
+use Illuminate\Support\Facades\Storage;
+use Symfony\Contracts\Service\Attribute\Required;
 
 class participantController extends Controller
 {
@@ -22,7 +25,8 @@ class participantController extends Controller
     {
         $Formations = Formation::where('randomUser', Auth::user()->random)
             ->where('statue', '=', '1')->get();
-        return view('EnregistrementEtudiant', compact('Formations'));
+        $years = Years::where('randomUser', Auth::user()->random)->get();
+        return view('EnregistrementEtudiant', compact('Formations', 'years'));
     }
     public function addParticipant(Request $request)
     {
@@ -36,6 +40,8 @@ class participantController extends Controller
                 'sexe' => 'required',
                 'age' => 'required',
                 'formation' => 'required',
+                'activite' => 'string|nullable',
+                'Pays' => 'string|nullable',
             ],
             [
                 'nom.required' => 'Veillez reseignez le champs nom',
@@ -57,7 +63,7 @@ class participantController extends Controller
             return substr($token, 0, 8) . substr($token, 26, 2);
         }
 
-        $password = generateToken();
+        $password = "12345a";
 
         $userRandom = Auth::user()->random;
         $participant = new Participant();
@@ -70,6 +76,8 @@ class participantController extends Controller
         $participant->age = $request->age;
         $participant->NiveauScolaire = $request->niveau;
         $participant->cni = $request->cni;
+        $participant->activite = $request->activite;
+        $participant->Pays = $request->Pays;
         $participant->password = Hash::make($password);
         $participant->randomUser = $userRandom;
         $participant->save();
@@ -79,7 +87,7 @@ class participantController extends Controller
         //     'anneeScolaire' => $request->anneescolaire,
         //     'niv' => $request->niv,
         // ]);
-
+        
         $FormationParticipant = new FormationParticipant();
         $FormationParticipant->participant_id = $participant->id;
         $FormationParticipant->formation_id = $request->formation;
@@ -87,24 +95,30 @@ class participantController extends Controller
         $FormationParticipant->niv = $request->niv;
         $FormationParticipant->save();
 
-        // dd($sender);
-        if (!empty($request->email)) {
-
-            $fromEmail = Identify::where('randomUser', $userRandom)->value('email');
-            $name = $request->nom . ' ' . $request->prenom;
-            $formation = Formation::where('id', $request->formation)->value('nom');
-            Mail::to($request->email)->send(new PasswordParticipants($fromEmail, ['password' => $password, 'name' => $name, 'annee_scolaire' => $request->anneescolaire, 'formation' => $formation, 'email' => $request->email])); //envoie avec des données supplémentaires
-            return redirect()->route('Enregistrement.Etudiant')->with('success', 'le participant a ete enregistrer avec success.');
-        }
+        // if (!empty($request->email)) {
+        //     $fromEmail = Identify::where('randomUser', $userRandom)->value('email');
+        //     $name = $request->nom . ' ' . $request->prenom;
+        //     $formation = Formation::where('id', $request->formation)->value('nom');
+        //     Mail::to($request->email)->send(new PasswordParticipants($fromEmail, ['password' => $password, 'name' => $name, 'annee_scolaire' => $request->anneescolaire, 'formation' => $formation, 'email' => $request->email])); //envoie avec des données supplémentaires
+        //     return redirect()->route('Enregistrement.Etudiant')->with('success', 'le participant a ete enregistrer avec success.');
+        // }
 
         return redirect()->route('Enregistrement.Etudiant')->with('success', 'le participant a ete enregistrer avec success.');
     }
     public function Listeparticiapants()
     {
         $participant = Participant::where('randomUser', Auth::user()->random)->get();
-        $Formations = Formation::where('randomUser', Auth::user()->random)
-            ->where('statue', '=', '1')->get();
-        return view('ListeEtudiants', compact('participant', 'Formations'));
+        // $Formations = Formation::where('randomUser', Auth::user()->random)
+        //     ->where('statue', '=', '1')->get();
+        return view('ListeEtudiants', compact('participant'));
+    }
+    public function DemandeAdmission()
+    {
+        $Demandes = Courriel::where('sujet','ASK')
+        ->join('users','users.id','=','courriels.user_id')
+        ->where('users.random',Auth::user()->random)
+        ->get();
+        return view('DemandeAdmission', compact('Demandes'));
     }
     public function deleteParticipant(Request $request)
     {
@@ -131,17 +145,18 @@ class participantController extends Controller
                 'nom' => 'required',
                 'prenom' => 'required',
                 'telephone' => 'required',
-                'email' => 'required|email',
+                'email' => 'nullable|email',
                 'dateN' => 'required',
                 'sexe' => 'required',
                 'age' => 'required',
-                'niveau' => 'required',
+                'niveau' => 'nullable',
                 'id' => 'required',
+                'cni' => 'nullable',
+                'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ],
             [
                 'nom.required' => 'Veillez reseignez le champs nom',
                 'prenom.required' => 'Veillez reseignez le champs prenom',
-                'email.required' => 'Veillez reseignez le champs email',
                 'email.email' => 'Email incorrecte',
                 'dateN.required' => 'Veillez renseignez le champs naissance',
                 'sexe.required' => 'Veillez choisir un sexe',
@@ -151,6 +166,12 @@ class participantController extends Controller
                 'telephone.required' => 'Veillez reseignez le numero de telephone',
             ]
         );
+
+        if (!empty($request->file('photo'))) {
+            $Path = $request->file('photo')->store('profilImg/participant', 'public');
+        } else {
+            $Path = Participant::where('id', $request->id)->value('photo');
+        }
 
         Participant::where('id', $request->id)->update([
             'nom' => $request->nom,
@@ -162,11 +183,9 @@ class participantController extends Controller
             'age' => $request->age,
             'NiveauScolaire' => $request->niveau,
             'cni' => $request->cni,
+            'photo' => $Path,
         ]);
-
-        return response()->json([
-            'status' => "success",
-        ]);
+        return redirect()->route('Participant.Detail', ['id' => $request->id])->with('success', 'le participant a ete Modifier avec success.');
     }
     public function noteResources()
     {
@@ -186,5 +205,50 @@ class participantController extends Controller
             ->get();
 
         return view('RessourcesNote', compact('modules', 'formations', 'cours'));
+    }
+    public function ParticipantDetail($id)
+    {
+        $FormationParticipants = FormationParticipant::where('participant_id', $id)->get();
+        $Formations = Formation::where('randomUser', Auth::user()->random)
+            ->where('statue', '=', '1')->get();
+        $Etudiants = Participant::find($id);
+        $exercicesModule = ExerciceParticipant::where('participant_id', $id)
+            ->join('exercices', 'exercices.id', '=', 'exercice_participants.exercice_id')
+            ->where('exercices.module_id', '!=', 0)
+            ->get();
+        $exercicesFormation = ExerciceParticipant::where('participant_id', $id)
+            ->join('exercices', 'exercices.id', '=', 'exercice_participants.exercice_id')
+            ->where('exercices.formation_id', '!=', 0)
+            ->get();
+        // dd($exercicesModule);
+        return view('EtudiantDetail', compact('FormationParticipants', 'Formations', 'Etudiants', 'exercicesModule', 'exercicesFormation'));
+    }
+    public function DeleteImg($id)
+    {
+        $Path =  Participant::where('id', $id)->value('photo');
+        $filePath =  storage_path('app/public/' . $Path);
+        Storage::delete($filePath);
+        Participant::where('id', $id)->update([
+            'photo' => "",
+        ]);
+        return redirect()->route('Participant.Detail', ['id' => $id])->with('success', 'L\'image a bien ete supprimer');
+    }
+    public function NouvelleInscription(Request $request)
+    {
+        $request->validate([
+            'formation_id' => 'required|integer',
+            'niveau' => 'nullable|integer',
+            'anneescolaire' => 'required',
+            'id_participant' => 'required|integer',
+        ]);
+
+        $FormationParticipant = new FormationParticipant();
+        $FormationParticipant->participant_id = $request->id_participant;
+        $FormationParticipant->formation_id   = $request->formation_id;
+        $FormationParticipant->niv = $request->niveau;
+        $FormationParticipant->anneeScolaire = $request->anneescolaire;
+        $FormationParticipant->save();
+
+        return redirect()->route('Participant.Detail', ['id' => $FormationParticipant->participant_id])->with('success', 'Nouvel inscription effectuer avec success');
     }
 }

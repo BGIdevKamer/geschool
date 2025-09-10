@@ -288,7 +288,7 @@
                 <td>
                     <div class="invoice-logo-brand">
                         <samp style="visibility: hidden;text-align: center;"> ------ </samp>
-                        <img src="{{ public_path('storage/assets/identifies/'.$identify.'') }}" alt="" />
+                        <img src="{{ public_path('assets/identifies/'.$identify.'') }}" alt="" />
                         <samp style="visibility: hidden;text-align: center;"> ------ </samp>
                     </div>
                     <div class="" style="visibility: hidden;text-align: center;">
@@ -301,7 +301,7 @@
             <table class="header-table" style="border-collapse: collapse;">
                 <th>
                 <td>
-                    <h2 style="text-decoration: underline; text-transform: uppercase;">Liste de payement des etudients Années scolaire : {{$optionAnneescolaire}} </h2>
+                    <h2 style="text-decoration: underline; text-transform: uppercase;">Liste de payement des @if(Session::get('type') == "1" OR Session::get('type') == "2") Elèves @else Etudiants @endif Années scolaire : {{$optionAnneescolaire}} </h2>
                 </td>
                 </th>
             </table>

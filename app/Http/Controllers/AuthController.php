@@ -9,6 +9,7 @@ use App\Models\Participant;
 use App\Models\Formation;
 use App\Models\Courriel;
 use App\Models\User;
+use App\Models\Identify;
 use App\Models\FormationParticipant;
 
 class AuthController extends Controller
@@ -42,14 +43,15 @@ class AuthController extends Controller
                 'gender' => 'required|string',
                 'naissance' => 'required',
                 'age' => 'required',
-                'formation' => 'required',
                 'courriel' => 'required',
+                'Pays' => 'nullable',
+                'activite' => 'nullable|string',
             ]
         );
 
 
-        $random =  Formation::where('id', '=', $request->formation)->value('randomUser');
-        $userId =  User::where('random', '=', $random)->first()->value('id');
+        // $random =  Formation::where('id', '=', $request->formation)->value('randomUser');
+        $userId =  User::where('random', '=', $request->randomUser)->first()->value('id');
 
         $participant = new Participant();
         $participant->nom = $request->nom;
@@ -58,9 +60,11 @@ class AuthController extends Controller
         $participant->email = $request->email;
         $participant->dateN = $request->naissance;
         $participant->sexe = $request->gender;
+        $participant->Pays = $request->Pays;
+        $participant->activite = $request->activite;
         $participant->age = $request->age;
         $participant->password = Hash::make($request->password);
-        $participant->randomUser = $random;
+        $participant->randomUser = $request->randomUser;
         $participant->save();
 
         $Courriel = new Courriel();
@@ -80,9 +84,10 @@ class AuthController extends Controller
     }
     public function inscription($keys)
     {
+        $Identify = Identify::where('randomUser', $keys)->first();
         $formations = Formation::where('randomUser', $keys)
             ->get();
-        return view('participant.auth.register', compact('formations'));
+        return view('participant.auth.register', compact('formations', 'Identify'));
     }
     public function dashboardParticipant()
     {
@@ -92,9 +97,7 @@ class AuthController extends Controller
     }
     public function dashboardVue()
     {
-        $userRandom = Auth::user()->random;
-        $formations = Formation::where('randomUser', $userRandom)->get();
-        return view('dashboard', compact('formations'));
+        return view('dashboard');
     }
     public function deconnxion(Request $request)
     {

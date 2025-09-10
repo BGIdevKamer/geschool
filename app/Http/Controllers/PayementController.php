@@ -9,6 +9,7 @@ use App\Models\Participant;
 use App\Models\Payement;
 use App\Models\Tranche;
 use App\Models\Invoice;
+use App\Models\Years;
 use App\Models\Identify;
 use App\Models\FormationParticipant;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +24,8 @@ class PayementController extends Controller
 
         $userRandom = Auth::user()->random;
         $participants =  Participant::where('randomUser', '=', $userRandom)->get();
-        return view('EnregistrementPayement', compact('participants'));
+        $Years = Years::where('randomUser', '=', $userRandom)->where('active', 1)->value('Years');
+        return view('EnregistrementPayement', compact('participants', 'Years'));
     }
     public function addPayement(Request $request)
     {
@@ -41,11 +43,11 @@ class PayementController extends Controller
         $reste =  $formationPrix - $sum; // a commanter
         $Tranches = Tranche::where('formation_id', '=', $FormationParticipant->Formation->id)->get();
         if (count($Tranches) == 0) {
-            return redirect()->route('Payement.index')->with('err', 'veiller d\'abord renseigner les tranche de cette fromation');
+            return redirect()->route('Payement.index')->with('err', 'Veiller d\'abord renseigner les tranches de cette formation');
         }
         $motif = "";
 
-        if ($sum <= $formationPrix) {
+        if ($SumPayement < $formationPrix && $sum <=  $formationPrix) {
             $total = 0;
             foreach ($Tranches as $Tranche) {
                 $total += $Tranche->montant;
@@ -58,7 +60,7 @@ class PayementController extends Controller
                 }
             }
         } else {
-            return redirect()->route('Payement.index')->with('err', 'la scolariter de ce participant est solder');
+            return redirect()->route('Payement.index')->with('err', 'La scolariter de ce participant est solder ou le montant entrer est supperieur au reste à payer');
         }
 
         $payement =  new Payement();
@@ -99,5 +101,18 @@ class PayementController extends Controller
 
         // Retourner le fichier PDF
         return response()->file($fileroute);
+    }
+    public function PayementsDelete(Request $request)
+    {
+        $request->validate([
+            'id_payement' => 'required|integer',
+            'participant_id_payement' => 'required|integer',
+        ]);
+
+        $Payement = Payement::find($request->id_payement);
+
+        if ($Payement->delete()) {
+            return redirect()->route('Participant.Detail', ['id' => $request->participant_id_payement])->with('success', 'Le Payement a été supprimer avec success!');
+        }
     }
 }

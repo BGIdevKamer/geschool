@@ -6,6 +6,38 @@ $.ajaxSetup({
 });
 
 $(document).ready(function () {
+
+    // const fileInput = document.getElementById('fileInput');
+    // const nameFile = document.getElementById('nameFile');
+    // const customLabel = document.querySelector('.custom-file-label');
+    // const errorMessage = document.getElementById('errorMessage'); // Ajouter un élément pour afficher l'erreur
+
+    // // Types d'images autorisés
+    // const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+
+    // fileInput.addEventListener('change', function () {
+    //     if (this.files.length > 0) {
+    //         const file = this.files[0];
+    //         const fileName = file.name;
+    //         const fileType = file.type;
+
+    //         // Vérifier si le fichier est une image
+    //         if (allowedImageTypes.includes(fileType)) {
+    //             nameFile.textContent = fileName; // Afficher le nom du fichier
+    //             customLabel.textContent = `Fichier sélectionné: ${fileName}`; // Mettre à jour le label
+    //             errorMessage.textContent = ''; // Réinitialiser le message d'erreur s'il y en avait un
+    //         } else {
+    //             nameFile.textContent = 'Aucun fichier choisi'; // Message par défaut
+    //             customLabel.textContent = 'Choisir un fichier'; // Réinitialiser le label
+    //             errorMessage.textContent = 'Veuillez sélectionner une image valide (JPG, PNG, GIF, BMP, WEBP).'; // Afficher l'erreur
+    //         }
+    //     } else {
+    //         nameFile.textContent = 'Aucun fichier choisi'; // Message par défaut si aucun fichier n'est sélectionné
+    //         customLabel.textContent = 'Choisir un fichier'; // Réinitialiser le label
+    //         errorMessage.textContent = ''; // Réinitialiser le message d'erreur
+    //     }
+    // });
+
     // scrool to top function
     function scrollTop() {
         window.scrollTo({
@@ -26,59 +58,59 @@ $(document).ready(function () {
     }
     // Enregistrer une  nouvelle formation
     //  validation & envoie des infortion en ajax
-    $(document).on('submit', '#FormationForm', function (e) {
-        e.preventDefault();
+    // $(document).on('submit', '#FormationForm', function (e) {
+    //     e.preventDefault();
 
-        let insc = $('#tranche_1').val();
-        let pr = $('#tranche_2').val();
-        let dr = $('#tranche_3').val();
-        let tr = $('#tranche_4').val();
-        let prix = $('#prix').val();
+    //     let insc = $('#tranche_1').val();
+    //     let pr = $('#tranche_2').val();
+    //     let dr = $('#tranche_3').val();
+    //     let tr = $('#tranche_4').val();
+    //     let prix = $('#prix').val();
 
-        let sum = parseInt(insc) + parseInt(pr) + parseInt(dr) + parseInt(tr);
+    //     let sum = parseInt(insc) + parseInt(pr) + parseInt(dr) + parseInt(tr);
 
-        if (sum != prix) {
-            let tagerr = document.querySelector(".err");
-            tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1 text-danger'>la somme des tranche et l'iscription doit etre egale au prix de la  formation</div>";
-            return false;
-        } else {
-            let tagerr = document.querySelector(".err");
-            tagerr.innerHTML = "";
-        }
+    //     if (sum != prix) {
+    //         let tagerr = document.querySelector(".err");
+    //         tagerr.innerHTML = "<div class='form-control-feedback pt-1 pb-1 text-danger'>la somme des tranche et l'iscription doit etre egale au prix de la  formation</div>";
+    //         return false;
+    //     } else {
+    //         let tagerr = document.querySelector(".err");
+    //         tagerr.innerHTML = "";
+    //     }
 
 
-        const formData = new FormData(this);
+    //     const formData = new FormData(this);
 
-        const sa = document.getElementById("sa-success");
-        document.querySelector(".save-load-btn-ma").classList.remove("d-none");
-        document.querySelector(".save-bu-ma").classList.add("d-none");
-        $.ajax({
-            url: $(this).attr('action'),
-            type: 'POST',
-            data: formData, // Envoie les données du formulaire en utilisant FormData
-            processData: false,
-            contentType: false,
-            success: function (res) {
-                if (res.status == "success") {
-                    document.querySelector(".save-load-btn-ma").classList.add("d-none");
-                    document.querySelector(".save-bu-ma").classList.remove("d-none");
-                    $('#FormationForm')[0].reset();
-                    sa.click();
-                    $(' .errors_calss').load(location.href + ' .errors_calss');
-                }
-            },
-            error: function (err) {
-                let error = err.responseJSON;
-                $.each(error.errors, function (index, value) {
-                    $('.errors_calss').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + value + '<button type="button" class="close" data-dismiss="alert" aria-label="Close" id="sa-err-close"><span aria-hidden="true">&times;</span></button>');
-                });
-                document.querySelector(".save-load-btn-ma").classList.add("d-none");
-                document.querySelector(".save-bu-ma").classList.remove("d-none");
-                scrollTop();
-            }
-        })
+    //     const sa = document.getElementById("sa-success");
+    //     document.querySelector(".save-load-btn-ma").classList.remove("d-none");
+    //     document.querySelector(".save-bu-ma").classList.add("d-none");
+    //     $.ajax({
+    //         url: $(this).attr('action'),
+    //         type: 'POST',
+    //         data: formData, // Envoie les données du formulaire en utilisant FormData
+    //         processData: false,
+    //         contentType: false,
+    //         success: function (res) {
+    //             if (res.status == "success") {
+    //                 document.querySelector(".save-load-btn-ma").classList.add("d-none");
+    //                 document.querySelector(".save-bu-ma").classList.remove("d-none");
+    //                 $('#FormationForm')[0].reset();
+    //                 sa.click();
+    //                 $(' .errors_calss').load(location.href + ' .errors_calss');
+    //             }
+    //         },
+    //         error: function (err) {
+    //             let error = err.responseJSON;
+    //             $.each(error.errors, function (index, value) {
+    //                 $('.errors_calss').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">' + value + '<button type="button" class="close" data-dismiss="alert" aria-label="Close" id="sa-err-close"><span aria-hidden="true">&times;</span></button>');
+    //             });
+    //             document.querySelector(".save-load-btn-ma").classList.add("d-none");
+    //             document.querySelector(".save-bu-ma").classList.remove("d-none");
+    //             scrollTop();
+    //         }
+    //     })
 
-    })
+    // })
 
     //Modification d'une formation
     // envoie des informations en ajax
@@ -1312,6 +1344,31 @@ $(document).ready(function () {
         $('#id').val(id);
     });
 
+    $(document).on('click', '#YearsActive', function (e) {
+        e.preventDefault();
+        let year = $(this).data('year');
+
+        $('#activeYears').val(year);
+    });
+
+    $(document).on('click', '#DeleteComposition', function (e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        let participant_id = $(this).data('participant');
+
+        $('#id').val(id);
+        $('#participant_id').val(participant_id);
+    });
+
+    $(document).on('click', '#DeletePayement', function (e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        let participant_id = $(this).data('participant');
+
+        $('#id_payement').val(id);
+        $('#participant_id_payement').val(participant_id);
+    });
+
     $(document).on('click', '#updateModule', function (e) {
         e.preventDefault();
         let id = $(this).data('id');
@@ -1323,9 +1380,34 @@ $(document).ready(function () {
         $('#updatelibeller').val(libeller);
         $('#updatedescription').val(description);
         $('#ancienneValue').val(formation_id);
+    });
+
+    $(document).on('click', '#updateEmploie', function (e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        let titre = $(this).data('titre');
+        let date_debut = $(this).data('date_debut');
+        let date_fin = $(this).data('date_fin');
+        let note = $(this).data('note');
+        let horaire = date_debut + ' - ' + date_fin;
+
+        $('#idUpdate').val(id);
+        $('#titreUpdate').val(titre);
+        $('#datesUpdate').val(horaire);
+        $('#noteUpdate').val(note);
     })
 
+    $(document).on('click', '#updatePersonnel', function (e) {
+        e.preventDefault();
+        let id = $(this).data('id');
+        let name = $(this).data('name');
+        let email = $(this).data('email');
+        let telephone = $(this).data('telephone');
 
-
+        $('#idUpdate').val(id);
+        $('#nameUpdate').val(name);
+        $('#emailUpdate').val(email);
+        $('#telephoneUpdate').val(telephone);
+    })
 })
 

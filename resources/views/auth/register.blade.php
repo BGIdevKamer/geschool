@@ -213,6 +213,7 @@
                                             <option value="1">Primaire</option>
                                             <option value="2">Secondaire</option>
                                             <option value="3">Supperieur</option>
+                                            <option value="4">Online School</option>
                                         </select>
                                     </div>
                                     <div class="form-group">

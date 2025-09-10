@@ -24,7 +24,7 @@
                         data-toggle="modal"
                         data-target="#bd-example-modal-Categorie"
                         type="button">
-                        <button class="btn btn-primary">Ajouter Categorie</button>
+                        <button class="btn btn-dark">Ajouter Categorie</button>
                     </a>
                 </div>
             </div>

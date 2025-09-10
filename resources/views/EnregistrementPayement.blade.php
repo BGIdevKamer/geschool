@@ -27,18 +27,19 @@
         </div>
         <div class="pd-20 card-box mb-30">
             @if(session('err'))
-            <div class="card-box mb-30">
-                <div class="alert alert-success">
+            <div class="alert alert-warning" role="alert">
+                <h4 class="alert-heading h4">Avertissement! Payement non Enregistrer</h4>
+                <p>
                     {{session('err')}}
-                </div>
+                </p>
             </div>
             @endif
             @if(session('success'))
             <div class="alert alert-success" role="alert">
                 <h4 class="alert-heading h4">Felicitations!</h4>
                 <p>
-                    Le payement de ce particiapants a bien ete en registrer.
-                    Pour generer rapidement un recus de payement cliker sur <strong>Generer un recus</strong>
+                    Le payement de ce particiapants a bien été en registré.
+                    Pour généré rapidement un reçus de payement cliquer sur <strong>Généré un reçus</strong>
                 </p>
                 <hr />
                 <p class="mb-0">
@@ -67,7 +68,9 @@
                                 <option value="">Choisir l'Apprenant</option>
                                 @foreach($participants as $participant)
                                 @foreach($participant->FormationParticipants as $FormationParticipant)
-                                <option value="{{$FormationParticipant->id}}">{{$FormationParticipant->Participant->nom}} {{$FormationParticipant->Participant->prenom}}, {{$FormationParticipant->Formation->nom}} @if(!empty($FormationParticipant->niv)) {{$FormationParticipant->niv}} @endif, {{$FormationParticipant->anneeScolaire}} </option>
+                                @if($FormationParticipant->anneeScolaire == $Years)
+                                <option value="{{$FormationParticipant->id}}">{{$participant->nom}} {{$participant->prenom}}, {{$FormationParticipant->Formation->nom}} @if(!empty($FormationParticipant->niv)) {{$FormationParticipant->niv}} @endif, {{$FormationParticipant->anneeScolaire}} </option>
+                                @endif
                                 @endforeach
                                 @endforeach
                             </select>

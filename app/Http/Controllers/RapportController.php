@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Formation;
 use App\Models\Payement;
 use App\Models\Tranche;
+use App\Models\Enseigant;
 use App\Models\FormationParticipant;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use FontLib\Table\Type\name;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Identify;
+use App\Models\Years;
 use Carbon\Carbon;
-
 use Illuminate\Http\Request;
 
 class RapportController extends Controller
@@ -21,7 +22,8 @@ class RapportController extends Controller
     {
         $Formations = Formation::where('randomUser', Auth::user()->random)
             ->where('statue', '=', '1')->get();
-        return view('rapports.Payement-Rapport-Index', compact('Formations'));
+        $years = Years::where('randomUser', Auth::user()->random)->get();
+        return view('rapports.Payement-Rapport-Index', compact('Formations', 'years'));
     }
     public function TransactionRapportIndex()
     {
@@ -29,16 +31,26 @@ class RapportController extends Controller
             ->where('statue', '=', '1')->get();
         return view('rapports.Transaction-Rapport-Index', compact('Formations'));
     }
+    public function EtudientRapportIndex()
+    {
+        $Formations = Formation::where('randomUser', Auth::user()->random)
+            ->where('statue', '=', '1')->get();
+        $years = Years::where('randomUser', Auth::user()->random)->get();
+
+        return view('rapports.Etudient-Rapport-Index', compact('Formations', 'years'));
+    }
     public function PayementRapportCreate(Request $request)
     {
         $request->validate(([
             'anneescolaire' => 'required',
+            'niv' => 'nullable',
             'formation' => 'nullable|exists:formations,id',
         ]));
 
         $query = FormationParticipant::query();
 
         $optionFormation = $request->input('formation');
+        $optionNiveau = $request->input('niv');
         $optionAnneescolaire = $request->input('anneescolaire');
 
         $query->where('anneeScolaire', $optionAnneescolaire);
@@ -48,6 +60,12 @@ class RapportController extends Controller
                 return $query->where('formation_id', $optionFormation);
             } else {
                 return $query->join('formations', 'formations.id', '=', 'formation_participants.formation_id')->where('formations.randomUser', Auth::user()->random);
+            }
+        });
+
+        $query->when($optionNiveau, function ($query, $optionNiveau) {
+            if (!empty($optionNiveau)) {
+                return $query->where('niv', $optionNiveau);
             }
         });
 
@@ -86,7 +104,7 @@ class RapportController extends Controller
         // Créer le dossier "PayementRecus" dans le système de stockage
         Storage::disk('public')->makeDirectory('Rapports/PayementRapport');
 
-        $filename = 'Rapports/PayementRapport' . $name . '.pdf';
+        $filename = 'Rapports/PayementRapport/' . $name . '.pdf';
         $identify =  Identify::where('randomUser', '=', Auth::user()->random)->value('logo');
 
         // Générer le PDF en utilisant le chemin absolu pour l'image
@@ -100,11 +118,13 @@ class RapportController extends Controller
     {
         $request->validate([
             'end_date' => 'required|date',
+            'niveau' => 'nullable',
             'start_date' => 'required|date',
             'form' => 'nullable',
         ]);
 
         $optionFormation = $request->input('form');
+        $optionNiveau = $request->input('niveau');
 
         // Récupérer les dates de début et de fin au format 'Month Year' (par exemple "December 2025")
         $start_date = $request->input('start_date');  // Format attendu: 'December 2025'
@@ -131,14 +151,20 @@ class RapportController extends Controller
             }
         });
 
+        $query->when($optionNiveau, function ($query, $optionNiveau) {
+            if (!empty($optionNiveau)) {
+                return $query->where('niv', $optionNiveau);
+            }
+        });
+
         $Payements = $query->get();
 
         $name = uniqid();
 
         // Créer le dossier "PayementRecus" dans le système de stockage
-        Storage::disk('public')->makeDirectory('Rapports/PayementRapport');
+        Storage::disk('public')->makeDirectory('Rapports/TransactionRapport');
 
-        $filename = 'Rapports/PayementTransactionRapport' . $name . '.pdf';
+        $filename = 'Rapports/TransactionRapport/' . $name . '.pdf';
         $identify =  Identify::where('randomUser', '=', Auth::user()->random)->value('logo');
 
         // Générer le PDF en utilisant le chemin absolu pour l'image
@@ -149,5 +175,77 @@ class RapportController extends Controller
         return response()->file($fileroute);
 
         dd($Payements);
+    }
+    public function EtudientRapportCreate(Request $request)
+    {
+        $request->validate(([
+            'anneescolaire' => 'required',
+            'niv' => 'nullable',
+            'formation' => 'nullable|exists:formations,id',
+        ]));
+
+        $query = FormationParticipant::query();
+
+        $optionFormation = $request->input('formation');
+        $optionNiveau = $request->input('niv');
+        $optionAnneescolaire = $request->input('anneescolaire');
+
+        $query->where('anneeScolaire', $optionAnneescolaire);
+
+        $query->when($optionFormation, function ($query, $optionFormation) {
+            if (!empty($optionFormation)) {
+                return $query->where('formation_id', $optionFormation);
+            } else {
+                return $query->join('formations', 'formations.id', '=', 'formation_participants.formation_id')->where('formations.randomUser', Auth::user()->random);
+            }
+        });
+
+        $query->when($optionNiveau, function ($query, $optionNiveau) {
+            if (!empty($optionNiveau)) {
+                return $query->where('niv', $optionNiveau);
+            }
+        });
+
+        $FormationParticipants = $query->get();
+
+        $Formations = Formation::where('randomUser', Auth::user()->random)
+            ->where('statue', '=', '1')
+            ->orderBy('nom', 'asc')
+            ->get();
+
+        $name = uniqid();
+        // Créer le dossier "PayementRecus" dans le système de stockage
+        Storage::disk('public')->makeDirectory('Rapports/EtudientRapport');
+
+        $filename = 'Rapports/EtudientRapport/' . $name . '.pdf';
+
+        $identify =  Identify::where('randomUser', '=', Auth::user()->random)->value('logo');
+
+        // Générer le PDF en utilisant le chemin absolu pour l'image
+        Pdf::loadView('print.EtudientRapport', compact('FormationParticipants', 'identify', 'optionAnneescolaire', 'Formations'))
+            ->save($fileroute = storage_path('app/public/' . $filename));
+
+        // Retourner le fichier PDF
+        return response()->file($fileroute);
+        // return view('print.EtudientRapport', compact('FormationParticipants', 'optionAnneescolaire'));
+    }
+    public function EnseignantRapportCreate()
+    {
+        $Enseigants = Enseigant::where('randomUser', Auth::user()->random)->get();
+
+        $name = uniqid();
+        // Créer le dossier "PayementRecus" dans le système de stockage
+        Storage::disk('public')->makeDirectory('Rapports/EnseigantRapport');
+
+        $filename = 'Rapports/EnseigantRapport/' . $name . '.pdf';
+
+        $identify =  Identify::where('randomUser', '=', Auth::user()->random)->value('logo');
+
+        // Générer le PDF en utilisant le chemin absolu pour l'image
+        Pdf::loadView('print.EnseigantRapport', compact('Enseigants', 'identify'))
+            ->save($fileroute = storage_path('app/public/' . $filename));
+
+        // Retourner le fichier PDF
+        return response()->file($fileroute);
     }
 }

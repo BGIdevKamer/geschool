@@ -37,16 +37,16 @@
 
     <div class="card-box mb-30">
         <div class="pd-20">
-            <h4 class="text-blue h4">Liste des matieres</h4>
+            <h4 class="text-blue h4">Liste des Modules</h4>
         </div>
         <div class="pb-20">
             <table class="data-table table stripe hover nowrap">
                 <thead>
                     <tr>
                         <th class="table-plus datatable-nosort"></th>
-                        <th>Libeller</th>
+                        <th>Libellé</th>
                         <th>Description</th>
-                        <th>formtion</th>
+                        <th>Formation</th>
                         <th class="datatable-nosort">Action</th>
                     </tr>
                 </thead>
@@ -99,7 +99,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myLargeModalLabel">
-                    Nouvel Matières
+                    Module
                 </h4>
                 <button type="button" class="close" id="closeSave" data-dismiss="modal" aria-hidden="true">
                     ×
@@ -111,7 +111,7 @@
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label>Libeller <strong class="text-danger">*</strong></label>
+                                <label>Libellé <strong class="text-danger">*</strong></label>
                                 <input type="text" class="form-control" name="libeller" id="libeller" required>
                             </div>
                         </div>

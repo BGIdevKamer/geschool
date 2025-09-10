@@ -13,7 +13,7 @@
 	<!-- Simple Datatable start -->
 	<div class="card-box mb-30">
 		<div class="pd-20">
-			<h4 class="text-blue h4">Liste des formations</h4>
+			<h4 class="text-blue h4">Liste des @if(Session::get('type') == "4") Des approches de formation @elseif(Session::get('type') == "1" OR Session::get('type') == "2") Classe @else Formation @endif</h4>
 			<p class="mb-0">
 			</p>
 		</div>
@@ -21,12 +21,12 @@
 			<table class="data-table table stripe hover nowrap load-liste">
 				<thead>
 					<tr>
-						<th class="table-plus datatable-nosort">Libeller</th>
-						<th>Durée</th>
-						<th>Note</th>
-						<th>prix</th>
+						<th class="table-plus datatable-nosort">Libellé</th>
 						<th>En ligne</th>
-						<th>Niveau requis</th>
+						<th>Niveau</th>
+						@if(Session::get('type') != "4")
+						<th>Effectif</th>
+						@endif
 						<th>Statut</th>
 						<th class="datatable-nosort">Action</th>
 					</tr>
@@ -35,11 +35,11 @@
 					@foreach($formations as $Formation)
 					<tr>
 						<td class="table-plus">{{$Formation->nom}}</td>
-						<td>{{$Formation->durée}}</td>
-						<td>{{$Formation->note}}</td>
-						<td>{{$Formation->prix}} Franc cfa</td>
 						<td>@if($Formation->EnLigne == 0) Non @else Oui @endif</td>
 						<td>{{$Formation->Niveau_requie}}</td>
+						@if(Session::get('type') != "4")
+						<td>{{$Formation->FormationParticipants()->count()}}</td>
+						@endif
 						<td class="@if($Formation->statue == 0) text-danger @endif">@if($Formation->statue == 1) Actif
 							@else Desactiver @endif</td>
 						<td>
@@ -94,17 +94,19 @@
 						<div class="row">
 							<div class="col-md-6 col-sm-12">
 								<div class="form-group">
-									<label>Nom de la formation <span class="text-danger">*</span> </label>
+									<label>Libellé <span class="text-danger">*</span> </label>
 									<input type="text" class="form-control" name="nom" id="nom">
 									<input type="text" class="form-control d-none" name="id" id="id">
 								</div>
 							</div>
+							@if(Session::get('type') == "3")
 							<div class="col-md-6 col-sm-12">
 								<div class="form-group">
-									<label>Durée de la formation <span class="text-danger">*</span> </label>
+									<label>Durée <span class="text-danger">*</span> </label>
 									<input type="text" class="form-control" name="duree" id="duree">
 								</div>
 							</div>
+							@endif
 						</div>
 						<div class="row">
 							<div class="col-md-6 col-sm-12">
@@ -115,15 +117,15 @@
 							</div>
 							<div class="col-md-6 col-sm-12">
 								<div class="form-group">
-									<label>Prix de la formation <span class="text-danger">*</span></label>
+									<label>Prix <span class="text-danger">*</span></label>
 									<input class="prix" id="prix" type="text" value="" name="prix" />
 								</div>
 							</div>
 						</div>
-						<div class="row">
+						<!-- <div class="row d-none">
 							<div class="col-md-6 col-sm-12">
 								<div class="form-group">
-									<label>Niveau requie <span class="text-danger">*</span></label>
+									<label>Niveau</label>
 									<input type="text" class="form-control" id="niveau" name="niveau">
 								</div>
 							</div>
@@ -143,7 +145,7 @@
 									</div>
 								</div>
 							</div>
-						</div>
+						</div> -->
 					</form>
 				</div>
 				<div class="modal-footer">

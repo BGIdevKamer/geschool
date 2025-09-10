@@ -15,7 +15,7 @@ class PlantUsers
      */
     public function handle(Request $request, Closure $next, string $plant): Response
     {
-        if($request->user()->plants()->last()->where('date_fin','>',now())->where('libeller','=', $plant)->exists()) return $next($request);
+        if ($request->user()->plants()->last()->where('date_fin', '>', now())->where('libeller', '=', $plant)->exists()) return $next($request);
 
         abord(403);
     }

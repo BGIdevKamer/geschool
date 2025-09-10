@@ -157,7 +157,7 @@
 							<div class="row">
 								<div class="col-sm-12">
 									<div class="input-group mb-0">
-										<input class="btn btn-success btn-lg btn-block" type="submit" value="Sign In">
+										<input class="btn btn-success btn-lg btn-block" type="submit" value="Se connecter">
 									</div>
 									<div
 										class="font-16 weight-600 pt-10 pb-10 text-center"

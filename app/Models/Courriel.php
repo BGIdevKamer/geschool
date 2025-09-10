@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Participant;
 
 class Courriel extends Model
 {
@@ -14,6 +15,11 @@ class Courriel extends Model
         'sujet',
         'is_View',
     ];
+
+    public function Participant()
+    {
+        return $this->belongsTo(Participant::class);
+    }
 
     use HasFactory;
 }

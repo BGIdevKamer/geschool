@@ -38,7 +38,7 @@
                         <div class="da-card-content">
                             <h5 class="h5 mb-10">{{$module->libeller}}</h5>
                             <p class="mb-0">{{$module->description}}</p>
-                            <a href="{{route('Module.Participant',['id'=>$module->id])}}" class="btn btn-success mt-3">Commancer <i class="icon-copy bi bi-arrow-right"></i></a>
+                            <a href="{{route('Module.Participant',['id'=>$module->id])}}" class="btn btn-success mt-3">Commencer <i class="icon-copy bi bi-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>

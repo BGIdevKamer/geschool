@@ -17,6 +17,14 @@
                         <button class="btn btn-primary">Ajouter Enseignant</button>
                     </a>
                 </div>
+                <div class="pull-right ml-2">
+                    <a
+                        href="{{route('Enseignant.RapportCreate')}}"
+                        class="btn-block"
+                        type="button">
+                        <button class="btn btn-dark">Liste Enseignants</button>
+                    </a>
+                </div>
             </div>
         </div>
         @if(session('success'))
