@@ -28,11 +28,12 @@ class FormationController extends Controller
         );
 
         $file = $request->file('miniature');
+
         if (!empty($file)) {
-            $name = storage::disk('public')->put('FormationImg', $file);
+            $name = $file->store('FormationImg', 'public');
         } else {
             $name = "";
-        }
+}
 
         $userRandom = Auth::user()->random;
         $formation = new Formation();

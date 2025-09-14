@@ -184,7 +184,7 @@
 						role="button"
 						data-toggle="dropdown">
 						<span class="user-icon">
-							<img src="{{Storage::url(Auth::user()->logo)}}" />
+							<img src="{{ Storage::url(Auth::user()->logo) }}" />
 						</span>
 						<span class="user-name">{{Auth::user()->name}}</span>
 					</a>

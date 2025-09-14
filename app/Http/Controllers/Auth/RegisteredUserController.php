@@ -51,20 +51,28 @@ class RegisteredUserController extends Controller
         ]);
 
         // Enregistrement du logo
-        $fileLogo = $request->file('logo');
-        // $pathLogo = 'assets/identifies/';
-        $filenameLogo = uniqid() . '.' . $fileLogo->getClientOriginalExtension();
+        if ($request->hasFile('logo')) {
+            $fileLogo = $request->file('logo');
+            $filenameLogo = uniqid() . '.' . $fileLogo->getClientOriginalExtension();
 
-        $responses=$request->file('logo')->move(public_path('assets/identifies'), $filenameLogo);
-        // $nameLogo = storage::disk('public')->put($pathLogo . $filenameLogo, file_get_contents($fileLogo->getRealPath()));
+            // Sauvegarde sur le disque public (bucket Laravel Cloud)
+            $pathLogo = $fileLogo->storeAs('userFile', $filenameLogo, 'public');
 
-
-        //enregistrement photo de profil
-        $imageUser = $request->file('photo');
-        if (!empty($imageUser)) {
-            $nameImageUser = storage::disk('public')->put('userFile', $imageUser);
+            // Mettre à jour en base
+            $user->logo = $pathLogo;
+            $user->save();
         }
 
+        // Enregistrement photo de profil
+        if ($request->hasFile('photo')) {
+            $imageUser = $request->file('photo');
+
+            // Ici Laravel génère automatiquement un nom unique
+            $pathImageUser = $imageUser->store('userFile', 'public');
+
+            $user->photo = $pathImageUser;
+            $user->save();
+    }
 
         function generateToken()
         {
