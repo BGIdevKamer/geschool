@@ -57,10 +57,6 @@ class RegisteredUserController extends Controller
 
             // Sauvegarde sur le disque public (bucket Laravel Cloud)
             $pathLogo = $fileLogo->storeAs('userFile', $filenameLogo, 'public');
-
-            // Mettre à jour en base
-            $user->logo = $pathLogo;
-            $user->save();
         }
 
         // Enregistrement photo de profil
@@ -69,10 +65,7 @@ class RegisteredUserController extends Controller
 
             // Ici Laravel génère automatiquement un nom unique
             $pathImageUser = $imageUser->store('userFile', 'public');
-
-            $user->photo = $pathImageUser;
-            $user->save();
-    }
+       }
 
         function generateToken()
         {
@@ -87,7 +80,7 @@ class RegisteredUserController extends Controller
         $Identify = new Identify();
         $Identify->email = $request->emailE;
         $Identify->raisonSocial = $request->Rs;
-        $Identify->logo = $filenameLogo;
+        $Identify->logo = $pathLogo;
         $Identify->ville = $request->ville;
         $Identify->adress = $request->adress;
         $Identify->Bp = $request->Bp;
@@ -107,7 +100,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'telephone' => $request->telephone,
-            'logo' => $nameImageUser,
+            'logo' => $pathImageUser,
             'role' => $role,
             'password' => Hash::make($request->password),
             'random' => $token,
