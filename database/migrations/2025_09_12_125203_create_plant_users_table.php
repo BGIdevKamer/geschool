@@ -5,8 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Models\User;
 use App\Models\plant;
-
-
 return new class extends Migration
 {
     /**
@@ -14,13 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('plant_user', function (Blueprint $table) {
+        Schema::create('plant_users', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class);
             $table->foreignIdFor(plant::class);
             $table->date('date_debut');
             $table->date('date_fin');
             $table->string('statue');
+            $table->timestamps();
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('plant_user');
+        Schema::dropIfExists('plant_users');
     }
 };

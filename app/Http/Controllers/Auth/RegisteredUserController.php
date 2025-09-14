@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Identify;
+use App\Models\PlantUser;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class RegisteredUserController extends Controller
 {
@@ -64,7 +66,6 @@ class RegisteredUserController extends Controller
         }
 
 
-
         function generateToken()
         {
             $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -104,6 +105,20 @@ class RegisteredUserController extends Controller
             'random' => $token,
             'identifie_id' => $Identify->id,
         ]);
+
+        // CREATION DU PLANT UTILISATEUR
+
+        $startDate = Carbon::today();
+        $endDate = Carbon::today()->addDays(30);
+
+        $PlantUser = new PlantUser();
+        $PlantUser->user_id = $user->id;
+        $PlantUser->plant_id = 1;
+        $PlantUser->date_debut = $startDate;
+        $PlantUser->date_fin = $endDate;
+        $PlantUser->statue = 1;
+        $PlantUser->save();
+
 
         event(new Registered($user));
 
