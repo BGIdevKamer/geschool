@@ -184,7 +184,7 @@
 						role="button"
 						data-toggle="dropdown">
 						<span class="user-icon">
-							<img src="{{ Storage::disk('s3')->temporaryUrl(Auth::user()->logo, now()->addMinutes(60)) }}" />
+							<img src="{{ Storage::disk('private')->temporaryUrl(Auth::user()->logo, now()->addMinutes(60)) }}" />
 						</span>
 						<span class="user-name">{{Auth::user()->name}}</span>
 					</a>
