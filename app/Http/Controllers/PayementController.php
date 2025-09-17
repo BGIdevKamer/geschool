@@ -75,33 +75,43 @@ class PayementController extends Controller
             'success' => $payement->id,
         ]);
     }
-    public function printPayement($id)
-    {
-        $userRandom = Auth::user()->random;
+   public function printPayement($id)
+{
+    $userRandom = Auth::user()->random;
 
-        $identify =  Identify::where('randomUser', '=', $userRandom)->get();
-        $payPrint =  Payement::where('id', '=', $id)->get();
-        $payement =  Payement::find($id);
+    $identify = Identify::where('randomUser', '=', $userRandom)->get();
+    $payPrint = Payement::where('id', '=', $id)->get();
+    $payement = Payement::find($id);
 
+    $prix = $payement->FormationParticipant->Formation->prix;
+    $payementTotal = Payement::where('formation_participant_id', $payement->formation_participant_id)->sum('montant');
+    $reste = $prix - $payementTotal;
 
-        $prix = $payement->FormationParticipant->Formation->prix;
+    $filename = 'PayementRecus/' . $id . '.pdf';
 
-        $payement =  Payement::where('formation_participant_id', $payement->formation_participant_id)->sum('montant');
-        $reste = $prix - $payement;
-
-        // Créer le dossier "PayementRecus" dans le système de stockage
-        Storage::disk('public')->makeDirectory('PayementRecus');
-
-        $filename = 'PayementRecus/' . $id . '.pdf';
-
-        // Générer le PDF en utilisant le chemin absolu pour l'image
-        Pdf::loadView('print.payement-recus', compact('payPrint', 'reste', 'identify', 'prix'))
-            ->setPaper(([0, 0, 400, 500]), 'landscape')
-            ->save($fileroute = storage_path('app/public/' . $filename));
-
-        // Retourner le fichier PDF
-        return response()->file($fileroute);
+    // ✅ Récupérer le logo de l’utilisateur depuis S3 et l’encoder en Base64
+    $logoBase64 = null;
+    if (Auth::user()->logo && Storage::disk('private')->exists(Auth::user()->logo)) {
+        $logoContent = Storage::disk('private')->get(Auth::user()->logo);
+        $logoMime = Storage::disk('private')->mimeType(Auth::user()->logo);
+        $logoBase64 = 'data:' . $logoMime . ';base64,' . base64_encode($logoContent);
     }
+
+    // Générer le PDF avec le logo en Base64
+    $pdf = Pdf::loadView('print.payement-recus', compact('payPrint', 'reste', 'identify', 'prix', 'logoBase64'))
+        ->setPaper([0, 0, 400, 500], 'landscape')
+        ->output();
+
+    // Sauvegarder sur S3
+    Storage::disk('private')->put($filename, $pdf, 'public');
+
+    // Générer un lien temporaire de téléchargement
+    $url = Storage::disk('private')->temporaryUrl($filename, now()->addMinutes(10));
+
+    return redirect($url);
+}
+
+
     public function PayementsDelete(Request $request)
     {
         $request->validate([
