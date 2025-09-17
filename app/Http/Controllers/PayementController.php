@@ -97,6 +97,10 @@ class PayementController extends Controller
         $logoBase64 = 'data:' . $logoMime . ';base64,' . base64_encode($logoContent);
     }
 
+     Payement::where('id', $id)->update([
+        'url' => $filename,
+    ]);
+
     // Générer le PDF avec le logo en Base64
     $pdf = Pdf::loadView('print.payement-recus', compact('payPrint', 'reste', 'identify', 'prix', 'logoBase64'))
         ->setPaper([0, 0, 400, 500], 'landscape')

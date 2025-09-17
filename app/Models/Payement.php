@@ -16,6 +16,7 @@ class Payement extends Model
         'pay_date',
         'motif',
         'note',
+        'url',
     ];
 
     public function FormationParticipant()

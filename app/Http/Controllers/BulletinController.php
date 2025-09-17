@@ -90,11 +90,15 @@ class BulletinController extends Controller
         // calcul de l'ecart type
         $moyenneClasse = $sumMoy / count($participantsMoyennes);
         $variance = 0;
-        foreach ($participantsMoyennes as $participantsMoyenne) {
-            $variance += pow($participantsMoyenne -  $moyenneClasse, 2);
+        if (count($participantsMoyennes) > 1) {
+            foreach ($participantsMoyennes as $participantsMoyenne) {
+                $variance += pow($participantsMoyenne - $moyenneClasse, 2);
+            }
+            $variance /= (count($participantsMoyennes) - 1);
+            $ecartType = sqrt($variance);
+        } else {
+            $ecartType = 0; // ou null si tu veux indiquer "non calculable"
         }
-        $variance /= (count($participantsMoyennes) - 1);
-        $ecartType =  sqrt($variance);
 
 
 
@@ -392,15 +396,43 @@ class BulletinController extends Controller
             ];
 
 
-            // Créer le dossier "Bulletins" dans le système de stockage
+           $number = time();
 
-            Storage::disk('public')->makeDirectory('Bulletins');
+            // Chemin du fichier PDF dans le dossier "bulletins/"
+            $filename = 'bulletins/' .
+            $FormationParticipant->Participant->nom . '_' .
+            $FormationParticipant->Participant->prenom . '_' .
+            $FormationParticipant->anneeScolaire . '_' .
+            $FormationParticipant->Formation->nom . '_' .
+            $request->evaluation . '_' . $number . '.pdf';
 
-            $number =  time();
-            $filename = 'Bulletins/' . $FormationParticipant->Participant->nom . '_' . $FormationParticipant->Participant->prenom . '_' . $FormationParticipant->anneeScolaire . '_' . $FormationParticipant->Formation->nom . '_' . $request->evaluation . '_' . $number . '.pdf';
+             // ✅ Récupérer le logo de l’utilisateur depuis S3 et l’encoder en Base64
+            $logoBase64 = null;
+            if (Auth::user()->logo && Storage::disk('private')->exists(Auth::user()->logo)) {
+                $logoContent = Storage::disk('private')->get(Auth::user()->logo);
+                $logoMime = Storage::disk('private')->mimeType(Auth::user()->logo);
+                $logoBase64 = 'data:' . $logoMime . ';base64,' . base64_encode($logoContent);
+            }
 
-            Pdf::loadView('print.bulletin', compact('bulletinData', 'moyenneGeneraleParticipant', 'identify', 'participants', 'effectif', 'Categories', 'data', 'prevData'))
-                ->save(storage_path('app/public/' . $filename));
+            // Générer le PDF avec le logo en Base64
+            $pdf = Pdf::loadView(
+                'print.bulletin',
+                compact(
+                    'bulletinData',
+                    'moyenneGeneraleParticipant',
+                    'identify',
+                    'participants',
+                    'effectif',
+                    'Categories',
+                    'data',
+                    'prevData',
+                    'logoBase64'
+                )
+            )->output();
+
+            // Sauvegarder le PDF sur S3 dans "bulletins/"
+            Storage::disk('private')->put($filename, $pdf, 'public');
+            
 
             // enregistrer le  bulletin 
             $Bulletin =  new Bulletin();
@@ -448,86 +480,107 @@ class BulletinController extends Controller
     public function view($route)
     {
         $filename = Bulletin::where('id', $route)->value('route');
-        $fileroute = storage_path('app/public/' . $filename);
-        return response()->file($fileroute);
+        $fileroute = Storage::disk('private')->temporaryUrl($filename, now()->addMinutes(10));
+        return redirect($fileroute);
     }
 
     public function download($route)
     {
-        $filename = Bulletin::where('id', $route)->value('route');
+       $filename = Bulletin::where('id', $route)->value('route');
 
-        if (Storage::disk('public')->exists($filename)) {
-            return Storage::disk('public')->download($filename);
+        if (Storage::disk('private')->exists($filename)) {
+            return Storage::disk('private')->download($filename);
         }
+
         abort(404);
 
         // return Storage::disk('public')->download($fileroute);
         // return response()->file($fileroute);
     }
     public function downloadAll($formation, $anneeScolaire, $evaluation)
-    {
-        $Bulletins = Bulletin::where('evaluation_id', $evaluation)
-            ->where('formation_id', $formation)
-            ->where('anneeScolaire', $anneeScolaire)->get();
+{
+    $Bulletins = Bulletin::where('evaluation_id', $evaluation)
+        ->where('formation_id', $formation)
+        ->where('anneeScolaire', $anneeScolaire)
+        ->get();
 
-        if (empty($Bulletins)) {
-            abort(400);
-        }
-
-        $zip = new ZipArchive();
-        $zipFileName = 'Bulletins.zip';
-        $zipPath = storage_path('app/' . $zipFileName);
-        $BulletinName = "";
-
-        if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
-
-            foreach ($Bulletins as $bulletin) {
-                if (empty($BulletinName)) {
-                    $BulletinName = $bulletin->Formation->nom . '_' . $bulletin->anneeScolaire . '_' . $bulletin->Evaluation->libeller . '.zip';
-                }
-                $filename = $bulletin->route;
-                $Path = Storage::disk('public')->path($filename);
-                // $Path = storage_path('app/' . $filename);
-                // dd($Path);
-                if (Storage::disk('public')->exists($filename)) {
-                    // return Storage::disk('public')->download($filename);
-                    $name = $bulletin->Participant->nom . '_' . $bulletin->Participant->prenom . '_' . $bulletin->anneeScolaire . '_' . $bulletin->Formation->nom . '_' . $bulletin->Evaluation->libeller . '.pdf';
-                    $zip->addFile($Path, $name);
-                } else {
-                    $zip->close();
-                    unlink($zipPath);
-                    abort(400);
-                }
-            }
-            $zip->close();
-            return response()->download($zipPath, $BulletinName)->deleteFileAfterSend(true);
-        } else {
-            abort(404);
-        }
+    if ($Bulletins->isEmpty()) {
+        abort(400, 'Aucun bulletin trouvé.');
     }
-    public function deleteAll($formation, $anneeScolaire, $evaluation)
-    {
-        $Bulletins = Bulletin::where('evaluation_id', $evaluation)
-            ->where('formation_id', $formation)
-            ->where('anneeScolaire', $anneeScolaire)->get();
 
-        if (empty($Bulletins)) {
-            abort(400);
-        }
+    $zip = new \ZipArchive();
+    $zipFileName = 'Bulletins.zip';
+    $zipPath = storage_path('app/' . $zipFileName);
+    $BulletinName = "";
 
-        $filePaths = [];
-
+    if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
         foreach ($Bulletins as $bulletin) {
-            $filePath =  storage_path('app/public/' . $bulletin->route);
-            if (!str_starts_with($filePath, storage_path('app/public/'))) {
-                abort(403, 'Acces non autorisé');
+            if (empty($BulletinName)) {
+                $BulletinName = $bulletin->Formation->nom . '_' .
+                    $bulletin->anneeScolaire . '_' .
+                    $bulletin->Evaluation->libeller . '.zip';
             }
-            $filePaths[] = $filePath;
-            $bulletin->delete();
+
+            $filename = $bulletin->route;
+
+            if (Storage::disk('private')->exists($filename)) {
+                // Récupérer le contenu du fichier depuis S3
+                $fileContent = Storage::disk('private')->get($filename);
+
+                // Nom du fichier à l'intérieur du zip
+                $name = $bulletin->Participant->nom . '_' .
+                        $bulletin->Participant->prenom . '_' .
+                        $bulletin->anneeScolaire . '_' .
+                        $bulletin->Formation->nom . '_' .
+                        $bulletin->Evaluation->libeller . '.pdf';
+
+                // Ajouter le fichier au zip (via addFromString car on a le contenu en mémoire)
+                $zip->addFromString($name, $fileContent);
+            } else {
+                $zip->close();
+                if (file_exists($zipPath)) {
+                    unlink($zipPath);
+                }
+                abort(400, "Fichier manquant : $filename");
+            }
         }
-        Storage::delete($filePaths);
-        return redirect()->route('Bulletin.index')->with('success', 'Bulletin supprimer.');
+
+        $zip->close();
+
+        return response()->download($zipPath, $BulletinName)->deleteFileAfterSend(true);
+    } else {
+        abort(404, 'Impossible de créer l’archive zip.');
     }
+}
+
+
+    public function deleteAll($formation, $anneeScolaire, $evaluation)
+{
+    $Bulletins = Bulletin::where('evaluation_id', $evaluation)
+        ->where('formation_id', $formation)
+        ->where('anneeScolaire', $anneeScolaire)
+        ->get();
+
+    if ($Bulletins->isEmpty()) {
+        abort(400, 'Aucun bulletin trouvé.');
+    }
+
+    foreach ($Bulletins as $bulletin) {
+        $filePath = $bulletin->route;
+
+        // Supprimer le fichier sur S3
+        if (Storage::disk('private')->exists($filePath)) {
+            Storage::disk('private')->delete($filePath);
+        }
+
+        // Supprimer l'enregistrement de la base de données
+        $bulletin->delete();
+    }
+
+    return redirect()->route('Bulletin.index')->with('success', 'Tous les bulletins ont été supprimés.');
+}
+
+
     public function BulletinListe()
     {
         $userRandom = Auth::user()->random;

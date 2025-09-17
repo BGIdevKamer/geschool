@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('pay_date');
             $table->string('motif');
             $table->string('note')->nullable();
+            $table->string('url')->nullable();
             $table->timestamps();
         });
     }

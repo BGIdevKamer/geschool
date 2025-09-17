@@ -292,7 +292,7 @@
                 <td>
                     <div class="invoice-logo-brand">
                         <samp style="visibility: hidden;text-align: center;"> ------ </samp>
-                        <img src="{{ public_path('assets/identifies/'.$identifie->logo.'') }}" alt="" />
+                        <img src="{{ $logoBase64 }}" alt="" />
                         <samp style="visibility: hidden;text-align: center;"> ------ </samp>
                     </div>
                     <div class="" style="visibility: hidden;text-align: center;">
